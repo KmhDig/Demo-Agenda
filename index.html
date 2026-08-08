@@ -969,7 +969,6 @@ let kitchenFilter = 'all';
 
 // CONEXIÓN CON GOOGLE SHEETS
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxhZISSEH7u-q6nlNvdZXGS--FanLib4JKHKiQf78i13noorSpLQBhcb0k177PBXVI9qg/exec';
-
 function enviarPedidoAGoogleSheets(order) {
     const data = {
         accion: 'guardarPedido',
@@ -1010,18 +1009,20 @@ function closeImage() {
 
 
         // INICIALIZACIÓN
-        window.onload = function() {
-            initFormCatalogs();
-            toggleDeliveryFields();
-            renderSocialLinks();
-            renderBranches();
-            renderBlockedDates();
-            renderOrders();
-            renderKitchenOrders();
-            
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('eventDate').min = today;
-        };
+       window.onload = function() {
+    initFormCatalogs();
+    toggleDeliveryFields();
+    renderSocialLinks();
+    renderBranches();
+    renderBlockedDates();
+    renderOrders();
+    renderKitchenOrders();
+
+    cargarConfiguracionDesdeGoogleSheets();
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('eventDate').min = today;
+};
 
         // ALMACENAMIENTO LOCAL
         function loadAppState() {
