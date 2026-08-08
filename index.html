@@ -1768,6 +1768,28 @@ Te compartimos este mensaje para pedirte de favor si nos podrías apoyar compart
                 showToast('Finanzas del pedido actualizadas', 'success');
             }
         }
+        function markOrderAsPaid() {
+    if (!currentEditingFinanceOrderId) return;
+
+    const order = state.orders.find(o => o.id === currentEditingFinanceOrderId);
+
+    if (order) {
+        // El anticipo pasa a ser igual al total
+        order.anticipo = order.totalPrice || 0;
+
+        // Guardar cambios
+        saveAppState();
+
+        // Actualizar la lista de pedidos
+        renderOrders();
+
+        // Cerrar el modal
+        closeFinanceModal();
+
+        // Mostrar confirmación
+        showToast('Pedido marcado como pagado', 'success');
+    }
+}
 
         // EDITAR DATOS DE FORMULARIO DE PEDIDO
         function openEditFormModal(id) {
