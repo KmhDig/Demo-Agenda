@@ -966,6 +966,23 @@ background-repeat:no-repeat;">
         let state = loadAppState();
         let currentEditingFinanceOrderId = null;
         let kitchenFilter = 'all';
+        function openImage(src) {
+    const viewer = document.getElementById('imageViewer');
+    const image = document.getElementById('imageViewerImg');
+
+    image.src = src;
+
+    viewer.classList.remove('hidden');
+    viewer.classList.add('flex');
+}
+
+function closeImage() {
+    const viewer = document.getElementById('imageViewer');
+
+    viewer.classList.add('hidden');
+    viewer.classList.remove('flex');
+}
+
 
         // INICIALIZACIÓN
         window.onload = function() {
