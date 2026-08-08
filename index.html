@@ -1791,9 +1791,9 @@ Logística: ${order.deliveryDetails}`;
         showToast(`Estatus de cocina actualizado a ${newStatus}`, 'success');
     }
 }
-        function actualizarProduccionEnGoogleSheets(order) {
+        function actualizarFinanzasEnGoogleSheets(order) {
     const data = {
-        accion: 'actualizarProduccion',
+        accion: 'actualizarFinanzas',
         pedido: order
     };
 
@@ -1806,10 +1806,10 @@ Logística: ${order.deliveryDetails}`;
     })
     .then(response => response.json())
     .then(resultado => {
-        console.log('Producción Google Sheets:', resultado);
+        console.log('Finanzas Google Sheets:', resultado);
     })
     .catch(error => {
-        console.error('Error actualizando Producción:', error);
+        console.error('Error actualizando Finanzas:', error);
     });
 }
 
