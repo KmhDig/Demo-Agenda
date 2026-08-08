@@ -1057,6 +1057,8 @@ function closeImage() {
         }
 
         const config = resultado.configuracion;
+        console.log('CONFIGURACIÓN RECIBIDA:', config);
+        
 
         if (config.businessPhone !== undefined) {
             state.businessPhone = config.businessPhone;
