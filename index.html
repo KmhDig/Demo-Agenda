@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dulce Reino - Agenda de Pedidos</title>
+    <title>Ledessertmx - Agenda de Pedidos</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fonts -->
@@ -20,8 +20,8 @@
                             50: '#f0f7f7',
                             100: '#dbecec',
                             200: '#b7d9db',
-                            500: '#660000',
-                            600: '#6c1a1a',
+                            500: '#569b9e',
+                            600: '#468386',
                             700: '#3a6c6f',
                             800: '#32575a',
                             900: '#2d494c',
@@ -37,7 +37,7 @@
     </script>
     <style>
         :root {
-            --brand-main: #660000;
+            --brand-main: #569b9e;
             --brand-dark: #3a6c6f;
             --bg-light: #f8faf9;
         }
@@ -62,7 +62,7 @@
         }
         .input-canva:focus {
             outline: none;
-            border-color: #660000;
+            border-color: #569b9e;
             box-shadow: 0 0 0 3px rgba(86, 155, 158, 0.15);
             background-color: #ffffff;
         }
@@ -102,11 +102,11 @@
     <header class="w-full bg-white/95 backdrop-blur-md border-b border-stone-100 py-3.5 px-4 md:px-10 flex justify-between items-center sticky top-0 z-40">
         <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-full border border-teal-100 p-0.5 overflow-hidden flex-shrink-0 bg-white">
-               <img id="business-logo" src="img/logo.png" alt="Logo" class="w-full h-full rounded-full object-cover">
+               <img id="business-logo" src="img/logo.png" onerror="this.src='https://placehold.co/100x100/569b9e/ffffff?text=Ledessertmx'" alt="Logo" class="w-full h-full rounded-full object-cover">
             </div>
             <div>
-                <h1 id="brand-title" class="text-lg md:text-xl font-bold font-serif text-brand-700 leading-tight tracking-wide">Dulce Reino </h1>
-                <p class="text-[10px] md:text-xs text-stone-400 font-medium tracking-widest uppercase">Pasteleria Artesanal</p>
+                <h1 id="brand-title" class="text-lg md:text-xl font-bold font-serif text-brand-700 leading-tight tracking-wide">Ledessertmx</h1>
+                <p class="text-[10px] md:text-xs text-stone-400 font-medium tracking-widest uppercase">LE DESSERT BY SOFI VILLARREAL POSTRES & PASTELES</p>
             </div>
         </div>
         
@@ -642,3 +642,571 @@
                     eventDate: "2026-08-15",
                     eventType: "Cumpleaños",
                     eventPortions: "20 - 25 Porciones",
+                    eventFlavor: "Vainilla Clásica",
+                    eventFilling: "Dulce de Leche",
+                    eventFrosting: "Buttercream Suave",
+                    deliveryMethod: "Recoger en tienda",
+                    deliveryDetails: "Sucursal Principal San Pedro (10:00 AM - 12:00 PM)",
+                    eventDetails: "Pastel temática floral en tonos pastel con leyenda 'Feliz Cumpleaños Sofi'",
+                    kitchenStatus: "En Proceso",
+                    total: 850,
+                    anticipo: 425,
+                    restante: 425,
+                    estatusPago: "Pendiente 50%"
+                }
+            ]
+        };
+
+        // App State
+        let appState = JSON.parse(localStorage.getItem('ledessert_app_state')) || DEFAULT_DATA;
+        let currentKitchenFilter = 'all';
+        let pendingClientOrder = null;
+
+        // Save State
+        function saveState() {
+            localStorage.setItem('ledessert_app_state', JSON.stringify(appState));
+        }
+
+        // Initialize UI on Load
+        window.onload = function() {
+            populateFormSelects();
+            updateSocialLinksUI();
+            updatePickupDetails();
+        };
+
+        // --- GALERÍA / LIGHTBOX LOGIC ---
+        function openImageModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = imgSrc;
+            modal.classList.remove('hidden');
+            // Small timeout to allow transition class
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 10);
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // --- FORM POPULATION & CONTROLS ---
+        function populateFormSelects() {
+            const fillSelect = (id, list) => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = list.map(item => `<option value="${item}">${item}</option>`).join('');
+            };
+
+            fillSelect('eventType', appState.eventTypes);
+            fillSelect('eventPortions', appState.portions);
+            fillSelect('eventFlavor', appState.flavors);
+            fillSelect('eventFilling', appState.fillings);
+            fillSelect('eventFrosting', appState.frostings);
+            
+            const pickupSel = document.getElementById('pickupLocationSelect');
+            if (pickupSel) {
+                pickupSel.innerHTML = appState.pickupLocations.map((loc, index) => `<option value="${index}">${loc.name}</option>`).join('');
+            }
+
+            fillSelect('pickupTime', appState.timeSlots);
+            fillSelect('shippingTime', appState.timeSlots);
+        }
+
+        function updatePickupDetails() {
+            const sel = document.getElementById('pickupLocationSelect');
+            const infoDiv = document.getElementById('pickupLocationInfo');
+            if (sel && infoDiv && appState.pickupLocations[sel.value]) {
+                infoDiv.innerText = appState.pickupLocations[sel.value].info;
+            }
+        }
+
+        function toggleDeliveryFields() {
+            const method = document.getElementById('deliveryMethod').value;
+            const pickupContainer = document.getElementById('pickupContainer');
+            const shippingContainer = document.getElementById('shippingContainer');
+
+            if (method === 'Recoger en tienda') {
+                pickupContainer.classList.remove('hidden');
+                shippingContainer.classList.add('hidden');
+            } else {
+                pickupContainer.classList.add('hidden');
+                shippingContainer.classList.remove('hidden');
+            }
+        }
+
+        function checkDateAvailability() {
+            const dateVal = document.getElementById('eventDate').value;
+            const warning = document.getElementById('dateWarning');
+            if (!dateVal) return;
+
+            const selectedDate = new Date(dateVal);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            if (selectedDate < today) {
+                warning.innerText = "⚠️ La fecha seleccionada no puede ser en el pasado.";
+                warning.classList.remove('hidden');
+            } else {
+                warning.classList.add('hidden');
+            }
+        }
+
+        // --- CLIENT REVIEW & ORDER SUBMISSION ---
+        function handleReviewOrder(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const date = document.getElementById('eventDate').value;
+            const type = document.getElementById('eventType').value;
+            const portions = document.getElementById('eventPortions').value;
+            const flavor = document.getElementById('eventFlavor').value;
+            const filling = document.getElementById('eventFilling').value;
+            const frosting = document.getElementById('eventFrosting').value;
+            const deliveryMethod = document.getElementById('deliveryMethod').value;
+            const details = document.getElementById('eventDetails').value;
+
+            let deliveryDetailsText = "";
+            if (deliveryMethod === 'Recoger en tienda') {
+                const locIndex = document.getElementById('pickupLocationSelect').value;
+                const locName = appState.pickupLocations[locIndex] ? appState.pickupLocations[locIndex].name : "";
+                const time = document.getElementById('pickupTime').value;
+                deliveryDetailsText = `${locName} (${time})`;
+            } else {
+                const street = document.getElementById('shipStreet').value;
+                const colony = document.getElementById('shipColony').value;
+                const city = document.getElementById('shipCity').value;
+                const receiver = document.getElementById('shipReceiver').value;
+                const time = document.getElementById('shippingTime').value;
+                deliveryDetailsText = `${street}, Col. ${colony}, ${city}. Recibe: ${receiver}. Horario: ${time}`;
+            }
+
+            pendingClientOrder = {
+                id: "ORD-" + Math.floor(100 + Math.random() * 900),
+                clientName: name,
+                clientPhone: phone,
+                eventDate: date,
+                eventType: type,
+                eventPortions: portions,
+                eventFlavor: flavor,
+                eventFilling: filling,
+                eventFrosting: frosting,
+                deliveryMethod: deliveryMethod,
+                deliveryDetails: deliveryDetailsText,
+                eventDetails: details,
+                kitchenStatus: "Pendiente",
+                total: 0,
+                anticipo: 0,
+                restante: 0,
+                estatusPago: "Pendiente Cotización"
+            };
+
+            const container = document.getElementById('reviewDetailsContainer');
+            container.innerHTML = `
+                <p><strong>Cliente:</strong> ${name}</p>
+                <p><strong>Teléfono:</strong> ${phone}</p>
+                <p><strong>Fecha del Evento:</strong> ${date}</p>
+                <p><strong>Evento:</strong> ${type}</p>
+                <p><strong>Tamaño/Porciones:</strong> ${portions}</p>
+                <p><strong>Sabor de Pan:</strong> ${flavor}</p>
+                <p><strong>Relleno:</strong> ${filling}</p>
+                <p><strong>Betún:</strong> ${frosting}</p>
+                <p><strong>Entrega:</strong> ${deliveryMethod} - ${deliveryDetailsText}</p>
+                <p><strong>Detalles de Diseño:</strong> ${details || "Sin detalles adicionales"}</p>
+            `;
+
+            document.getElementById('reviewModal').classList.remove('hidden');
+            document.getElementById('reviewModal').classList.add('flex');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.add('hidden');
+            document.getElementById('reviewModal').classList.remove('flex');
+        }
+
+        function confirmAndSendWhatsApp() {
+            if (!pendingClientOrder) return;
+
+            // Save order locally for admin view
+            appState.orders.unshift(pendingClientOrder);
+            saveState();
+
+            // Construct WhatsApp Message for business
+            const msg = `¡Hola Ledessertmx! 🧁 Quisiera solicitar el siguiente pedido:\n\n` +
+                `👤 *Nombre:* ${pendingClientOrder.clientName}\n` +
+                `📱 *Teléfono:* ${pendingClientOrder.clientPhone}\n` +
+                `📅 *Fecha Evento:* ${pendingClientOrder.eventDate}\n` +
+                `🎉 *Tipo de Evento:* ${pendingClientOrder.eventType}\n` +
+                `🍰 *Porciones:* ${pendingClientOrder.eventPortions}\n` +
+                `🍞 *Sabor de Pan:* ${pendingClientOrder.eventFlavor}\n` +
+                `🍫 *Relleno:* ${pendingClientOrder.eventFilling}\n` +
+                `🧁 *Betún:* ${pendingClientOrder.eventFrosting}\n` +
+                `🚚 *Método de Entrega:* ${pendingClientOrder.deliveryMethod}\n` +
+                `📍 *Detalles Entrega:* ${pendingClientOrder.deliveryDetails}\n` +
+                `📝 *Detalles de Diseño:* ${pendingClientOrder.eventDetails || "N/A"}\n\n` +
+                `Quedo en espera de la confirmación y datos para el anticipo. ¡Muchas gracias!`;
+
+            const waNum = appState.businessWA.replace(/\D/g, '');
+            const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`;
+
+            closeReviewModal();
+            showToast("¡Pedido registrado exitosamente! Redirigiendo a WhatsApp...");
+            
+            setTimeout(() => {
+                window.open(waUrl, '_blank');
+            }, 800);
+        }
+
+        // --- ADMIN MODAL & AUTH ---
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            document.getElementById('adminModal').classList.add('flex');
+            document.getElementById('loginView').classList.remove('hidden');
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('adminPinInput').value = '';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+            document.getElementById('adminModal').classList.remove('flex');
+        }
+
+        function verifyAdminPin() {
+            const input = document.getElementById('adminPinInput').value;
+            if (input === appState.pin) {
+                document.getElementById('loginView').classList.add('hidden');
+                document.getElementById('dashboardView').classList.remove('hidden');
+                loadAdminDashboardData();
+                showToast("Acceso concedido al Panel de Administración");
+            } else {
+                showToast("PIN incorrecto. Intenta de nuevo.", "error");
+            }
+        }
+
+        function lockAdminSession() {
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('loginView').classList.remove('hidden');
+            document.getElementById('adminPinInput').value = '';
+            showToast("Sesión de administración cerrada");
+        }
+
+        function handleForgotPin() {
+            showToast("El PIN por defecto es '1234'. Si lo cambiaste, contáctate con soporte.", "info");
+        }
+
+        // --- ADMIN DASHBOARD RENDERERS ---
+        function loadAdminDashboardData() {
+            renderAdminOrders();
+            document.getElementById('adminBusinessWA').value = appState.businessWA || '';
+            document.getElementById('adminInsta').value = appState.insta || '';
+            document.getElementById('adminFB').value = appState.fb || '';
+            document.getElementById('adminTikTok').value = appState.tiktok || '';
+        }
+
+        function filterKitchenView(status) {
+            currentKitchenFilter = status;
+            renderAdminOrders();
+        }
+
+        function renderAdminOrders() {
+            const container = document.getElementById('kitchenOrdersContainer');
+            const countBadge = document.getElementById('kitchenCountBadge');
+            
+            let filtered = appState.orders;
+            if (currentKitchenFilter !== 'all') {
+                filtered = appState.orders.filter(o => o.kitchenStatus === currentKitchenFilter);
+            }
+
+            countBadge.innerHTML = `<i class="fa-solid fa-list-check text-[10px]"></i> ${filtered.length} Activos`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-xs text-stone-400 bg-white rounded-2xl border border-stone-100">No hay pedidos registrados en esta sección.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(order => {
+                const statusColors = {
+                    'Pendiente': 'bg-amber-100 text-amber-800 border-amber-300',
+                    'En Proceso': 'bg-sky-100 text-sky-800 border-sky-300',
+                    'Terminado': 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                };
+
+                const isPaid = order.restante === 0 && order.total > 0;
+                const payBadgeClass = isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
+                const payText = isPaid ? 'PAGADO' : (order.estatusPago || 'Pendiente');
+
+                return `
+                <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm space-y-4 text-xs">
+                    <div class="flex flex-wrap justify-between items-start gap-2 border-b border-stone-100 pb-3">
+                        <div>
+                            <span class="font-bold text-stone-900 text-sm">${order.clientName}</span>
+                            <span class="text-stone-400 text-[11px] block">ID: ${order.id} | WhatsApp: ${order.clientPhone}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold border ${statusColors[order.kitchenStatus] || statusColors['Pendiente']}">
+                                ${order.kitchenStatus}
+                            </span>
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold ${payBadgeClass}">
+                                ${payText}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-stone-600 bg-stone-50/70 p-3.5 rounded-xl">
+                        <div>
+                            <p><strong>Fecha Evento:</strong> ${order.eventDate}</p>
+                            <p><strong>Evento:</strong> ${order.eventType} (${order.eventPortions})</p>
+                            <p><strong>Sabor:</strong> ${order.eventFlavor} | <strong>Relleno:</strong> ${order.eventFilling}</p>
+                            <p><strong>Betún:</strong> ${order.eventFrosting}</p>
+                        </div>
+                        <div>
+                            <p><strong>Entrega:</strong> ${order.deliveryMethod}</p>
+                            <p><strong>Lugar/Dirección:</strong> ${order.deliveryDetails}</p>
+                            <p><strong>Detalles:</strong> ${order.eventDetails || 'N/A'}</p>
+                        </div>
+                    </div>
+
+                    <!-- CONTROL DE ESTATUS EN COCINA -->
+                    <div class="flex items-center gap-2 pt-1">
+                        <span class="font-bold text-stone-700">Cambiar Avance:</span>
+                        <select onchange="changeKitchenStatus('${order.id}', this.value)" class="input-canva py-1 text-xs font-semibold">
+                            <option value="Pendiente" ${order.kitchenStatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                            <option value="En Proceso" ${order.kitchenStatus === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
+                            <option value="Terminado" ${order.kitchenStatus === 'Terminado' ? 'selected' : ''}>Terminado</option>
+                        </select>
+                    </div>
+
+                    <!-- FINANZAS CON BOTÓN PAGADO Y BOTÓN EDITAR PERMANENTE -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 p-3 bg-teal-50/50 rounded-xl border border-teal-100">
+                        <div class="space-x-3 text-stone-700">
+                            <span><strong>Total:</strong> $${(order.total || 0).toFixed(2)}</span>
+                            <span><strong>Anticipo:</strong> $${(order.anticipo || 0).toFixed(2)}</span>
+                            <span class="text-brand-700 font-bold"><strong>Restante:</strong> $${(order.restante || 0).toFixed(2)}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <!-- BOTÓN DE PAGADO: Pone en cotización como Pagado y restante en ceros -->
+                            <button onclick="markAsPaid('${order.id}')" class="px-3.5 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-circle-check text-[11px]"></i> Pagado
+                            </button>
+                            <!-- BOTÓN DE EDITAR FINANZAS (TAL CUAL) -->
+                            <button onclick="openEditFinanceModal('${order.id}')" class="px-3.5 py-1.5 bg-brand-500 text-white rounded-xl text-xs font-bold hover:bg-brand-600 transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-pen-to-square text-[11px]"></i> Editar Finanzas
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ACCIONES DE WHATSAPP: CONFIRMAR PEDIDO (SIN MONTO) & PEDIR FOTO INSPIRACIÓN -->
+                    <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-stone-100">
+                        <!-- BOTÓN CONTAR / CONTACTAR PARA CONFIRMAR PEDIDO (SIN DATOS FINANCIEROS Y PREGUNTANDO SI ESTÁ CORRECTO O SI HAY ERRORES) -->
+                        <button onclick="sendOrderConfirmationNoFinance('${order.id}')" class="px-4 py-2 bg-emerald-500 text-white rounded-xl text-xs font-bold hover:bg-emerald-600 transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> Confirmar Pedido
+                        </button>
+
+                        <!-- NUEVO BOTÓN: FAVOR DE MANDAR TU FOTO DE IDEA DE INSPIRACIÓN -->
+                        <button onclick="sendInspirationPhotoRequest('${order.id}')" class="px-4 py-2 bg-amber-500 text-white rounded-xl text-xs font-bold hover:bg-amber-600 transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-camera text-xs"></i> Favor de mandar tu foto de idea de inspiración
+                        </button>
+
+                        <!-- BOTÓN DE ELIMINAR PEDIDO -->
+                        <button onclick="deleteOrder('${order.id}')" class="px-3 py-2 text-rose-600 hover:text-rose-800 text-xs font-semibold ml-auto flex items-center gap-1 transition">
+                            <i class="fa-solid fa-trash text-[11px]"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Action: Change Kitchen Status
+        function changeKitchenStatus(orderId, newStatus) {
+            const order = appState.orders.find(o => o.id === orderId);
+            if (order) {
+                order.kitchenStatus = newStatus;
+                saveState();
+                renderAdminOrders();
+                showToast(`Estatus en cocina actualizado a "${newStatus}"`);
+            }
+        }
+
+        // Action: Mark as Paid (Pone cotización pagada y restante en ceros $0)
+        function markAsPaid(orderId) {
+            const order = appState.orders.find(o => o.id === orderId);
+            if (order) {
+                if (order.total === 0) {
+                    order.total = order.anticipo || 500; // Asigna un default si no había total definido
+                }
+                order.anticipo = order.total;
+                order.restante = 0;
+                order.estatusPago = "Pagado";
+                saveState();
+                renderAdminOrders();
+                showToast(`El pedido ${order.id} ha sido marcado como PAGADO y en ceros en restante.`);
+            }
+        }
+
+        // Edit Finance Modal Controls
+        function openEditFinanceModal(orderId) {
+            const order = appState.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            document.getElementById('editFinanceOrderId').value = order.id;
+            document.getElementById('editFinanceTotal').value = order.total || 0;
+            document.getElementById('editFinanceAnticipo').value = order.anticipo || 0;
+
+            document.getElementById('editFinanceModal').classList.remove('hidden');
+            document.getElementById('editFinanceModal').classList.add('flex');
+        }
+
+        function closeEditFinanceModal() {
+            document.getElementById('editFinanceModal').classList.add('hidden');
+            document.getElementById('editFinanceModal').classList.remove('flex');
+        }
+
+        function saveFinanceChanges() {
+            const orderId = document.getElementById('editFinanceOrderId').value;
+            const total = parseFloat(document.getElementById('editFinanceTotal').value) || 0;
+            const anticipo = parseFloat(document.getElementById('editFinanceAnticipo').value) || 0;
+
+            const order = appState.orders.find(o => o.id === orderId);
+            if (order) {
+                order.total = total;
+                order.anticipo = anticipo;
+                order.restante = Math.max(0, total - anticipo);
+
+                if (order.restante === 0 && total > 0) {
+                    order.estatusPago = "Pagado";
+                } else if (anticipo > 0) {
+                    order.estatusPago = "Anticipo Pagado";
+                } else {
+                    order.estatusPago = "Pendiente Pago";
+                }
+
+                saveState();
+                renderAdminOrders();
+                closeEditFinanceModal();
+                showToast("Finanzas del pedido actualizadas con éxito");
+            }
+        }
+
+        // WhatsApp Action 1: Enviar toda la información MENOS LO FINANCIERO para confirmar si está correcto o hay errores
+        function sendOrderConfirmationNoFinance(orderId) {
+            const order = appState.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const msg = `¡Hola ${order.clientName}! 🌸✨\n` +
+                `Te compartimos el resumen de la información de tu pedido en *Ledessertmx*:\n\n` +
+                `📅 *Fecha del Evento:* ${order.eventDate}\n` +
+                `🎉 *Tipo de Evento:* ${order.eventType}\n` +
+                `🍰 *Porciones / Tamaño:* ${order.eventPortions}\n` +
+                `🍞 *Sabor de Pan:* ${order.eventFlavor}\n` +
+                `🍫 *Relleno:* ${order.eventFilling}\n` +
+                `🧁 *Betún:* ${order.eventFrosting}\n` +
+                `🚚 *Método de Entrega:* ${order.deliveryMethod}\n` +
+                `📍 *Detalles Entrega:* ${order.deliveryDetails}\n` +
+                `📝 *Detalles de Diseño:* ${order.eventDetails || "Sin detalles adicionales"}\n\n` +
+                `Favor de confirmar si toda la información está correcta. Si hay algún error, favor de mencionarlo. ¡Muchas gracias! 💕`;
+
+            const phoneClean = order.clientPhone.replace(/\D/g, '');
+            const waPhone = phoneClean.length === 10 ? '52' + phoneClean : phoneClean;
+            const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(msg)}`;
+
+            window.open(waUrl, '_blank');
+        }
+
+        // WhatsApp Action 2: Favor de mandar tu foto de idea de inspiración (ubicado al lado del botón de confirmar)
+        function sendInspirationPhotoRequest(orderId) {
+            const order = appState.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const msg = `¡Hola ${order.clientName}! 🎨✨\n` +
+                `Favor de mandar tu foto de idea de inspiración para tu pedido de *Ledessertmx* por este medio.\n` +
+                `¡Quedamos al pendiente para diseñar el pastel perfecto para ti! 💕`;
+
+            const phoneClean = order.clientPhone.replace(/\D/g, '');
+            const waPhone = phoneClean.length === 10 ? '52' + phoneClean : phoneClean;
+            const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(msg)}`;
+
+            window.open(waUrl, '_blank');
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm("¿Estás segura de eliminar este pedido permanentemente?")) {
+                appState.orders = appState.orders.filter(o => o.id !== orderId);
+                saveState();
+                renderAdminOrders();
+                showToast("Pedido eliminado correctamente");
+            }
+        }
+
+        // Save Social Links Settings
+        function saveSocialLinks() {
+            appState.businessWA = document.getElementById('adminBusinessWA').value;
+            appState.insta = document.getElementById('adminInsta').value;
+            appState.fb = document.getElementById('adminFB').value;
+            appState.tiktok = document.getElementById('adminTikTok').value;
+
+            saveState();
+            updateSocialLinksUI();
+            showToast("Redes sociales y WhatsApp de contacto actualizados");
+        }
+
+        function updateSocialLinksUI() {
+            const waNum = appState.businessWA.replace(/\D/g, '');
+            document.getElementById('footerInsta').href = appState.insta || '#';
+            document.getElementById('footerFB').href = appState.fb || '#';
+            document.getElementById('footerTikTok').href = appState.tiktok || '#';
+            document.getElementById('footerWA').href = `https://wa.me/${waNum}` || '#';
+        }
+
+        // Change Admin PIN
+        function changeAdminPin() {
+            const current = document.getElementById('currentPin').value;
+            const newP = document.getElementById('newPin').value;
+            const confirmP = document.getElementById('confirmPin').value;
+
+            if (current !== appState.pin) {
+                showToast("El PIN actual es incorrecto", "error");
+                return;
+            }
+            if (!newP || newP.length < 4) {
+                showToast("El nuevo PIN debe tener al menos 4 dígitos", "error");
+                return;
+            }
+            if (newP !== confirmP) {
+                showToast("Los nuevos PIN no coinciden", "error");
+                return;
+            }
+
+            appState.pin = newP;
+            saveState();
+            document.getElementById('currentPin').value = '';
+            document.getElementById('newPin').value = '';
+            document.getElementById('confirmPin').value = '';
+            showToast("¡PIN de seguridad cambiado exitosamente!");
+        }
+
+        // Toast Helper
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgClass = type === 'error' ? 'bg-rose-600' : (type === 'info' ? 'bg-sky-600' : 'bg-brand-600');
+            
+            toast.className = `${bgClass} text-white text-xs px-4 py-3 rounded-2xl shadow-lg flex items-center gap-2 border border-white/20 transition duration-300 transform translate-y-2`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
