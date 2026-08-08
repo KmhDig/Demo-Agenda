@@ -1044,6 +1044,57 @@ function closeImage() {
                 console.error("Error guardando estado", e);
             }
         }
+        async function cargarConfiguracionDesdeGoogleSheets() {
+    try {
+        const response = await fetch(GOOGLE_SHEETS_URL + '?accion=obtenerConfiguracion');
+
+        const resultado = await response.json();
+
+        if (!resultado.ok || !resultado.configuracion) {
+            console.error('No se pudo cargar la configuración:', resultado);
+            return;
+        }
+
+        const config = resultado.configuracion;
+
+        if (config.businessPhone !== undefined) {
+            state.businessPhone = config.businessPhone;
+        }
+
+        if (config.socials) {
+            state.socials = {
+                ...state.socials,
+                ...config.socials
+            };
+        }
+
+        if (config.branches) {
+            state.branches = config.branches;
+        }
+
+        if (config.catalogs) {
+            state.catalogs = {
+                ...state.catalogs,
+                ...config.catalogs
+            };
+        }
+
+        if (config.privateMessageTemplate !== undefined) {
+            state.privateMessageTemplate = config.privateMessageTemplate;
+        }
+
+        if (config.blockedDates) {
+            state.blockedDates = config.blockedDates;
+        }
+
+        saveAppState();
+
+        console.log('Configuración cargada desde Google Sheets');
+
+    } catch (error) {
+        console.error('Error cargando configuración desde Google Sheets:', error);
+    }
+}
 
         // SISTEMA DE TOASTS Y NOTIFICACIONES
         function showToast(message, type = 'info') {
