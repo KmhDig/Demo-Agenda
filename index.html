@@ -1647,7 +1647,7 @@ Cualquier detalle o ajuste, quedamos con gusto a tus órdenes. ¡Muchas gracias!
             }
         }
 
-       // AGREGAR PEDIDO AL CALENDARIO DE IPHONE
+      // AGREGAR PEDIDO AL CALENDARIO DE IPHONE
 function openIphoneCalendarDirect(orderId) {
     const order = state.orders.find(o => o.id === orderId);
     if (!order) return;
@@ -1670,10 +1670,11 @@ Logística: ${order.deliveryDetails}`;
         .replace(/;/g, '\\;')
         .replace(/,/g, '\\,');
 
-    const formatCalendarDate = date =>
-        date.toISOString()
+    const formatCalendarDate = date => {
+        return date.toISOString()
             .replace(/[-:]/g, '')
             .replace(/\.\d{3}/, '');
+    };
 
     const ics = [
         'BEGIN:VCALENDAR',
@@ -1682,7 +1683,7 @@ Logística: ${order.deliveryDetails}`;
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
         'BEGIN:VEVENT',
-        `UID:${order.id}@ledessertmx`,
+        `UID:${Date.now()}@ledessertmx`,
         `DTSTAMP:${formatCalendarDate(new Date())}`,
         `DTSTART:${formatCalendarDate(start)}`,
         `DTEND:${formatCalendarDate(end)}`,
@@ -1695,11 +1696,11 @@ Logística: ${order.deliveryDetails}`;
     const calendarData =
         `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
 
+    // Igual que Canva
     window.open(calendarData, '_blank', 'noopener,noreferrer');
 
     showToast('Abriendo el calendario para agregar la cita.', 'success');
 }
-
         // ESTATUS Y VISTA DE COCINA
         function changeOrderStatus(id, newStatus) {
             const order = state.orders.find(o => o.id === id);
