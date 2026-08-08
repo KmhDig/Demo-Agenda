@@ -1090,6 +1090,11 @@ function closeImage() {
 
         saveAppState();
 
+        initFormCatalogs();
+        renderSocialLinks();
+        renderBranches();
+       renderBlockedDates();
+
         console.log('Configuración cargada desde Google Sheets');
 
     } catch (error) {
