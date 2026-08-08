@@ -1647,33 +1647,31 @@ Cualquier detalle o ajuste, quedamos con gusto a tus órdenes. ¡Muchas gracias!
             }
         }
 
-      // AGREGAR PEDIDO AL CALENDARIO DE IPHONE
+     // AGREGAR PEDIDO AL CALENDARIO DE IPHONE
 function openIphoneCalendarDirect(orderId) {
     const order = state.orders.find(o => o.id === orderId);
     if (!order) return;
 
-    const start = new Date(`${order.eventDate}T10:00:00`);
-    const end = new Date(`${order.eventDate}T11:00:00`);
+    const start = order.eventDate.replace(/-/g, '') + 'T100000';
+    const end = order.eventDate.replace(/-/g, '') + 'T110000';
 
     const title = `Entrega Pastel - ${order.clientName} (${order.eventType})`;
 
-    const details = `Cliente: ${order.clientName}
+    const location = order.deliveryDetails || '';
+
+    const description = `Cliente: ${order.clientName}
 Tel: ${order.clientPhone}
 Producto: ${order.portions}
 Sabor: ${order.flavor}
 Relleno: ${order.filling}
 Logística: ${order.deliveryDetails}`;
 
-    const escapeICS = value => String(value || '')
-        .replace(/\\/g, '\\\\')
-        .replace(/\r?\n/g, '\\n')
-        .replace(/;/g, '\\;')
-        .replace(/,/g, '\\,');
-
-    const formatCalendarDate = date => {
-        return date.toISOString()
-            .replace(/[-:]/g, '')
-            .replace(/\.\d{3}/, '');
+    const escapeICS = (value) => {
+        return String(value || '')
+            .replace(/\\/g, '\\\\')
+            .replace(/\r?\n/g, '\\n')
+            .replace(/;/g, '\\;')
+            .replace(/,/g, '\\,');
     };
 
     const ics = [
@@ -1681,25 +1679,34 @@ Logística: ${order.deliveryDetails}`;
         'VERSION:2.0',
         'PRODID:-//Ledessertmx//Agenda//ES',
         'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH',
         'BEGIN:VEVENT',
-        `UID:${Date.now()}@ledessertmx`,
-        `DTSTAMP:${formatCalendarDate(new Date())}`,
-        `DTSTART:${formatCalendarDate(start)}`,
-        `DTEND:${formatCalendarDate(end)}`,
+        `UID:${order.id}@ledessertmx`,
+        `DTSTART:${start}`,
+        `DTEND:${end}`,
         `SUMMARY:${escapeICS(title)}`,
-        `DESCRIPTION:${escapeICS(details)}`,
+        `LOCATION:${escapeICS(location)}`,
+        `DESCRIPTION:${escapeICS(description)}`,
         'END:VEVENT',
         'END:VCALENDAR'
-    ].join('\r\n');
+    ].join('\n');
 
-    const calendarData =
-        `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+    // Método Blob utilizado en tu invitación de Canva
+    const blob = new Blob(
+        [ics],
+        { type: 'text/calendar;charset=utf-8' }
+    );
 
-    // Igual que Canva
-    window.open(calendarData, '_blank', 'noopener,noreferrer');
+    const url = window.URL.createObjectURL(blob);
 
-    showToast('Abriendo el calendario para agregar la cita.', 'success');
+    // Abrir el archivo de calendario
+    window.location.href = url;
+
+    showToast('Abriendo calendario para agregar la cita...', 'success');
+
+    // Liberar la URL después de un momento
+    setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+    }, 5000);
 }
         // ESTATUS Y VISTA DE COCINA
         function changeOrderStatus(id, newStatus) {
