@@ -1513,7 +1513,7 @@ background-repeat:no-repeat;">
                     <!-- BOTONES DE ACCIÓN COMPLETOS (SE MANTIENEN TODOS LOS EXISTENTES Y SE AGREGA AGENDA IPHONE QUE ABRE DIRECTO EL CALENDARIO) -->
                     <div class="flex flex-wrap gap-2 pt-1 border-t border-stone-100 items-center">
                         <!-- Direct WhatsApp Contact -->
-                        <button onclick="contactClientWA('${order.clientPhone}', '${order.clientName}')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-xl font-semibold transition flex items-center gap-1.5 border border-emerald-200">
+                        <button onclick="contactClientWA('$'${order.id}'', '${order.clientName}')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-xl font-semibold transition flex items-center gap-1.5 border border-emerald-200">
                             <i class="fa-brands fa-whatsapp text-emerald-600"></i> Contactar
                         </button>
 
@@ -1564,17 +1564,20 @@ background-repeat:no-repeat;">
 
         // FUNCIONES DE ACCIÓN DIRECTAS A WHATSAPP
         function contactClientWA(phone, name) {
-            const cleanPhone = phone.replace(/\D/g, '');
-            const msg = `Hola ${name}, te escribimos Te compartimos el resumen de la información de tu pedido:`;
-            *FECHA DE ENTREGA:* ${order.eventDate}
-            *EVENTO:* ${order.eventType}
-            *DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
-            *MÉTODO DE ENTREGA:* ${order.deliveryMethod}
-            *LOGÍSTICA/HORARIO:* ${order.deliveryDetails}
-            Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo. ¡Muchas gracias!
-            
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
-        }
+    const cleanPhone = phone.replace(/\D/g, '');
+
+    const msg = `Hola ${name}, te escribimos para compartirte el resumen de la información de tu pedido:
+
+*FECHA DE ENTREGA:* ${order.eventDate}
+*EVENTO:* ${order.eventType}
+*DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
+*MÉTODO DE ENTREGA:* ${order.deliveryMethod}
+*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}
+
+Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo. ¡Muchas gracias!`;
+
+    window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+}
 
         function sendOrderReminderWA(orderId) {
             const order = state.orders.find(o => o.id === orderId);
