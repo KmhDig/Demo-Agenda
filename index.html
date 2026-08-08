@@ -1778,15 +1778,39 @@ Logística: ${order.deliveryDetails}`;
 }
         // ESTATUS Y VISTA DE COCINA
         function changeOrderStatus(id, newStatus) {
-            const order = state.orders.find(o => o.id === id);
-            if (order) {
-                order.status = newStatus;
-                saveAppState();
-                renderOrders();
-                renderKitchenOrders();
-                showToast(`Estatus de cocina actualizado a ${newStatus}`, 'success');
-            }
-        }
+    const order = state.orders.find(o => o.id === id);
+    if (order) {
+        order.status = newStatus;
+        saveAppState();
+
+        actualizarProduccionEnGoogleSheets(order);
+
+        renderOrders();
+        renderKitchenOrders();
+        showToast(`Estatus de cocina actualizado a ${newStatus}`, 'success');
+    }
+}
+        function actualizarProduccionEnGoogleSheets(order) {
+    const data = {
+        accion: 'actualizarProduccion',
+        pedido: order
+    };
+
+    fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'payload=' + encodeURIComponent(JSON.stringify(data))
+    })
+    .then(response => response.json())
+    .then(resultado => {
+        console.log('Producción Google Sheets:', resultado);
+    })
+    .catch(error => {
+        console.error('Error actualizando Producción:', error);
+    });
+}
 
         function filterKitchenView(filter) {
             kitchenFilter = filter;
