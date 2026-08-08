@@ -1565,7 +1565,14 @@ background-repeat:no-repeat;">
         // FUNCIONES DE ACCIÓN DIRECTAS A WHATSAPP
         function contactClientWA(phone, name) {
             const cleanPhone = phone.replace(/\D/g, '');
-            const msg = `Hola ${name}, te escribimos de Ledessertmx en relación a tu pedido. ¿Cómo estás?`;
+            const msg = `Hola ${name}, te escribimos Te compartimos el resumen de la información de tu pedido:`;
+            *FECHA DE ENTREGA:* ${order.eventDate}
+            *EVENTO:* ${order.eventType}
+            *DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
+            *MÉTODO DE ENTREGA:* ${order.deliveryMethod}
+            *LOGÍSTICA/HORARIO:* ${order.deliveryDetails}
+            Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo. ¡Muchas gracias!
+            
             window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -1576,7 +1583,7 @@ background-repeat:no-repeat;">
             const cleanPhone = order.clientPhone.replace(/\D/g, '');
             const restante = (order.totalPrice || 0) - (order.anticipo || 0);
 
-            const text = `Hola ${order.clientName}, te escribimos de Ledessertmx para recordar la fecha y la logística de tu entrega de pedido:
+            const text = `Hola ${order.clientName}, te escribimos para recordar la fecha y la logística de tu entrega de pedido:
             
 *FECHA DE ENTREGA:* ${order.eventDate}
 *EVENTO:* ${order.eventType}
@@ -1597,11 +1604,8 @@ Cualquier detalle o ajuste, quedamos con gusto a tus órdenes. ¡Muchas gracias!
 
             const cleanPhone = order.clientPhone.replace(/\D/g, '');
 
-            const text = `Hola ${order.clientName}, te escribimos de Ledessertmx.
-
-Te compartimos este mensaje para pedirte de favor si nos podrías apoyar compartiendo el comprobante de pago de tu anticipo por este medio para registrar tu fecha de entrega oficialmente en nuestra agenda de producción.
-
-¡Quedamos muy atentos y muchas gracias por tu confianza!`;
+            const text = `Hola ${order.clientName}, te saludamos te compartimos este mensaje para pedirte de favor ¿Si nos podrías apoyar enviándonos el comprobante de pago de tu anticipo por este medio para registrar tu fecha de entrega oficialmente en nuestra agenda de producción? 
+            Muchas gracias. ¡Quedamos muy atentos y muchas gracias por tu confianza!`;
 
             window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
             showToast('Redirigiendo a WhatsApp para solicitar Comprobante de Anticipo', 'success');
