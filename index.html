@@ -1347,8 +1347,40 @@ function closeImage() {
 
             saveAppState();
             renderSocialLinks();
-            showToast('Redes sociales y WhatsApp guardados', 'success');
+           guardarConfiguracionEnGoogleSheets();
+           showToast('Redes sociales y WhatsApp guardados', 'success');
         }
+        function guardarConfiguracionEnGoogleSheets() {
+
+    const configuracion = {
+        businessPhone: state.businessPhone,
+        socials: state.socials,
+        branches: state.branches,
+        catalogs: state.catalogs,
+        privateMessageTemplate: state.privateMessageTemplate,
+        blockedDates: state.blockedDates
+    };
+
+    const data = {
+        accion: 'guardarConfiguracion',
+        configuracion: configuracion
+    };
+
+    fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'payload=' + encodeURIComponent(JSON.stringify(data))
+    })
+    .then(response => response.json())
+    .then(resultado => {
+        console.log('Configuración Google Sheets:', resultado);
+    })
+    .catch(error => {
+        console.error('Error guardando configuración en Google Sheets:', error);
+    });
+}
 
         function renderSocialLinks() {
             const instaEl = document.getElementById('footerInsta');
