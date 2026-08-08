@@ -1888,17 +1888,22 @@ Logística: ${order.deliveryDetails}`;
         }
 
         function saveFinanceSettings() {
-            if (!currentEditingFinanceOrderId) return;
-            const order = state.orders.find(o => o.id === currentEditingFinanceOrderId);
-            if (order) {
-                order.totalPrice = parseFloat(document.getElementById('financeTotalInput').value) || 0;
-                order.anticipo = parseFloat(document.getElementById('financeAnticipoInput').value) || 0;
-                saveAppState();
-                renderOrders();
-                closeFinanceModal();
-                showToast('Finanzas del pedido actualizadas', 'success');
-            }
-        }
+      if (!currentEditingFinanceOrderId) return;
+    const order = state.orders.find(o => o.id === currentEditingFinanceOrderId);
+
+    if (order) {
+        order.totalPrice = parseFloat(document.getElementById('financeTotalInput').value) || 0;
+        order.anticipo = parseFloat(document.getElementById('financeAnticipoInput').value) || 0;
+
+        saveAppState();
+
+        actualizarFinanzasEnGoogleSheets(order);
+
+        renderOrders();
+        closeFinanceModal();
+        showToast('Finanzas del pedido actualizadas', 'success');
+    }
+}
         function markOrderAsPaid() {
     if (!currentEditingFinanceOrderId) return;
 
@@ -1910,6 +1915,9 @@ Logística: ${order.deliveryDetails}`;
 
         // Guardar cambios
         saveAppState();
+
+        // Actualizar Finanzas en Google Sheets
+        actualizarFinanzasEnGoogleSheets(order);
 
         // Actualizar la lista de pedidos
         renderOrders();
