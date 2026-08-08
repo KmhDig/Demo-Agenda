@@ -964,9 +964,10 @@ background-repeat:no-repeat;">
         };
 
         let state = loadAppState();
-        let currentEditingFinanceOrderId = null;
-        let kitchenFilter = 'all';
-        // CONEXIÓN CON GOOGLE SHEETS
+let currentEditingFinanceOrderId = null;
+let kitchenFilter = 'all';
+
+// CONEXIÓN CON GOOGLE SHEETS
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxhZISSEH7u-q6nlNvdZXGS--FanLib4JKHKiQf78i13noorSpLQBhcb0k177PBXVI9qg/exec';
 
 function enviarPedidoAGoogleSheets(order) {
