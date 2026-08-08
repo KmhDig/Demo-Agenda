@@ -1647,32 +1647,35 @@ Cualquier detalle o ajuste, quedamos con gusto a tus órdenes. ¡Muchas gracias!
             }
         }
 
-        // AGREGAR PEDIDO AL CALENDARIO DE IPHONE
+       // AGREGAR PEDIDO AL CALENDARIO DE IPHONE
 function openIphoneCalendarDirect(orderId) {
     const order = state.orders.find(o => o.id === orderId);
     if (!order) return;
 
-    const dateClean = order.eventDate.replace(/-/g, '');
+    const start = new Date(`${order.eventDate}T10:00:00`);
+    const end = new Date(`${order.eventDate}T11:00:00`);
 
     const title = `Entrega Pastel - ${order.clientName} (${order.eventType})`;
 
-    const details =
-        `Cliente: ${order.clientName}\n` +
-        `Tel: ${order.clientPhone}\n` +
-        `Producto: ${order.portions}\n` +
-        `Sabor: ${order.flavor}\n` +
-        `Relleno: ${order.filling}\n` +
-        `Logística: ${order.deliveryDetails}`;
+    const details = `Cliente: ${order.clientName}
+Tel: ${order.clientPhone}
+Producto: ${order.portions}
+Sabor: ${order.flavor}
+Relleno: ${order.filling}
+Logística: ${order.deliveryDetails}`;
 
-    const escapeICS = (value) => {
-        return String(value || '')
-            .replace(/\\/g, '\\\\')
-            .replace(/\r?\n/g, '\\n')
-            .replace(/;/g, '\\;')
-            .replace(/,/g, '\\,');
-    };
+    const escapeICS = value => String(value || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/\r?\n/g, '\\n')
+        .replace(/;/g, '\\;')
+        .replace(/,/g, '\\,');
 
-    const icsData = [
+    const formatCalendarDate = date =>
+        date.toISOString()
+            .replace(/[-:]/g, '')
+            .replace(/\.\d{3}/, '');
+
+    const ics = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
         'PRODID:-//Ledessertmx//Agenda//ES',
@@ -1680,9 +1683,9 @@ function openIphoneCalendarDirect(orderId) {
         'METHOD:PUBLISH',
         'BEGIN:VEVENT',
         `UID:${order.id}@ledessertmx`,
-        `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')}`,
-        `DTSTART:${dateClean}T100000`,
-        `DTEND:${dateClean}T110000`,
+        `DTSTAMP:${formatCalendarDate(new Date())}`,
+        `DTSTART:${formatCalendarDate(start)}`,
+        `DTEND:${formatCalendarDate(end)}`,
         `SUMMARY:${escapeICS(title)}`,
         `DESCRIPTION:${escapeICS(details)}`,
         'END:VEVENT',
@@ -1690,11 +1693,11 @@ function openIphoneCalendarDirect(orderId) {
     ].join('\r\n');
 
     const calendarData =
-        `data:text/calendar;charset=utf-8,${encodeURIComponent(icsData)}`;
+        `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
 
-    window.open(calendarData, '_blank');
+    window.open(calendarData, '_blank', 'noopener,noreferrer');
 
-    showToast('Abriendo calendario para agregar la cita...', 'success');
+    showToast('Abriendo el calendario para agregar la cita.', 'success');
 }
 
         // ESTATUS Y VISTA DE COCINA
