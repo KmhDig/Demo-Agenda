@@ -805,12 +805,20 @@ background-repeat:no-repeat;">
             </div>
 
             <div class="flex gap-2 pt-2">
-                <button onclick="saveFinanceSettings()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios Finanzas
-                </button>
-            </div>
+
+    <!-- Botón que ya tenías -->
+    <button onclick="saveFinanceSettings()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow flex items-center justify-center gap-2">
+        <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios Finanzas
+    </button>
+
+    <!-- Botón nuevo -->
+    <button onclick="markOrderAsPaid()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow flex items-center justify-center gap-2">
+        <i class="fa-solid fa-circle-check"></i> Pagado
+    </button>
+
         </div>
-    </div>
+        </div>
+       </div>
 
     <!-- MODAL DE EDICIÓN EXCLUSIVA DEL FORMULARIO DE PEDIDO -->
     <div id="editFormModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
