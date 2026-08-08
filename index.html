@@ -151,6 +151,7 @@ background-repeat:no-repeat;">
          class="grid grid-cols-2 lg:grid-cols-3 gap-6">
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
+        onclick="openLightbox(' <img src="img/Pastel1.jpg")">
             <img src="img/Pastel1.jpg"
                  class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500">
         </div>
@@ -376,6 +377,17 @@ background-repeat:no-repeat;">
             </div>
         </div>
     </footer>
+    <!-- LIGHTBOX DE IMÁGENES -->
+    <div id="lightboxModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0 cursor-pointer" onclick="closeLightbox()">
+        <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center justify-center cursor-default" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-white text-3xl font-light hover:text-teal-200 transition focus:outline-none" title="Cerrar visor">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="lightboxImg" src="" alt="Vista previa de pastel" class="max-w-full max-h-[82vh] rounded-2xl shadow-2xl object-contain border border-white/20 transition-transform duration-300 scale-95" onclick="closeLightbox()">
+            <p id="lightboxCaption" class="text-white/80 text-xs mt-3 tracking-widest font-light uppercase">Ledessertmx - Galería</p>
+        </div>
+    </div>
+
 
     <!-- MODAL DE REVISIÓN Y CONFIRMACIÓN DE PEDIDO POR EL CLIENTE -->
     <div id="reviewModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
