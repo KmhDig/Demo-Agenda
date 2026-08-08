@@ -83,6 +83,24 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-teal-100 selection:text-brand-900">
 
+
+    <!-- VISOR DE IMÁGENES -->
+    <div id="imageViewer"
+         class="fixed inset-0 bg-black/80 hidden items-center justify-center z-[100] p-4"
+         onclick="closeImage()">
+
+        <button onclick="closeImage()"
+                class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/90 text-stone-700 text-xl font-bold flex items-center justify-center shadow-lg z-10">
+            ✕
+        </button>
+
+        <img id="imageViewerImg"
+             src=""
+             alt="Imagen ampliada"
+             class="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
+             onclick="event.stopPropagation()">
+
+    </div>
     <!-- Header Elegante Estilo Canva -->
     <header class="w-full bg-white/95 backdrop-blur-md border-b border-stone-100 py-3.5 px-4 md:px-10 flex justify-between items-center sticky top-0 z-40">
         <div class="flex items-center gap-3">
@@ -152,32 +170,38 @@ background-repeat:no-repeat;">
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
             <img src="img/Pastel1.jpg"
-                 class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500">
+                 onclick="openImage(this.src)"
+                class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
             <img src="img/Pastel2.jpg"
-                 class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500">
+                  onclick="openImage(this.src)"
+         class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
             <img src="img/Pastel3.jpg"
-                 class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500">
+                  onclick="openImage(this.src)"
+         class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
             <img src="img/Pastel4.jpg"
-                 class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500">
+                  onclick="openImage(this.src)"
+         class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
             <img src="img/Pastel5.jpg"
-                 class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500">
+                  onclick="openImage(this.src)"
+         class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
             <img src="img/Pastel6.jpg"
-                 class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500">
+                  onclick="openImage(this.src)"
+         class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
     </div>
