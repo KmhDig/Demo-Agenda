@@ -2268,16 +2268,64 @@ showToast('Datos del pedido actualizados', 'success');
 }
 
         function confirmClearPastMonthOrders() {
-            const todayStr = new Date().toISOString().split('T')[0];
-            const initialCount = state.orders.length;
-            state.orders = state.orders.filter(o => o.eventDate >= todayStr);
-            const clearedCount = initialCount - state.orders.length;
-            
-            saveAppState();
-            renderOrders();
-            renderKitchenOrders();
-            showToast(`Se limpiaron ${clearedCount} pedidos pasados.`, 'success');
-        }
+
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    // Obtener los pedidos que tienen fecha pasada
+    const pastOrders = state.orders.filter(o => o.eventDate < todayStr);
+
+    // Obtener sus IDs para eliminarlos también de Google Sheets
+    const pastOrderIds = pastOrders.map(o => String(o.id));
+
+    // Eliminar de Google Sheets
+    if (pastOrderIds.length > 0) {
+
+        const data = {
+            accion: 'limpiarPedidosPasados',
+            pedidoIds: pastOrderIds
+        };
+
+        fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'payload=' + encodeURIComponent(JSON.stringify(data))
+        })
+        .then(response => response.json())
+        .then(resultado => {
+
+            console.log('Google Sheets - limpiar pedidos pasados:', resultado);
+
+            if (!resultado.ok) {
+                console.error(
+                    'No se pudieron eliminar los pedidos pasados de Google Sheets:',
+                    resultado
+                );
+            }
+
+        })
+        .catch(error => {
+            console.error(
+                'Error limpiando pedidos pasados de Google Sheets:',
+                error
+            );
+        });
+    }
+
+    // Eliminar también de la aplicación
+    const initialCount = state.orders.length;
+
+    state.orders = state.orders.filter(o => o.eventDate >= todayStr);
+
+    const clearedCount = initialCount - state.orders.length;
+
+    saveAppState();
+    renderOrders();
+    renderKitchenOrders();
+
+    showToast(`Se limpiaron ${clearedCount} pedidos pasados.`, 'success');
+}
     </script>
 </body>
 </html>
