@@ -1493,12 +1493,14 @@ function closeImage() {
         }
     }
 }
-        function savePrivateMessage() {
-            state.privateMessageTemplate = document.getElementById('privateMessageTemplate').value.trim();
-            saveAppState();
-            showToast('Plantilla de dirección privada guardada', 'success');
-        }
+       function savePrivateMessage() {
+    state.privateMessageTemplate = document.getElementById('privateMessageTemplate').value.trim();
 
+    saveAppState();
+    guardarConfiguracionEnGoogleSheets();
+
+    showToast('Plantilla de dirección privada guardada', 'success');
+}
         // PUNTOS DE RECOLECCIÓN
         function addBranch() {
     const name = document.getElementById('newBranchName').value.trim();
