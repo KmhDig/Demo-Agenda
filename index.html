@@ -1609,23 +1609,32 @@ function addCatalogOption(key, inputId) {
 
         // FECHAS BLOQUEADAS
         function blockSpecificDate() {
-            const d = document.getElementById('blockDateInput').value;
-            if (!d) return;
-            if (!state.blockedDates.includes(d)) {
-                state.blockedDates.push(d);
-                saveAppState();
-                renderBlockedDates();
-                document.getElementById('blockDateInput').value = '';
-                showToast('Fecha bloqueada correctamente', 'success');
-            }
-        }
+    const d = document.getElementById('blockDateInput').value;
+
+    if (!d) return;
+
+    if (!state.blockedDates.includes(d)) {
+        state.blockedDates.push(d);
+
+        saveAppState();
+        guardarConfiguracionEnGoogleSheets();
+        renderBlockedDates();
+
+        document.getElementById('blockDateInput').value = '';
+
+        showToast('Fecha bloqueada correctamente', 'success');
+    }
+}
 
         function unblockSpecificDate(d) {
-            state.blockedDates = state.blockedDates.filter(item => item !== d);
-            saveAppState();
-            renderBlockedDates();
-            showToast('Fecha desbloqueada', 'info');
-        }
+    state.blockedDates = state.blockedDates.filter(item => item !== d);
+
+    saveAppState();
+    guardarConfiguracionEnGoogleSheets();
+    renderBlockedDates();
+
+    showToast('Fecha desbloqueada', 'info');
+}
 
         function renderBlockedDates() {
             const container = document.getElementById('blockedDatesList');
