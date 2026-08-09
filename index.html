@@ -469,49 +469,10 @@ background-repeat:no-repeat;">
                 </button>
                 <div class="text-center pt-2">
     <button
-        type="button"
-        onclick="mostrarRecuperacionPIN()"
+        onclick="handleForgotPin()"
         class="text-xs text-stone-400 hover:text-brand-600 underline">
         ¿Olvidaste tu PIN?
     </button>
-
-    <div id="recuperacionPIN" class="hidden mt-4 text-left">
-
-        <p class="text-sm font-semibold text-stone-700 mb-1">
-            🔐 Recuperar PIN
-        </p>
-
-        <p class="text-xs text-stone-500 mb-3">
-            Ingresa uno de tus correos de recuperación.
-        </p>
-
-        <input
-            id="correoRecuperacion"
-            type="email"
-            placeholder="correo@ejemplo.com"
-            class="w-full input-canva text-sm mb-2">
-
-        <p id="mensajeRecuperacion"
-           class="hidden text-xs text-center rounded-xl p-2 mb-2">
-        </p>
-
-        <div class="flex gap-2">
-            <button
-                type="button"
-                onclick="consultarPIN()"
-                class="flex-1 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold">
-                Consultar PIN
-            </button>
-
-            <button
-                type="button"
-                onclick="ocultarRecuperacionPIN()"
-                class="flex-1 py-2 rounded-xl bg-stone-200 text-stone-600 text-xs font-bold">
-                Cancelar
-            </button>
-        </div>
-
-    </div>
 </div>
 
             <!-- Dashboard Admin -->
@@ -1556,7 +1517,7 @@ if (config.branches) {
             showToast('Sesión cerrada correctamente', 'info');
         }
 
-      function handleForgotPin() {
+     function handleForgotPin() {
     const email = prompt('Ingresa tu correo de recuperación:');
 
     if (!email) {
@@ -1565,97 +1526,17 @@ if (config.branches) {
 
     const correo = email.trim().toLowerCase();
 
-    const correoPrincipal = String(state.emailPrimary || '').trim().toLowerCase();
-    const correoSecundario = String(state.emailSecondary || '').trim().toLowerCase();
-
-    if (correoPrincipal === '' && correoSecundario === '') {
-        showToast('No hay un correo de recuperación configurado.', 'error');
-        return;
-    }
-
-    if (correo !== correoPrincipal && correo !== correoSecundario) {
-        showToast('No encontramos ese correo entre tus correos de recuperación.', 'error');
-        return;
-    }
-
-    if (!state.pin) {
-        showToast('No hay un PIN configurado para recuperar.', 'error');
-        return;
-    }
-
-    showToast('🔐 Tu PIN de acceso es: ' + state.pin, 'success');
-}
-        function saveSecuritySettings() {
-    const currentInput = document.getElementById('adminPinCurrent').value.trim();
-    const newPin = document.getElementById('adminPinNew').value.trim();
-    const confirmPin = document.getElementById('adminPinConfirm').value.trim();
-    const primaryEmail = document.getElementById('adminEmailPrimary').value.trim();
-    const secondaryEmail = document.getElementById('adminEmailSecondary').value.trim();
-
-    if (currentInput || newPin || confirmPin) {
-
-    if (currentInput !== state.pin) {
-        showToast('El PIN Actual es incorrecto.', 'error');
-        return;
-    }
-
-    if (!newPin) {
-        showToast('Ingresa el Nuevo PIN deseado.', 'error');
-        return;
-    }
-
-    if (newPin !== confirmPin) {
-        showToast('El Nuevo PIN y la Confirmación no coinciden.', 'error');
-        return;
-    }
-
-    state.pin = newPin;
-}
-
-state.emailPrimary = primaryEmail;
-state.emailSecondary = secondaryEmail;
-
-document.getElementById('adminPinCurrent').value = '';
-document.getElementById('adminPinNew').value = '';
-document.getElementById('adminPinConfirm').value = '';
-
-saveAppState();
-guardarConfiguracionEnGoogleSheets();
-}
-        function consultarPIN() {
-    const correo = document
-        .getElementById('correoRecuperacion')
-        .value
-        .trim()
-        .toLowerCase();
-
-    const mensaje = document.getElementById('mensajeRecuperacion');
-
     const correoPrincipal =
         String(state.emailPrimary || '').trim().toLowerCase();
 
     const correoSecundario =
         String(state.emailSecondary || '').trim().toLowerCase();
 
-    mensaje.classList.remove(
-        'hidden',
-        'bg-red-50',
-        'text-red-700',
-        'bg-green-50',
-        'text-green-700'
-    );
-
-    if (!correo) {
-        mensaje.textContent =
-            'Ingresa tu correo de recuperación.';
-        mensaje.classList.add('bg-red-50', 'text-red-700');
-        return;
-    }
-
-    if (!correoPrincipal && !correoSecundario) {
-        mensaje.textContent =
-            'No hay un correo de recuperación configurado.';
-        mensaje.classList.add('bg-red-50', 'text-red-700');
+    if (correoPrincipal === '' && correoSecundario === '') {
+        showToast(
+            'No hay un correo de recuperación configurado.',
+            'error'
+        );
         return;
     }
 
@@ -1663,26 +1544,27 @@ guardarConfiguracionEnGoogleSheets();
         correo !== correoPrincipal &&
         correo !== correoSecundario
     ) {
-        mensaje.textContent =
-            'No encontramos ese correo entre tus correos de recuperación.';
-        mensaje.classList.add('bg-red-50', 'text-red-700');
+        showToast(
+            'No encontramos ese correo entre tus correos de recuperación.',
+            'error'
+        );
         return;
     }
 
     if (!state.pin) {
-        mensaje.textContent =
-            'No hay un PIN configurado para recuperar.';
-        mensaje.classList.add('bg-red-50', 'text-red-700');
+        showToast(
+            'No hay un PIN configurado para recuperar.',
+            'error'
+        );
         return;
     }
 
-    mensaje.innerHTML =
-        '🔐 <strong>Tu PIN de acceso es: ' +
-        state.pin +
-        '</strong>';
-
-    mensaje.classList.add('bg-green-50', 'text-green-700');
+    showToast(
+        '🔐 Tu PIN de acceso es: ' + state.pin,
+        'success'
+    );
 }
+  
 
         function saveSocialLinks() {
             state.businessPhone = document.getElementById('adminBusinessWA').value.trim();
