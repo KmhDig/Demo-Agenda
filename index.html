@@ -1627,20 +1627,7 @@ guardarConfiguracionEnGoogleSheets();
         showToast('Error al guardar la configuración', 'error');
     });
 }
-            function renderSocialLinks() {
-           const instaEl = document.getElementById('footerInsta');
-    const fbEl = document.getElementById('footerFB');
-    const ttEl = document.getElementById('footerTikTok');
-    const waEl = document.getElementById('footerWA');
-
-    if (instaEl) instaEl.href = state.socials.instagram || '#';
-    if (fbEl) fbEl.href = state.socials.facebook || '#';
-    if (ttEl) ttEl.href = state.socials.tiktok || '#';
-
-    const cleanWA = String(state.businessPhone || '').replace(/\D/g, '');
-
-    if (waEl) waEl.href = `https://wa.me/${cleanWA}`;
-}
+            
         function renderSocialLinks() {
     const instaEl = document.getElementById('footerInsta');
     const fbEl = document.getElementById('footerFB');
