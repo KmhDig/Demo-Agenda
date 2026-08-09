@@ -1087,8 +1087,18 @@ function closeImage() {
         }
 
         if (config.blockedDates) {
-            state.blockedDates = config.blockedDates;
+    state.blockedDates = config.blockedDates.map(fecha => {
+        if (!fecha) return '';
+
+        const d = new Date(fecha);
+
+        if (!isNaN(d.getTime())) {
+            return d.toISOString().split('T')[0];
         }
+
+        return String(fecha).substring(0, 10);
+    }).filter(Boolean);
+}
 
         saveAppState();
 
