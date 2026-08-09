@@ -1455,6 +1455,44 @@ function closeImage() {
 
     if (waEl) waEl.href = `https://wa.me/${cleanWA}`;
 }
+        function renderSocialLinks() {
+    const instaEl = document.getElementById('footerInsta');
+    const fbEl = document.getElementById('footerFB');
+    const ttEl = document.getElementById('footerTikTok');
+    const waEl = document.getElementById('footerWA');
+
+    function configurarEnlace(elemento, enlace) {
+        if (!elemento) return;
+
+        if (enlace && enlace.trim()) {
+            elemento.href = enlace;
+            elemento.style.pointerEvents = 'auto';
+            elemento.style.opacity = '1';
+        } else {
+            elemento.removeAttribute('href');
+            elemento.style.pointerEvents = 'none';
+            elemento.style.opacity = '0.5';
+        }
+    }
+
+    configurarEnlace(instaEl, state.socials.instagram);
+    configurarEnlace(fbEl, state.socials.facebook);
+    configurarEnlace(ttEl, state.socials.tiktok);
+
+    const cleanWA = String(state.businessPhone || '').replace(/\D/g, '');
+
+    if (waEl) {
+        if (cleanWA) {
+            waEl.href = `https://wa.me/${cleanWA}`;
+            waEl.style.pointerEvents = 'auto';
+            waEl.style.opacity = '1';
+        } else {
+            waEl.removeAttribute('href');
+            waEl.style.pointerEvents = 'none';
+            waEl.style.opacity = '0.5';
+        }
+    }
+}
         function savePrivateMessage() {
             state.privateMessageTemplate = document.getElementById('privateMessageTemplate').value.trim();
             saveAppState();
