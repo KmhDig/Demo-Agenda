@@ -468,12 +468,9 @@ background-repeat:no-repeat;">
                     <i class="fa-solid fa-key text-xs"></i> Acceder al Panel
                 </button>
                 <div class="text-center pt-2">
-    <button
-        onclick="handleForgotPin()"
-        class="text-xs text-stone-400 hover:text-brand-600 underline">
-        ¿Olvidaste tu PIN?
-    </button>
-</div>
+                    <button onclick="handleForgotPin()" class="text-xs text-stone-400 hover:text-brand-600 underline">¿Olvidaste tu PIN?</button>
+                </div>
+            </div>
 
             <!-- Dashboard Admin -->
             <div id="dashboardView" class="hidden space-y-6">
@@ -1517,7 +1514,7 @@ if (config.branches) {
             showToast('Sesión cerrada correctamente', 'info');
         }
 
-     function handleForgotPin() {
+      function handleForgotPin() {
     const email = prompt('Ingresa tu correo de recuperación:');
 
     if (!email) {
@@ -1526,45 +1523,63 @@ if (config.branches) {
 
     const correo = email.trim().toLowerCase();
 
-    const correoPrincipal =
-        String(state.emailPrimary || '').trim().toLowerCase();
-
-    const correoSecundario =
-        String(state.emailSecondary || '').trim().toLowerCase();
+    const correoPrincipal = String(state.emailPrimary || '').trim().toLowerCase();
+    const correoSecundario = String(state.emailSecondary || '').trim().toLowerCase();
 
     if (correoPrincipal === '' && correoSecundario === '') {
-        showToast(
-            'No hay un correo de recuperación configurado.',
-            'error'
-        );
+        showToast('No hay un correo de recuperación configurado.', 'error');
         return;
     }
 
-    if (
-        correo !== correoPrincipal &&
-        correo !== correoSecundario
-    ) {
-        showToast(
-            'No encontramos ese correo entre tus correos de recuperación.',
-            'error'
-        );
+    if (correo !== correoPrincipal && correo !== correoSecundario) {
+        showToast('No encontramos ese correo entre tus correos de recuperación.', 'error');
         return;
     }
 
     if (!state.pin) {
-        showToast(
-            'No hay un PIN configurado para recuperar.',
-            'error'
-        );
+        showToast('No hay un PIN configurado para recuperar.', 'error');
         return;
     }
 
-    showToast(
-        '🔐 Tu PIN de acceso es: ' + state.pin,
-        'success'
-    );
+    showToast('🔐 Tu PIN de acceso es: ' + state.pin, 'success');
 }
-  
+        function saveSecuritySettings() {
+    const currentInput = document.getElementById('adminPinCurrent').value.trim();
+    const newPin = document.getElementById('adminPinNew').value.trim();
+    const confirmPin = document.getElementById('adminPinConfirm').value.trim();
+    const primaryEmail = document.getElementById('adminEmailPrimary').value.trim();
+    const secondaryEmail = document.getElementById('adminEmailSecondary').value.trim();
+
+    if (currentInput || newPin || confirmPin) {
+
+    if (currentInput !== state.pin) {
+        showToast('El PIN Actual es incorrecto.', 'error');
+        return;
+    }
+
+    if (!newPin) {
+        showToast('Ingresa el Nuevo PIN deseado.', 'error');
+        return;
+    }
+
+    if (newPin !== confirmPin) {
+        showToast('El Nuevo PIN y la Confirmación no coinciden.', 'error');
+        return;
+    }
+
+    state.pin = newPin;
+}
+
+state.emailPrimary = primaryEmail;
+state.emailSecondary = secondaryEmail;
+
+document.getElementById('adminPinCurrent').value = '';
+document.getElementById('adminPinNew').value = '';
+document.getElementById('adminPinConfirm').value = '';
+
+saveAppState();
+guardarConfiguracionEnGoogleSheets();
+}
 
         function saveSocialLinks() {
             state.businessPhone = document.getElementById('adminBusinessWA').value.trim();
