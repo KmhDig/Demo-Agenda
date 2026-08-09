@@ -468,9 +468,55 @@ background-repeat:no-repeat;">
                     <i class="fa-solid fa-key text-xs"></i> Acceder al Panel
                 </button>
                 <div class="text-center pt-2">
-                    <button onclick="handleForgotPin()" class="text-xs text-stone-400 hover:text-brand-600 underline">¿Olvidaste tu PIN?</button>
-                </div>
-            </div>
+    <button
+        type="button"
+        onclick="handleForgotPin()"
+        class="text-xs text-stone-400 hover:text-brand-600 underline">
+        ¿Olvidaste tu PIN?
+    </button>
+</div>
+
+<div id="forgotPinBox" class="hidden mt-4 p-4 bg-stone-50 rounded-2xl border border-stone-200">
+
+    <div class="text-center mb-4">
+        <div class="w-10 h-10 mx-auto rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-2">
+            <i class="fa-solid fa-key"></i>
+        </div>
+
+        <p class="font-bold text-stone-700 text-sm">
+            Recuperar PIN
+        </p>
+
+        <p class="text-xs text-stone-500 mt-1">
+            Ingresa uno de tus correos de recuperación.
+        </p>
+    </div>
+
+    <input
+        type="email"
+        id="forgotPinEmail"
+        placeholder="correo@ejemplo.com"
+        class="w-full input-canva text-sm mb-3">
+
+    <div id="forgotPinMessage" class="hidden text-xs text-center rounded-xl p-3 mb-3"></div>
+
+    <div class="flex gap-2">
+        <button
+            type="button"
+            onclick="closeForgotPin()"
+            class="flex-1 py-2.5 rounded-xl bg-stone-200 text-stone-600 text-xs font-bold">
+            Cancelar
+        </button>
+
+        <button
+            type="button"
+            onclick="checkForgotPin()"
+            class="flex-1 py-2.5 rounded-xl bg-brand-500 text-white text-xs font-bold">
+            Consultar PIN
+        </button>
+    </div>
+
+</div>
 
             <!-- Dashboard Admin -->
             <div id="dashboardView" class="hidden space-y-6">
