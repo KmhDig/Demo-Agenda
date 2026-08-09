@@ -1422,30 +1422,108 @@ if (config.branches) {
         }
 
         function verifyAdminPin() {
-            const inputPin = document.getElementById('adminPinInput').value;
-            if (inputPin === state.pin) {
-                document.getElementById('loginView').classList.add('hidden');
-                document.getElementById('dashboardView').classList.remove('hidden');
-                document.getElementById('adminPinInput').value = '';
-                
-                document.getElementById('adminBusinessWA').value = state.businessPhone;
-                document.getElementById('adminInsta').value = state.socials.instagram || '';
-                document.getElementById('adminFB').value = state.socials.facebook || '';
-                document.getElementById('adminTikTok').value = state.socials.tiktok || '';
-                
-                document.getElementById('adminEmailPrimary').value = state.emailPrimary;
-                document.getElementById('adminEmailSecondary').value = state.emailSecondary;
-                document.getElementById('adminPinCurrent').value = '';
-                document.getElementById('adminPinNew').value = '';
-                document.getElementById('adminPinConfirm').value = '';
+    const inputPin = document.getElementById('adminPinInput').value.trim();
 
-                document.getElementById('privateMessageTemplate').value = state.privateMessageTemplate;
+    const MAX_INTENTOS = 5;
+    const TIEMPO_BLOQUEO = 10 * 60 * 1000; // 10 minutos
 
-                showToast('Sesión de administración iniciada', 'success');
-            } else {
-                showToast('PIN incorrecto. Inténtalo de nuevo.', 'error');
-            }
+    const ahora = Date.now();
+
+    let intentos = parseInt(localStorage.getItem('admin_pin_attempts') || '0', 10);
+    let bloqueoHasta = parseInt(localStorage.getItem('admin_pin_locked_until') || '0', 10);
+
+    // ============================================
+    // COMPROBAR SI EL ACCESO ESTÁ BLOQUEADO
+    // ============================================
+
+    if (bloqueoHasta > ahora) {
+        const minutosRestantes = Math.ceil((bloqueoHasta - ahora) / 60000);
+
+        document.getElementById('adminPinInput').value = '';
+
+        showToast(
+            `Acceso bloqueado. Intenta nuevamente en ${minutosRestantes} minuto${minutosRestantes !== 1 ? 's' : ''}.`,
+            'error'
+        );
+
+        return;
+    }
+
+    // Si el bloqueo ya terminó, reiniciamos los intentos
+    if (bloqueoHasta > 0 && bloqueoHasta <= ahora) {
+        localStorage.removeItem('admin_pin_locked_until');
+        localStorage.removeItem('admin_pin_attempts');
+        intentos = 0;
+    }
+
+    // ============================================
+    // COMPROBAR PIN
+    // ============================================
+
+    if (inputPin === state.pin) {
+
+        // PIN correcto: reiniciar contador
+        localStorage.removeItem('admin_pin_attempts');
+        localStorage.removeItem('admin_pin_locked_until');
+
+        document.getElementById('loginView').classList.add('hidden');
+        document.getElementById('dashboardView').classList.remove('hidden');
+        document.getElementById('adminPinInput').value = '';
+
+        document.getElementById('adminBusinessWA').value = state.businessPhone;
+        document.getElementById('adminInsta').value = state.socials.instagram || '';
+        document.getElementById('adminFB').value = state.socials.facebook || '';
+        document.getElementById('adminTikTok').value = state.socials.tiktok || '';
+
+        document.getElementById('adminEmailPrimary').value = state.emailPrimary || '';
+        document.getElementById('adminEmailSecondary').value = state.emailSecondary || '';
+
+        document.getElementById('adminPinCurrent').value = '';
+        document.getElementById('adminPinNew').value = '';
+        document.getElementById('adminPinConfirm').value = '';
+
+        document.getElementById('privateMessageTemplate').value =
+            state.privateMessageTemplate || '';
+
+        showToast('Sesión de administración iniciada', 'success');
+
+    } else {
+
+        // ============================================
+        // PIN INCORRECTO
+        // ============================================
+
+        intentos++;
+
+        localStorage.setItem('admin_pin_attempts', intentos);
+
+        const intentosRestantes = MAX_INTENTOS - intentos;
+
+        document.getElementById('adminPinInput').value = '';
+
+        if (intentos >= MAX_INTENTOS) {
+
+            const nuevoBloqueo = Date.now() + TIEMPO_BLOQUEO;
+
+            localStorage.setItem(
+                'admin_pin_locked_until',
+                nuevoBloqueo
+            );
+
+            showToast(
+                'Demasiados intentos. El acceso ha sido bloqueado durante 10 minutos.',
+                'error'
+            );
+
+        } else {
+
+            showToast(
+                `PIN incorrecto. Te quedan ${intentosRestantes} intento${intentosRestantes !== 1 ? 's' : ''}.`,
+                'error'
+            );
         }
+    }
+}
 
         function lockAdminSession() {
             document.getElementById('dashboardView').classList.add('hidden');
