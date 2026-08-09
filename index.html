@@ -1514,7 +1514,7 @@ if (config.branches) {
             showToast('Sesión cerrada correctamente', 'info');
         }
 
-        function handleForgotPin() {
+      function handleForgotPin() {
     const email = prompt('Ingresa tu correo de recuperación:');
 
     if (!email) {
@@ -1526,13 +1526,23 @@ if (config.branches) {
     const correoPrincipal = String(state.emailPrimary || '').trim().toLowerCase();
     const correoSecundario = String(state.emailSecondary || '').trim().toLowerCase();
 
-    if (correo === correoPrincipal || correo === correoSecundario) {
+    if (correoPrincipal === '' && correoSecundario === '') {
+        showToast('No hay un correo de recuperación configurado.', 'error');
+        return;
+    }
+
+    if (correo !== correoPrincipal && correo !== correoSecundario) {
+        showToast('No encontramos ese correo entre tus correos de recuperación.', 'error');
+        return;
+    }
 
     if (!state.pin) {
         showToast('No hay un PIN configurado para recuperar.', 'error');
         return;
     }
 
+    showToast('🔐 Tu PIN de acceso es: ' + state.pin, 'success');
+}
     showToast('Tu PIN de acceso es: ' + state.pin, 'success');
 }
         function saveSecuritySettings() {
