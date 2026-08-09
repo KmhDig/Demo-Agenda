@@ -1454,8 +1454,23 @@ if (config.branches) {
         }
 
         function handleForgotPin() {
-            showToast('Instrucciones enviadas a los correos de recuperación.', 'info');
-        }
+    const email = prompt('Ingresa tu correo de recuperación:');
+
+    if (!email) {
+        return;
+    }
+
+    const correo = email.trim().toLowerCase();
+
+    const correoPrincipal = String(state.emailPrimary || '').trim().toLowerCase();
+    const correoSecundario = String(state.emailSecondary || '').trim().toLowerCase();
+
+    if (correo === correoPrincipal || correo === correoSecundario) {
+        showToast('Correo reconocido. Recuperación disponible.', 'success');
+    } else {
+        showToast('El correo no coincide con ningún correo de recuperación.', 'error');
+    }
+}
 
         function saveSecuritySettings() {
     const currentInput = document.getElementById('adminPinCurrent').value.trim();
