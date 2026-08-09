@@ -2254,17 +2254,7 @@ showToast('Datos del pedido actualizados', 'success');
             window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(txt)}`, '_blank');
         }
 
-     f
-    .catch(error => {
-        console.error(
-            'Error eliminando pedido de Google Sheets:',
-            error
-        );
-    });
-}
-
-
-function deleteOrder(id) {
+    function deleteOrder(id) {
 
     eliminarPedidoDeGoogleSheets(id);
 
