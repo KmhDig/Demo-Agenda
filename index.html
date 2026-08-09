@@ -2220,7 +2220,8 @@ showToast('Datos del pedido actualizados', 'success');
             window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(txt)}`, '_blank');
         }
 
-      function eliminarPedidoDeGoogleSheets(pedidoId) {
+     unction eliminarPedidoDeGoogleSheets(pedidoId) {
+
     const data = {
         accion: 'eliminarPedido',
         pedidoId: pedidoId
@@ -2235,14 +2236,22 @@ showToast('Datos del pedido actualizados', 'success');
     })
     .then(response => response.json())
     .then(resultado => {
+
         console.log('Google Sheets - eliminar pedido:', resultado);
 
         if (!resultado.ok) {
-            console.error('No se pudo eliminar el pedido de Google Sheets:', resultado);
+            console.error(
+                'No se pudo eliminar el pedido de Google Sheets:',
+                resultado
+            );
         }
+
     })
     .catch(error => {
-        console.error('Error eliminando pedido de Google Sheets:', error);
+        console.error(
+            'Error eliminando pedido de Google Sheets:',
+            error
+        );
     });
 }
 
