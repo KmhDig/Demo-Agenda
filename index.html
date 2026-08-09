@@ -1584,7 +1584,7 @@ guardarConfiguracionEnGoogleSheets();
            guardarConfiguracionEnGoogleSheets();
            showToast('Redes sociales y WhatsApp guardados', 'success');
         }
-        function guardarConfiguracionEnGoogleSheets() {
+  function guardarConfiguracionEnGoogleSheets() {
 
     const configuracion = {
         businessPhone: state.businessPhone,
@@ -1627,7 +1627,7 @@ guardarConfiguracionEnGoogleSheets();
         showToast('Error al guardar la configuración', 'error');
     });
 }
-        function renderSocialLinks() {
+            function renderSocialLinks() {
            const instaEl = document.getElementById('footerInsta');
     const fbEl = document.getElementById('footerFB');
     const ttEl = document.getElementById('footerTikTok');
