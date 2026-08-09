@@ -1129,9 +1129,24 @@ function closeImage() {
             return;
         }
 
-        const config = resultado.configuracion;
-        console.log('CONFIGURACIÓN RECIBIDA:', config);
-        
+       const config = resultado.configuracion;
+console.log('CONFIGURACIÓN RECIBIDA:', config);
+
+if (config.pin !== undefined && config.pin !== '') {
+    state.pin = String(config.pin);
+}
+
+if (config.emailPrimary !== undefined) {
+    state.emailPrimary = String(config.emailPrimary);
+}
+
+if (config.emailSecondary !== undefined) {
+    state.emailSecondary = String(config.emailSecondary);
+}
+
+if (config.businessPhone !== undefined) {
+    state.businessPhone = String(config.businessPhone);
+}
 
         if (config.businessPhone !== undefined) {
            state.businessPhone = String(config.businessPhone);
