@@ -1559,7 +1559,40 @@ if (config.branches) {
             document.getElementById('loginView').classList.remove('hidden');
             showToast('Sesión cerrada correctamente', 'info');
         }
+function lockAdminSession() {
+    document.getElementById('dashboardView').classList.add('hidden');
+    document.getElementById('loginView').classList.remove('hidden');
+    showToast('Sesión cerrada correctamente', 'info');
+}
 
+function handleForgotPin() {
+    const box = document.getElementById('forgotPinBox');
+    const input = document.getElementById('forgotPinEmail');
+    const message = document.getElementById('forgotPinMessage');
+
+    if (!box || !input || !message) {
+        console.error('No se encontró el formulario de recuperación de PIN.');
+        return;
+    }
+
+    input.value = '';
+    message.textContent = '';
+    message.classList.add('hidden');
+
+    box.classList.remove('hidden');
+
+    setTimeout(() => {
+        input.focus();
+    }, 100);
+}
+
+function checkForgotPin() {
+    // ...
+}
+
+function saveSecuritySettings() {
+    // ...
+}
       function checkForgotPin() {
     const input = document.getElementById('forgotPinEmail');
     const message = document.getElementById('forgotPinMessage');
