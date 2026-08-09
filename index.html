@@ -471,70 +471,6 @@ background-repeat:no-repeat;">
                     <button onclick="handleForgotPin()" class="text-xs text-stone-400 hover:text-brand-600 underline">¿Olvidaste tu PIN?</button>
                 </div>
             </div>
-            <!-- MODAL RECUPERAR PIN -->
-<div id="forgotPinModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[60] p-4">
-
-    <div class="bg-white rounded-[2rem] w-full max-w-md p-6 md:p-7 shadow-2xl relative border border-stone-100">
-
-        <button
-            type="button"
-            onclick="closeForgotPinModal()"
-            class="absolute top-5 right-5 w-9 h-9 rounded-full bg-stone-100 text-stone-500 hover:text-stone-800 hover:bg-stone-200 flex items-center justify-center transition">
-            ✕
-        </button>
-
-        <div class="text-center mb-6">
-            <div class="w-12 h-12 mx-auto rounded-full bg-brand-50 flex items-center justify-center mb-3">
-                <i class="fa-solid fa-key text-brand-500"></i>
-            </div>
-
-            <h3 class="font-bold text-stone-800 text-lg">
-                Recuperar PIN
-            </h3>
-
-            <p class="text-sm text-stone-500 mt-2">
-                Ingresa uno de tus correos de recuperación para consultar tu PIN.
-            </p>
-        </div>
-
-        <div class="space-y-2">
-            <label
-                for="forgotPinEmail"
-                class="block text-xs font-bold uppercase tracking-wider text-stone-600">
-                Correo de recuperación
-            </label>
-
-            <input
-                type="email"
-                id="forgotPinEmail"
-                placeholder="correo@ejemplo.com"
-                class="w-full input-canva px-4 py-3"
-                autocomplete="email">
-        </div>
-
-        <div
-            id="forgotPinMessage"
-            class="hidden mt-4 rounded-xl p-3 text-sm text-center">
-        </div>
-
-        <div class="flex gap-3 mt-6">
-            <button
-                type="button"
-                onclick="closeForgotPinModal()"
-                class="flex-1 py-3 rounded-xl bg-stone-100 text-stone-600 font-semibold hover:bg-stone-200 transition">
-                Cancelar
-            </button>
-
-            <button
-                type="button"
-                onclick="verifyForgotPinEmail()"
-                class="flex-1 py-3 rounded-xl bg-brand-500 text-white font-semibold hover:bg-brand-600 transition">
-                Consultar PIN
-            </button>
-        </div>
-
-    </div>
-</div>
 
             <!-- Dashboard Admin -->
             <div id="dashboardView" class="hidden space-y-6">
@@ -1579,68 +1515,33 @@ if (config.branches) {
         }
 
       function handleForgotPin() {
-    function verifyForgotPinEmail() {
-    const emailInput = document.getElementById('forgotPinEmail');
-    const message = document.getElementById('forgotPinMessage');
+    const email = prompt('Ingresa tu correo de recuperación:');
 
-    const correo = emailInput.value.trim().toLowerCase();
-
-    const correoPrincipal =
-        String(state.emailPrimary || '').trim().toLowerCase();
-
-    const correoSecundario =
-        String(state.emailSecondary || '').trim().toLowerCase();
-
-    message.classList.remove(
-        'hidden',
-        'bg-red-50',
-        'text-red-700',
-        'bg-green-50',
-        'text-green-700'
-    );
-
-    // No hay correos configurados
-    if (!correoPrincipal && !correoSecundario) {
-        message.textContent =
-            'No hay un correo de recuperación configurado.';
-
-        message.classList.add('bg-red-50', 'text-red-700');
+    if (!email) {
         return;
     }
 
-    // No escribió correo
-    if (!correo) {
-        message.textContent =
-            'Ingresa tu correo de recuperación.';
+    const correo = email.trim().toLowerCase();
 
-        message.classList.add('bg-red-50', 'text-red-700');
-        emailInput.focus();
+    const correoPrincipal = String(state.emailPrimary || '').trim().toLowerCase();
+    const correoSecundario = String(state.emailSecondary || '').trim().toLowerCase();
+
+    if (correoPrincipal === '' && correoSecundario === '') {
+        showToast('No hay un correo de recuperación configurado.', 'error');
         return;
     }
 
-    // Correo incorrecto
     if (correo !== correoPrincipal && correo !== correoSecundario) {
-        message.textContent =
-            'No encontramos ese correo entre tus correos de recuperación.';
-
-        message.classList.add('bg-red-50', 'text-red-700');
+        showToast('No encontramos ese correo entre tus correos de recuperación.', 'error');
         return;
     }
 
-    // No existe PIN
     if (!state.pin) {
-        message.textContent =
-            'No hay un PIN configurado para recuperar.';
-
-        message.classList.add('bg-red-50', 'text-red-700');
+        showToast('No hay un PIN configurado para recuperar.', 'error');
         return;
     }
 
-    // Correo correcto
-    message.innerHTML =
-        '<strong>🔐 Tu PIN de acceso es:</strong> ' + state.pin;
-
-    message.classList.add('bg-green-50', 'text-green-700');
+    showToast('🔐 Tu PIN de acceso es: ' + state.pin, 'success');
 }
         function saveSecuritySettings() {
     const currentInput = document.getElementById('adminPinCurrent').value.trim();
