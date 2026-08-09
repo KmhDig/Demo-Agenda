@@ -1495,18 +1495,16 @@ function closeImage() {
         function guardarConfiguracionEnGoogleSheets() {
 
     const configuracion = {
-        businessPhone: state.businessPhone,
-        socials: state.socials,
-        branches: state.branches,
-        catalogs: state.catalogs,
-        privateMessageTemplate: state.privateMessageTemplate,
-        blockedDates: state.blockedDates
-    };
-
-    const data = {
-        accion: 'guardarConfiguracion',
-        configuracion: configuracion
-    };
+    businessPhone: state.businessPhone,
+    socials: state.socials,
+    branches: state.branches,
+    catalogs: state.catalogs,
+    privateMessageTemplate: state.privateMessageTemplate,
+    blockedDates: state.blockedDates,
+    pin: state.pin,
+    emailPrimary: state.emailPrimary,
+    emailSecondary: state.emailSecondary
+};
 
     fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
