@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Dulce Reino - Agenda de Pedidos</title>
-
+saveSecuritySettings()
    <link rel="icon" type="image/png" href="img/logo.png">
 
 <link rel="icon" type="image/png" href="img/logo.png">
@@ -1470,38 +1470,33 @@ if (config.businessPhone !== undefined) {
 
     if (currentInput || newPin || confirmPin) {
 
-        if (currentInput !== state.pin) {
-            showToast('El PIN Actual es incorrecto.', 'error');
-            return;
-        }
-
-        if (!newPin) {
-            showToast('Ingresa el Nuevo PIN deseado.', 'error');
-            return;
-        }
-
-        if (newPin !== confirmPin) {
-            showToast('El Nuevo PIN y la Confirmación no coinciden.', 'error');
-            return;
-        }
-
-        state.pin = newPin;
+    if (currentInput !== state.pin) {
+        showToast('El PIN Actual es incorrecto.', 'error');
+        return;
     }
 
-    if (primaryEmail) {
-        state.emailPrimary = primaryEmail;
+    if (!newPin) {
+        showToast('Ingresa el Nuevo PIN deseado.', 'error');
+        return;
     }
 
-    if (secondaryEmail) {
-        state.emailSecondary = secondaryEmail;
+    if (newPin !== confirmPin) {
+        showToast('El Nuevo PIN y la Confirmación no coinciden.', 'error');
+        return;
     }
 
-    document.getElementById('adminPinCurrent').value = '';
-    document.getElementById('adminPinNew').value = '';
-    document.getElementById('adminPinConfirm').value = '';
+    state.pin = newPin;
+}
 
-    saveAppState();
-    guardarConfiguracionEnGoogleSheets();
+state.emailPrimary = primaryEmail;
+state.emailSecondary = secondaryEmail;
+
+document.getElementById('adminPinCurrent').value = '';
+document.getElementById('adminPinNew').value = '';
+document.getElementById('adminPinConfirm').value = '';
+
+saveAppState();
+guardarConfiguracionEnGoogleSheets();
 }
 
         function saveSocialLinks() {
