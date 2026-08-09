@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Dulce Reino - Agenda de Pedidos</title>
-saveSecuritySettings()
-   <link rel="icon" type="image/png" href="img/logo.png">
+
+ <link rel="icon" type="image/png" href="img/logo.png">
 
 <link rel="icon" type="image/png" href="img/logo.png">
 
@@ -1421,20 +1421,16 @@ if (config.branches) {
             document.getElementById('adminModal').classList.remove('flex');
         }
 
-        function verifyAdminPin() {
+      function verifyAdminPin() {
     const inputPin = document.getElementById('adminPinInput').value.trim();
 
     const MAX_INTENTOS = 5;
-    const TIEMPO_BLOQUEO = 10 * 60 * 1000; // 10 minutos
+    const TIEMPO_BLOQUEO = 10 * 60 * 1000;
 
     const ahora = Date.now();
 
     let intentos = parseInt(localStorage.getItem('admin_pin_attempts') || '0', 10);
     let bloqueoHasta = parseInt(localStorage.getItem('admin_pin_locked_until') || '0', 10);
-
-    // ============================================
-    // COMPROBAR SI EL ACCESO ESTÁ BLOQUEADO
-    // ============================================
 
     if (bloqueoHasta > ahora) {
         const minutosRestantes = Math.ceil((bloqueoHasta - ahora) / 60000);
@@ -1449,20 +1445,14 @@ if (config.branches) {
         return;
     }
 
-    // Si el bloqueo ya terminó, reiniciamos los intentos
     if (bloqueoHasta > 0 && bloqueoHasta <= ahora) {
         localStorage.removeItem('admin_pin_locked_until');
         localStorage.removeItem('admin_pin_attempts');
         intentos = 0;
     }
 
-    // ============================================
-    // COMPROBAR PIN
-    // ============================================
-
     if (inputPin === state.pin) {
 
-        // PIN correcto: reiniciar contador
         localStorage.removeItem('admin_pin_attempts');
         localStorage.removeItem('admin_pin_locked_until');
 
@@ -1489,10 +1479,6 @@ if (config.branches) {
 
     } else {
 
-        // ============================================
-        // PIN INCORRECTO
-        // ============================================
-
         intentos++;
 
         localStorage.setItem('admin_pin_attempts', intentos);
@@ -1505,10 +1491,7 @@ if (config.branches) {
 
             const nuevoBloqueo = Date.now() + TIEMPO_BLOQUEO;
 
-            localStorage.setItem(
-                'admin_pin_locked_until',
-                nuevoBloqueo
-            );
+            localStorage.setItem('admin_pin_locked_until', nuevoBloqueo);
 
             showToast(
                 'Demasiados intentos. El acceso ha sido bloqueado durante 10 minutos.',
