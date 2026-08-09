@@ -1462,40 +1462,47 @@ if (config.businessPhone !== undefined) {
         }
 
         function saveSecuritySettings() {
-            const currentInput = document.getElementById('adminPinCurrent').value.trim();
-            const newPin = document.getElementById('adminPinNew').value.trim();
-            const confirmPin = document.getElementById('adminPinConfirm').value.trim();
-            const primaryEmail = document.getElementById('adminEmailPrimary').value.trim();
-            const secondaryEmail = document.getElementById('adminEmailSecondary').value.trim();
+    const currentInput = document.getElementById('adminPinCurrent').value.trim();
+    const newPin = document.getElementById('adminPinNew').value.trim();
+    const confirmPin = document.getElementById('adminPinConfirm').value.trim();
+    const primaryEmail = document.getElementById('adminEmailPrimary').value.trim();
+    const secondaryEmail = document.getElementById('adminEmailSecondary').value.trim();
 
-            if (currentInput || newPin || confirmPin) {
-                if (currentInput !== state.pin) {
-                    showToast('El PIN Actual es incorrecto.', 'error');
-                    return;
-                }
-                if (!newPin) {
-                    showToast('Ingresa el Nuevo PIN deseado.', 'error');
-                    return;
-                }
-                if (newPin !== confirmPin) {
-                    showToast('El Nuevo PIN y la Confirmación no coinciden.', 'error');
-                    return;
-                }
-                state.pin = newPin;
-                showToast('¡PIN de acceso actualizado con éxito!', 'success');
-            }
+    if (currentInput || newPin || confirmPin) {
 
-            if (primaryEmail) state.emailPrimary = primaryEmail;
-            if (secondaryEmail) state.emailSecondary = secondaryEmail;
-
-            document.getElementById('adminPinCurrent').value = '';
-            document.getElementById('adminPinNew').value = '';
-            document.getElementById('adminPinConfirm').value = '';
-
-            saveAppState();
-guardarConfiguracionEnGoogleSheets();
-showToast('Configuraciones de seguridad guardadas', 'success');
+        if (currentInput !== state.pin) {
+            showToast('El PIN Actual es incorrecto.', 'error');
+            return;
         }
+
+        if (!newPin) {
+            showToast('Ingresa el Nuevo PIN deseado.', 'error');
+            return;
+        }
+
+        if (newPin !== confirmPin) {
+            showToast('El Nuevo PIN y la Confirmación no coinciden.', 'error');
+            return;
+        }
+
+        state.pin = newPin;
+    }
+
+    if (primaryEmail) {
+        state.emailPrimary = primaryEmail;
+    }
+
+    if (secondaryEmail) {
+        state.emailSecondary = secondaryEmail;
+    }
+
+    document.getElementById('adminPinCurrent').value = '';
+    document.getElementById('adminPinNew').value = '';
+    document.getElementById('adminPinConfirm').value = '';
+
+    saveAppState();
+    guardarConfiguracionEnGoogleSheets();
+}
 
         function saveSocialLinks() {
             state.businessPhone = document.getElementById('adminBusinessWA').value.trim();
@@ -1510,18 +1517,22 @@ showToast('Configuraciones de seguridad guardadas', 'success');
         }
         function guardarConfiguracionEnGoogleSheets() {
 
-    
     const configuracion = {
-    businessPhone: state.businessPhone,
-    socials: state.socials,
-    branches: state.branches,
-    catalogs: state.catalogs,
-    privateMessageTemplate: state.privateMessageTemplate,
-    blockedDates: state.blockedDates,
-    pin: state.pin,
-    emailPrimary: state.emailPrimary,
-    emailSecondary: state.emailSecondary
-};
+        businessPhone: state.businessPhone,
+        socials: state.socials,
+        branches: state.branches,
+        catalogs: state.catalogs,
+        privateMessageTemplate: state.privateMessageTemplate,
+        blockedDates: state.blockedDates,
+        pin: state.pin,
+        emailPrimary: state.emailPrimary,
+        emailSecondary: state.emailSecondary
+    };
+
+    const data = {
+        accion: 'guardarConfiguracion',
+        configuracion: configuracion
+    };
 
     fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
@@ -1533,9 +1544,18 @@ showToast('Configuraciones de seguridad guardadas', 'success');
     .then(response => response.json())
     .then(resultado => {
         console.log('Configuración Google Sheets:', resultado);
+
+        if (!resultado.ok) {
+            console.error('Google Sheets rechazó la configuración:', resultado);
+            showToast('No se pudo guardar en Google Sheets', 'error');
+            return;
+        }
+
+        showToast('Configuración guardada en Google Sheets', 'success');
     })
     .catch(error => {
         console.error('Error guardando configuración en Google Sheets:', error);
+        showToast('Error al guardar en Google Sheets', 'error');
     });
 }
 
