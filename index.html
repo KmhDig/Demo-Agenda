@@ -2220,13 +2220,45 @@ showToast('Datos del pedido actualizados', 'success');
             window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(txt)}`, '_blank');
         }
 
-        function deleteOrder(id) {
-            state.orders = state.orders.filter(o => o.id !== id);
-            saveAppState();
-            renderOrders();
-            renderKitchenOrders();
-            showToast('Pedido eliminado', 'info');
+      function eliminarPedidoDeGoogleSheets(pedidoId) {
+    const data = {
+        accion: 'eliminarPedido',
+        pedidoId: pedidoId
+    };
+
+    fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'payload=' + encodeURIComponent(JSON.stringify(data))
+    })
+    .then(response => response.json())
+    .then(resultado => {
+        console.log('Google Sheets - eliminar pedido:', resultado);
+
+        if (!resultado.ok) {
+            console.error('No se pudo eliminar el pedido de Google Sheets:', resultado);
         }
+    })
+    .catch(error => {
+        console.error('Error eliminando pedido de Google Sheets:', error);
+    });
+}
+
+
+function deleteOrder(id) {
+
+    eliminarPedidoDeGoogleSheets(id);
+
+    state.orders = state.orders.filter(o => o.id !== id);
+
+    saveAppState();
+    renderOrders();
+    renderKitchenOrders();
+
+    showToast('Pedido eliminado', 'info');
+}
 
         function confirmClearPastMonthOrders() {
             const todayStr = new Date().toISOString().split('T')[0];
