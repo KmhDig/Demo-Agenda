@@ -2144,9 +2144,13 @@ Logística: ${order.deliveryDetails}`;
                 order.eventDetails = document.getElementById('editEventDetails').value.trim();
 
                 saveAppState();
-                renderOrders();
-                renderKitchenOrders();
+
+                actualizarPedidoEnGoogleSheets(order);
+
+                 renderOrders();
+                 renderKitchenOrders();
                 closeEditFormModal();
+
                 showToast('Datos del pedido actualizados', 'success');
             }
         }
