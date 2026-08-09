@@ -1493,7 +1493,8 @@ if (config.businessPhone !== undefined) {
             document.getElementById('adminPinConfirm').value = '';
 
             saveAppState();
-            showToast('Configuraciones de seguridad guardadas', 'success');
+guardarConfiguracionEnGoogleSheets();
+showToast('Configuraciones de seguridad guardadas', 'success');
         }
 
         function saveSocialLinks() {
