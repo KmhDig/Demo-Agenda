@@ -1463,39 +1463,43 @@ function closeImage() {
 
         // PUNTOS DE RECOLECCIÓN
         function addBranch() {
-            const name = document.getElementById('newBranchName').value.trim();
-            const address = document.getElementById('newBranchAddress').value.trim();
-            const map = document.getElementById('newBranchMap').value.trim();
+    const name = document.getElementById('newBranchName').value.trim();
+    const address = document.getElementById('newBranchAddress').value.trim();
+    const map = document.getElementById('newBranchMap').value.trim();
 
-            if (!name || !address) {
-                showToast('Ingresa el nombre y la dirección de la sucursal', 'error');
-                return;
-            }
+    if (!name || !address) {
+        showToast('Ingresa el nombre y la dirección de la sucursal', 'error');
+        return;
+    }
 
-            state.branches.push({
-                id: Date.now(),
-                name,
-                address,
-                map
-            });
+    state.branches.push({
+        id: Date.now(),
+        name,
+        address,
+        map
+    });
 
-            saveAppState();
-            initFormCatalogs();
-            renderBranches();
-            document.getElementById('newBranchName').value = '';
-            document.getElementById('newBranchAddress').value = '';
-            document.getElementById('newBranchMap').value = '';
-            showToast('Sucursal agregada con éxito', 'success');
-        }
+    saveAppState();
+    guardarConfiguracionEnGoogleSheets();
+    initFormCatalogs();
+    renderBranches();
 
+    document.getElementById('newBranchName').value = '';
+    document.getElementById('newBranchAddress').value = '';
+    document.getElementById('newBranchMap').value = '';
+
+    showToast('Sucursal agregada con éxito', 'success');
+}
         function removeBranch(id) {
-            state.branches = state.branches.filter(b => b.id !== id);
-            saveAppState();
-            initFormCatalogs();
-            renderBranches();
-            showToast('Sucursal eliminada', 'info');
-        }
+    state.branches = state.branches.filter(b => b.id !== id);
 
+    saveAppState();
+    guardarConfiguracionEnGoogleSheets();
+    initFormCatalogs();
+    renderBranches();
+
+    showToast('Sucursal eliminada', 'info');
+}
         function renderBranches() {
             const container = document.getElementById('branchesList');
             if (!container) return;
@@ -1514,25 +1518,32 @@ function closeImage() {
             });
         }
 
-        // CATÁLOGOS ADMIN
-        function addCatalogOption(key, inputId) {
-            const val = document.getElementById(inputId).value.trim();
-            if (!val) return;
-            if (!state.catalogs[key].includes(val)) {
-                state.catalogs[key].push(val);
-                saveAppState();
-                initFormCatalogs();
-                document.getElementById(inputId).value = '';
-                showToast('Opción agregada al catálogo', 'success');
-            }
-        }
+    // CATÁLOGOS ADMIN
+function addCatalogOption(key, inputId) {
+    const val = document.getElementById(inputId).value.trim();
+    if (!val) return;
 
-        function removeCatalogOption(key, index) {
-            state.catalogs[key].splice(index, 1);
-            saveAppState();
-            initFormCatalogs();
-            showToast('Opción eliminada del catálogo', 'info');
-        }
+    if (!state.catalogs[key].includes(val)) {
+        state.catalogs[key].push(val);
+
+        saveAppState();
+        guardarConfiguracionEnGoogleSheets();
+        initFormCatalogs();
+
+        document.getElementById(inputId).value = '';
+        showToast('Opción agregada al catálogo', 'success');
+    }
+}
+
+       function removeCatalogOption(key, index) {
+    state.catalogs[key].splice(index, 1);
+
+    saveAppState();
+    guardarConfiguracionEnGoogleSheets();
+    initFormCatalogs();
+
+    showToast('Opción eliminada del catálogo', 'info');
+}
 
         function renderCatalogAdminLists() {
             renderTagList('eventsList', 'events');
