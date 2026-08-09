@@ -1560,34 +1560,57 @@ if (config.branches) {
             showToast('Sesión cerrada correctamente', 'info');
         }
 
-      function handleForgotPin() {
-    const email = prompt('Ingresa tu correo de recuperación:');
+      function checkForgotPin() {
+    const input = document.getElementById('forgotPinEmail');
+    const message = document.getElementById('forgotPinMessage');
 
-    if (!email) {
+    const correo = input.value.trim().toLowerCase();
+
+    const correoPrincipal =
+        String(state.emailPrimary || '').trim().toLowerCase();
+
+    const correoSecundario =
+        String(state.emailSecondary || '').trim().toLowerCase();
+
+    message.classList.remove(
+        'hidden',
+        'bg-red-50',
+        'text-red-700',
+        'bg-green-50',
+        'text-green-700'
+    );
+
+    if (!correo) {
+        message.textContent = 'Ingresa tu correo de recuperación.';
+        message.classList.add('bg-red-50', 'text-red-700');
         return;
     }
 
-    const correo = email.trim().toLowerCase();
-
-    const correoPrincipal = String(state.emailPrimary || '').trim().toLowerCase();
-    const correoSecundario = String(state.emailSecondary || '').trim().toLowerCase();
-
-    if (correoPrincipal === '' && correoSecundario === '') {
-        showToast('No hay un correo de recuperación configurado.', 'error');
+    if (!correoPrincipal && !correoSecundario) {
+        message.textContent =
+            'No hay un correo de recuperación configurado.';
+        message.classList.add('bg-red-50', 'text-red-700');
         return;
     }
 
     if (correo !== correoPrincipal && correo !== correoSecundario) {
-        showToast('No encontramos ese correo entre tus correos de recuperación.', 'error');
+        message.textContent =
+            'No encontramos ese correo entre tus correos de recuperación.';
+        message.classList.add('bg-red-50', 'text-red-700');
         return;
     }
 
     if (!state.pin) {
-        showToast('No hay un PIN configurado para recuperar.', 'error');
+        message.textContent =
+            'No hay un PIN configurado para recuperar.';
+        message.classList.add('bg-red-50', 'text-red-700');
         return;
     }
 
-    showToast('🔐 Tu PIN de acceso es: ' + state.pin, 'success');
+    message.innerHTML =
+        '<strong>🔐 Tu PIN de acceso es:</strong> ' + state.pin;
+
+    message.classList.add('bg-green-50', 'text-green-700');
 }
         function saveSecuritySettings() {
     const currentInput = document.getElementById('adminPinCurrent').value.trim();
