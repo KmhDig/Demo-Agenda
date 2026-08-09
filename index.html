@@ -1132,7 +1132,7 @@ function closeImage() {
        const config = resultado.configuracion;
 console.log('CONFIGURACIÓN RECIBIDA:', config);
 
-if (config.pin !== undefined && config.pin !== '') {
+if (config.pin !== undefined) {
     state.pin = String(config.pin);
 }
 
@@ -1148,20 +1148,16 @@ if (config.businessPhone !== undefined) {
     state.businessPhone = String(config.businessPhone);
 }
 
-        if (config.businessPhone !== undefined) {
-           state.businessPhone = String(config.businessPhone);
-        }
+if (config.socials) {
+    state.socials = {
+        ...state.socials,
+        ...config.socials
+    };
+}
 
-        if (config.socials) {
-            state.socials = {
-                ...state.socials,
-                ...config.socials
-            };
-        }
-
-        if (config.branches) {
-            state.branches = config.branches;
-        }
+if (config.branches) {
+    state.branches = config.branches;
+}
 
         if (config.catalogs) {
             state.catalogs = {
