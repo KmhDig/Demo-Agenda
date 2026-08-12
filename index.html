@@ -2332,6 +2332,39 @@ showToast('Datos del pedido actualizados', 'success');
 
             currentSummaryPhone = order.clientPhone;
             const restante = (order.totalPrice || 0) - (order.anticipo || 0);
+            let deliveryInfo = '';
+
+if (order.deliveryMethod === 'Recoger en tienda') {
+
+    if (
+        String(order.branchName || '').trim().toLowerCase() === 'principal'
+    ) {
+
+        const sucursal = (state.branches || []).find(
+            branch =>
+                String(branch.name || '').trim().toLowerCase() === 'principal'
+        );
+
+        deliveryInfo =
+            `*Sucursal:* ${order.branchName || 'Sin información'}\n` +
+            `*Dirección:* ${sucursal?.address || 'Sin información'}\n` +
+            `*Horario de Recogida:* ${order.pickupTime || 'Sin información'}`;
+
+    } else {
+
+        // Privada: no mostrar su dirección
+        deliveryInfo =
+            `*Sucursal:* ${order.branchName || 'Sin información'}\n` +
+            `*Horario de Recogida:* ${order.pickupTime || 'Sin información'}`;
+    }
+
+} else {
+
+    deliveryInfo =
+        `*Dirección:* ${order.address || 'Sin información'}\n` +
+        `*Quién recibe:* ${order.receiver || 'Sin información'}\n` +
+        `*Horario de Entrega:* ${order.deliveryTime || 'Sin información'}`;
+}
 
             const txt = `*RESUMEN OFICIAL DE PEDIDO*\n\n` +
                 `*Cliente:* ${order.clientName}\n` +
@@ -2343,7 +2376,7 @@ showToast('Datos del pedido actualizados', 'success');
                 `*Relleno:* ${order.filling}\n` +
                 `*Betún:* ${order.frosting}\n` +
                 `*Método Entrega:* ${order.deliveryMethod}\n` +
-                `*Logística:* ${order.deliveryDetails}\n` +
+                deliveryInfo + `\n` +
                 `*Detalles:* ${order.eventDetails || 'Sin especificaciones extra'}\n\n` +
                 `*FINANZAS:*\n` +
                 `- Total: $${(order.totalPrice || 0).toFixed(2)}\n` +
