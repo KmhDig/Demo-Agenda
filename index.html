@@ -6,15 +6,13 @@
 
     <title>Dulce Reino - Agenda de Pedidos</title>
 
- <link rel="icon" type="image/png" href="img/logo.png">
+ <link id="favicon-link" rel="icon" type="image/png" href="img/logo.png">
 
-<link rel="icon" type="image/png" href="img/logo.png">
-
-    <meta property="og:title" content="Dulce Reino - Agenda de Pedidos">
-    <meta property="og:description" content="Pastelería Artesanal">
-    <meta property="og:image" content="https://demo-agenda.vercel.app/img/preview.jpg">
+    <meta id="og-title" property="og:title" content="Dulce Reino - Agenda de Pedidos">
+    <meta id="og-description" property="og:description" content="Pastelería Artesanal">
+    <meta id="og-image" property="og:image" content="https://demo-agenda.vercel.app/img/preview-Dulce Reino.jpg">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://demo-agenda.vercel.app/">
+    <meta id="og-url" property="og:url" content="https://demo-agenda.vercel.app/">
 
     
 </head>
@@ -25,20 +23,82 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- CONFIGURACIÓN DE LA CLIENTA / PLANTILLA MAESTRA -->
+    <script>
+        const CLIENT_CONFIG = {
+            businessName: 'Dulce Reino',
+            businessSubtitle: 'Pastelería Artesanal',
+            logo: 'img/logo.png',
+            favicon: 'img/favicon.png',
+            heroImage: 'img/hero.jpg',
+            previewImage: 'img/preview-Dulce Reino.jpg',
+
+            colors: {
+                main: '#5f3134',
+                secondary: '#896157',
+                dark: '#2d494c',
+                background: '#f8faf9',
+                light: '#f0f7f7',
+                lighter: '#dbecec',
+                border: '#edf2f7',
+                inputFocus: '#569b9e'
+            },
+
+            hero: {
+                badge: 'AGENDA ABIERTA',
+                title: 'Aparta con Tiempo la Fecha de tu Celebración',
+                subtitle: 'Diseñamos pasteles y postres exclusivos para convertir tus momentos especiales en dulces recuerdos.'
+            },
+
+            essence: {
+                label: 'NUESTRA ESENCIA',
+                title: 'Calidad',
+                text: 'Cada creación es elaborada con ingredientes finos de la más alta calidad, cuidando hasta el último detalle estético para convertir tus momentos especiales en dulces recuerdos memorables.'
+            },
+
+            guide: {
+                label: 'GUÍA SENCILLA',
+                title: '¿Cómo apartar tu fecha?'
+            },
+
+            designDetailsLabel: 'DETALLES DEL PASTEL (Opcional).',
+
+            portfolio: [
+                'img/Pastel1.jpg',
+                'img/Pastel2.jpg',
+                'img/Pastel3.jpg',
+                'img/Pastel4.jpg',
+                'img/Pastel5.jpg',
+                'img/Pastel6.jpg'
+            ],
+
+            googleSheetsUrl: 'https://script.google.com/macros/s/AKfycbwH6_2oK8gNBnTkS9rxjXNSVTj-_84t8a0a3EwRBb1JuO0UIjH8fzi7tuDH4enlPhRUgA/exec'
+        };
+
+        document.documentElement.style.setProperty('--brand-main', CLIENT_CONFIG.colors.main);
+        document.documentElement.style.setProperty('--brand-secondary', CLIENT_CONFIG.colors.secondary);
+        document.documentElement.style.setProperty('--brand-dark', CLIENT_CONFIG.colors.dark);
+        document.documentElement.style.setProperty('--bg-light', CLIENT_CONFIG.colors.background);
+        document.documentElement.style.setProperty('--brand-light', CLIENT_CONFIG.colors.light);
+        document.documentElement.style.setProperty('--brand-lighter', CLIENT_CONFIG.colors.lighter);
+        document.documentElement.style.setProperty('--brand-border', CLIENT_CONFIG.colors.border);
+        document.documentElement.style.setProperty('--brand-focus', CLIENT_CONFIG.colors.inputFocus);
+    </script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f0f7f7',
-                            100: '#dbecec',
-                            200: '#b7d9db',
-                            500: '#5f3134',
-                            600: '#896157',
-                            700: '#5f3134',
-                            800: '#896157',
-                            900: '#2d494c',
+                            50: 'var(--brand-light)',
+                            100: 'var(--brand-lighter)',
+                            200: 'var(--brand-lighter)',
+                            500: 'var(--brand-main)',
+                            600: 'var(--brand-secondary)',
+                            700: 'var(--brand-main)',
+                            800: 'var(--brand-secondary)',
+                            900: 'var(--brand-dark)',
                         }
                     },
                     fontFamily: {
@@ -52,7 +112,12 @@
     <style>
         :root {
             --brand-main: #5f3134;
-            --brand-dark: #3a6c6f;
+            --brand-secondary: #896157;
+            --brand-dark: #2d494c;
+            --brand-light: #f0f7f7;
+            --brand-lighter: #dbecec;
+            --brand-border: #edf2f7;
+            --brand-focus: #569b9e;
             --bg-light: #f8faf9;
         }
         body {
@@ -122,8 +187,8 @@
                <img id="business-logo" src="img/logo.png" alt="Logo" class="w-full h-full rounded-full object-cover">
             </div>
             <div>
-                <h1 id="brand-title" class="text-lg md:text-xl font-bold font-serif text-brand-700 leading-tight tracking-wide">Dulce Reino</h1>
-                <p class="text-[10px] md:text-xs text-stone-400 font-medium tracking-widest uppercase">Pasteleria Artesanal</p>
+                <h1 id="brand-title" class="text-lg md:text-xl font-bold font-serif text-brand-700 leading-tight tracking-wide"></h1>
+                <p id="brand-subtitle" class="text-[10px] md:text-xs text-stone-400 font-medium tracking-widest uppercase"></p>
             </div>
         </div>
         
@@ -145,9 +210,7 @@ background-repeat:no-repeat;">
 
     <div class="max-w-4xl mx-auto px-6">
 
-        <span class="inline-block text-xs uppercase tracking-[3px] bg-white/20 backdrop-blur-md text-white px-6 py-2 rounded-full font-semibold border border-white/30 mb-6">
-            AGENDA ABIERTA
-        </span>
+        <span id="hero-badge" class="inline-block text-xs uppercase tracking-[3px] bg-white/20 backdrop-blur-md text-white px-6 py-2 rounded-full font-semibold border border-white/30 mb-6"></span>
 
         <h2 id="hero-title"
         class="text-4xl md:text-6xl font-serif leading-tight mb-6">
@@ -183,37 +246,37 @@ background-repeat:no-repeat;">
          class="grid grid-cols-2 lg:grid-cols-3 gap-6">
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
-            <img src="img/Pastel1.jpg"
+            <img src="" id="portfolio-image-1"
                  onclick="openImage(this.src)"
                 class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
-            <img src="img/Pastel2.jpg"
+            <img src="" id="portfolio-image-2"
                   onclick="openImage(this.src)"
          class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
-            <img src="img/Pastel3.jpg"
+            <img src="" id="portfolio-image-3"
                   onclick="openImage(this.src)"
          class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
-            <img src="img/Pastel4.jpg"
+            <img src="" id="portfolio-image-4"
                   onclick="openImage(this.src)"
          class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
-            <img src="img/Pastel5.jpg"
+            <img src="" id="portfolio-image-5"
                   onclick="openImage(this.src)"
-         class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">">
+         class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
 
         <div class="overflow-hidden rounded-3xl shadow-md bg-white">
-            <img src="img/Pastel6.jpg"
+            <img src="" id="portfolio-image-6"
                   onclick="openImage(this.src)"
          class="w-full aspect-[4/5] object-cover hover:scale-105 transition duration-500 cursor-pointer">
         </div>
@@ -225,44 +288,52 @@ background-repeat:no-repeat;">
         <!-- SECCIÓN 2: NUESTRA ESENCIA / CALIDAD -->
         <section id="quality-section">
             <div class="bg-brand-500 text-white p-8 md:p-10 rounded-[2rem] shadow-sm space-y-3 relative overflow-hidden">
-                <span class="text-[11px] uppercase tracking-widest font-medium opacity-90 block">NUESTRA ESENCIA</span>
-                <h3 class="text-2xl md:text-3xl font-serif font-medium">Calidad</h3>
-                <p class="text-xs md:text-sm text-stone-100 font-light leading-relaxed max-w-2xl opacity-95">
-                    Cada creación es elaborada con ingredientes finos de la más alta calidad, cuidando hasta el último detalle estético para convertir tus momentos especiales en dulces recuerdos memorables.
-                </p>
+                <span id="essence-label" class="text-[11px] uppercase tracking-widest font-medium opacity-90 block"></span>
+                <h3 id="essence-title" class="text-2xl md:text-3xl font-serif font-medium"></h3>
+                <p id="essence-text" class="text-xs md:text-sm text-stone-100 font-light leading-relaxed max-w-2xl opacity-95"></p>
             </div>
         </section>
 
         <!-- SECCIÓN 3: GUÍA SENCILLA -->
         <section id="steps-section" class="bg-white p-8 md:p-10 rounded-[2.5rem] border border-stone-100 canva-card-shadow space-y-6">
             <div class="space-y-1">
-                <span class="text-xs uppercase font-bold tracking-widest text-brand-500">GUÍA SENCILLA</span>
-                <h3 class="text-2xl font-serif text-brand-700">¿Cómo apartar tu fecha?</h3>
+                <span id="guide-label" class="text-xs uppercase font-bold tracking-widest text-brand-500"></span>
+                <h3 id="guide-title" class="text-2xl font-serif text-brand-700"></h3>
             </div>
 
             <div class="space-y-6 text-sm">
                 <div class="flex items-start gap-4">
                     <div class="w-9 h-9 rounded-full bg-brand-500 text-white font-bold flex items-center justify-center shrink-0 text-sm">1</div>
                     <div class="space-y-1 pt-0.5">
-                        <strong class="text-brand-800 font-semibold text-base block">Personaliza tu pastel</strong>
+                        <strong class="text-brand-800 font-semibold text-base block">Elige tu fecha</strong>
                         <p class="text-xs text-stone-500 leading-relaxed">
-                            Elige porciones, Sabor de Pan, Relleno y Betún de tu preferencia. Escríbelo en el apartado de detalles en el formulario.
+                            Pedidos con mínimo 5 días de anticipación y sujetos a disponibilidad. 
+                           ⚠️ Si la fecha está llena, el sistema te avisará y te dará indicaciones para que elijas otro día.
                         </p>
                     </div>
                 </div>
-
-                <div class="flex items-start gap-4">
+                 <div class="flex items-start gap-4">
                     <div class="w-9 h-9 rounded-full bg-brand-500 text-white font-bold flex items-center justify-center shrink-0 text-sm">2</div>
                     <div class="space-y-1 pt-0.5">
-                        <strong class="text-brand-800 font-semibold text-base block">Envía tu orden al instante</strong>
+                        <strong class="text-brand-800 font-semibold text-base block">Personaliza tu pastel</strong>
                         <p class="text-xs text-stone-500 leading-relaxed">
-                            El sistema redactará todo tu pedido para enviarlo directo a nuestro WhatsApp.
+                            Elige porciones, Sabor de Pan, Relleno y Betún de tu preferencia. Escríbe todos los detalles de tu pastel en el formulario.
                         </p>
                     </div>
                 </div>
 
                 <div class="flex items-start gap-4">
                     <div class="w-9 h-9 rounded-full bg-brand-500 text-white font-bold flex items-center justify-center shrink-0 text-sm">3</div>
+                    <div class="space-y-1 pt-0.5">
+                        <strong class="text-brand-800 font-semibold text-base block">Envía tu orden al instante</strong>
+                        <p class="text-xs text-stone-500 leading-relaxed">
+                           El sistema preparará los datos de tu pedido para enviarlos directamente a nuestro WhatsApp. Nos pondremos en contacto contigo para confirmar los detalles y el proceso de pago. 
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="w-9 h-9 rounded-full bg-brand-500 text-white font-bold flex items-center justify-center shrink-0 text-sm">4</div>
                     <div class="space-y-1 pt-0.5">
                         <strong class="text-brand-800 font-semibold text-base block">Confirma con tu anticipo</strong>
                         <p class="text-xs text-stone-500 leading-relaxed">
@@ -354,7 +425,7 @@ background-repeat:no-repeat;">
                     </div>
 
                     <!-- Opción Recoger -->
-                    <div id="pickupContainer" class="p-5 bgCrounded-3xl border border-pink-100/60 space-y-4">
+                    <div id="pickupContainer" class="p-5 bg-rose-50/40 rounded-3xl border border-pink-100/60 space-y-4">
                         <div class="space-y-2">
                             <label class="block text-xs font-bold uppercase tracking-wider text-stone-600">SUCURSAL / PUNTO</label>
                             <select id="pickupLocationSelect" onchange="updatePickupDetails()" class="w-full input-canva"></select>
@@ -367,7 +438,7 @@ background-repeat:no-repeat;">
                     </div>
 
                     <!-- Opción Envío -->
-                    <div id="shippingContainer" class="hidden p-5 bg-stone-50  rounded-3xl border border-pink-100/60  space-y-3">
+                    <div id="shippingContainer" class="hidden p-5 bg-stone-50 rounded-3xl border border-stone-200/60 space-y-3">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <input type="text" id="shipStreet" placeholder="Calle y Número" class="input-canva">
                             <input type="text" id="shipColony" placeholder="Colonia" class="input-canva">
@@ -384,12 +455,22 @@ background-repeat:no-repeat;">
                 </div>
 
                 <!-- Detalles -->
-                <div class="space-y-2 pt-2">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 leading-relaxed">
-                        DETALLES DE DISEÑO / TEMÁTICA /DETALLES DEL PEDIDO: TEMÁTICA, NOMBRE, NÚMERO DE CUMPLEAÑOS Y NOTAS ADICIONALES DE TU PEDIDO.
-                    </label>
-                    <textarea id="eventDetails" rows="4" class="w-full input-canva" placeholder="Describe aquí los colores, detalles visuales o leyenda del pastel..."></textarea>
-                </div>
+<div class="space-y-2 pt-2">
+    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 leading-relaxed">
+        <span id="design-details-label"></span>
+        <span class="text-stone-400 font-normal normal-case">(Por favor, completa la siguiente información para ayudarnos a preparar tu pedido)</span>
+    </label>
+
+    <textarea
+        id="eventDetails"
+        rows="6"
+        class="w-full input-canva">Temática / Diseño:
+Nombre:
+Número de cumpleaños:
+Colores: 
+Texto en el pastel:        
+Notas adicionales:</textarea>
+</div>
 
                 <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 rounded-2xl shadow-md transition duration-200 text-sm tracking-widest uppercase">
                     REVISAR Y CONFIRMAR PEDIDO
@@ -401,8 +482,8 @@ background-repeat:no-repeat;">
 
     <!-- Footer Elegante -->
     <footer class="w-full bg-brand-500 text-white text-center py-10 px-4 space-y-4">
-        <h4 class="font-serif text-xl tracking-wide">Dulce Reino</h4>
-        <p class="text-xs font-light text-stone-100 opacity-90">Pasteleria Artesanal</p>
+        <h4 id="footer-business-name" class="font-serif text-xl tracking-wide"></h4>
+        <p id="footer-business-subtitle" class="text-xs font-light text-stone-100 opacity-90"></p>
         <p class="text-xs font-light text-stone-100 opacity-90">© Agenda de Pedidos -Pasteleria Artesanal. Todos los derechos reservados.</p>
         
         <div class="pt-2">
@@ -437,8 +518,7 @@ background-repeat:no-repeat;">
         </div>
     </div>
 
-    <!-- MODAL ADMIN -->
-    <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+<div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-[2.25rem] max-w-4xl w-full p-6 md:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto border border-stone-100">
             <button onclick="closeAdminModal()" class="absolute top-6 right-6 w-9 h-9 rounded-full bg-stone-100 text-stone-500 hover:text-stone-800 hover:bg-stone-200 flex items-center justify-center text-sm font-bold transition">✕</button>
             
@@ -447,6 +527,8 @@ background-repeat:no-repeat;">
                     <i class="fa-solid fa-sliders"></i>
                 </div>
                 <div>
+
+
                     <h3 class="text-2xl font-serif text-brand-700 leading-none">Panel Administrativo</h3>
                     <p class="text-xs text-stone-400 mt-1">Gestiona pedidos, menú, redes y configuraciones del negocio.</p>
                 </div>
@@ -512,7 +594,7 @@ background-repeat:no-repeat;">
                         <button onclick="filterKitchenView('En Proceso')" class="px-3.5 py-1.5 bg-sky-100 hover:bg-sky-200 text-sky-800 rounded-xl font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-kitchen-set text-[11px]"></i> En Proceso
                         </button>
-                        <button onclick="filterKitchenView('Terminado')" class="px-3.5 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-xl font-bold transition flex items-center gap-1.5">
+                       <button type="button" onclick="filterKitchenView('Terminado')" class="px-3.5 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-xl font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-circle-check text-[11px]"></i> Completos
                         </button>
                     </div>
@@ -534,7 +616,7 @@ background-repeat:no-repeat;">
                             <label class="font-bold text-stone-600 flex items-center gap-1.5">
                                 <i class="fa-brands fa-whatsapp text-emerald-600"></i> WhatsApp del Negocio
                             </label>
-                            <input type="text" id="adminBusinessWA" placeholder="Ej. 528116055365" class="w-full input-canva">
+                            <input type="text" id="adminBusinessWA" placeholder="Ej. 520000000000" class="w-full input-canva">
                         </div>
                         <div class="space-y-1">
                             <label class="font-bold text-stone-600 flex items-center gap-1.5">
@@ -919,42 +1001,164 @@ background-repeat:no-repeat;">
                     </div>
                 </div>
 
-                <div class="space-y-1">
-                    <label class="font-bold text-stone-600">Método de Entrega</label>
-                    <select id="editDeliveryMethod" required class="w-full input-canva">
-                        <option value="Recoger en tienda">Recoger en Sucursal / Punto de Entrega</option>
-                        <option value="Envio a domicilio">Envío a Domicilio</option>
-                    </select>
-                </div>
+                
+              <div class="space-y-1">
+    <label class="font-bold text-stone-600">Método de Entrega</label>
+    <select
+        id="editDeliveryMethod"
+        required
+        onchange="toggleEditDeliveryFields()"
+        class="w-full input-canva">
 
-                <div class="space-y-1">
-                    <label class="font-bold text-stone-600">Detalles Logísticos / Dirección / Horario</label>
-                    <input type="text" id="editDeliveryDetails" required class="w-full input-canva">
-                </div>
+        <option value="Recoger en tienda">
+            Recoger en Sucursal / Punto de Entrega
+        </option>
 
-                <div class="space-y-1">
-                    <label class="font-bold text-stone-600">Detalles de Diseño / Temática / Leyenda</label>
-                    <textarea id="editEventDetails" rows="3" class="w-full input-canva"></textarea>
-                </div>
+        <option value="Envio a domicilio">
+            Envío a Domicilio
+        </option>
+    </select>
+</div>
 
-                <div class="pt-2">
-                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> Guardar Formulario
-                    </button>
-                </div>
-            </form>
-        </div>
+
+<!-- RECOGER EN SUCURSAL -->
+<div
+    id="editPickupContainer"
+    class="p-4 bg-rose-50/40 rounded-2xl border border-pink-100/60 space-y-3">
+
+    <div class="space-y-1">
+        <label class="font-bold text-stone-600">
+            Sucursal / Punto
+        </label>
+
+        <select
+            id="editPickupLocationSelect"
+            class="w-full input-canva">
+        </select>
+    </div>
+   
+    <div class="space-y-1">
+        <label class="font-bold text-stone-600">
+            Horario de Recogida
+        </label>
+
+        <select
+            id="editPickupTime"
+            class="w-full input-canva">
+        </select>
     </div>
 
-    <!-- MODAL DE NOTIFICACIÓN DE MENSAJES -->
-    <div id="toast-container"></div> 
-    <script>
-        // ESTADO GLOBAL DE LA APLICACIÓN
-        const DEFAULT_STATE = {
-            pin: '1234',
-            emailPrimary: 'admin@ledessertmx.com',
-            emailSecondary: 'soporte@ledessertmx.com',
-            businessPhone: '528116055365',
+</div>
+
+
+<!-- ENVÍO A DOMICILIO -->
+<div
+    id="editShippingContainer"
+    class="hidden p-4 bg-stone-50 rounded-2xl border border-stone-200/60 space-y-3">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+        <div class="space-y-1">
+            <label class="font-bold text-stone-600">
+                Calle y Número
+            </label>
+
+            <input
+                type="text"
+                id="editShipStreet"
+                placeholder="Calle y Número"
+                class="w-full input-canva">
+        </div>
+
+        <div class="space-y-1">
+            <label class="font-bold text-stone-600">
+                Colonia
+            </label>
+
+            <input
+                type="text"
+                id="editShipColony"
+                placeholder="Colonia"
+                class="w-full input-canva">
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+        <div class="space-y-1">
+            <label class="font-bold text-stone-600">
+                Municipio / Ciudad
+            </label>
+
+            <input
+                type="text"
+                id="editShipCity"
+                placeholder="Municipio / Ciudad"
+                class="w-full input-canva">
+        </div>
+
+        <div class="space-y-1">
+            <label class="font-bold text-stone-600">
+                ¿Quién recibe?
+            </label>
+
+            <input
+                type="text"
+                id="editShipReceiver"
+                placeholder="¿Quién recibe?"
+                class="w-full input-canva">
+        </div>
+
+    </div>
+
+    <div class="space-y-1">
+        <label class="font-bold text-stone-600">
+            Horario Preferido de Entrega
+        </label>
+
+        <select
+            id="editShippingTime"
+            class="w-full input-canva">
+        </select>
+    </div>
+
+</div>
+
+
+<!-- DETALLES DE DISEÑO -->
+<div class="space-y-1">
+    <label class="font-bold text-stone-600">
+        Detalles del pastel
+        <span class="text-stone-400 font-normal">(Opcional)</span>
+    </label>
+
+    <textarea
+        id="editEventDetails"
+        rows="6"
+        class="w-full input-canva"
+        placeholder="Temática / Diseño:
+Nombre:
+Número de cumpleaños:
+Colores:
+Texto en el pastel:        
+Notas adicionales:"></textarea>
+</div>
+                <div class="pt-2">
+    <button
+        type="submit"
+        class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow">
+        <i class="fa-solid fa-floppy-disk mr-1"></i>
+        Guardar Formulario
+    </button>
+</div>
+
+   <script>
+    const DEFAULT_STATE = {
+    pin: '1234',
+    emailPrimary: 'admin@ejemplo.com',
+    emailSecondary: 'soporte@ejemplo.com',
+    businessPhone: '520000000000',
             socials: {
                 instagram: 'https://instagram.com',
                 facebook: 'https://facebook.com',
@@ -982,7 +1186,7 @@ let currentEditingFinanceOrderId = null;
 let kitchenFilter = 'all';
 
 // CONEXIÓN CON GOOGLE SHEETS
-const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxhZISSEH7u-q6nlNvdZXGS--FanLib4JKHKiQf78i13noorSpLQBhcb0k177PBXVI9qg/exec';
+const GOOGLE_SHEETS_URL = CLIENT_CONFIG.googleSheetsUrl;
 function enviarPedidoAGoogleSheets(order) {
     const data = {
         accion: 'guardarPedido',
@@ -1045,11 +1249,52 @@ function closeImage() {
         console.error('Error enviando actualización del pedido:', error);
     });
 }
-        function eliminarPedidoDeGoogleSheets(pedidoId) {
+        async function eliminarPedidoDeGoogleSheets(pedidoId) {
 
     const data = {
         accion: 'eliminarPedido',
         pedidoId: pedidoId
+    };
+
+    try {
+
+        const response = await fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'payload=' + encodeURIComponent(JSON.stringify(data))
+        });
+
+        const resultado = await response.json();
+
+        console.log(
+            'Google Sheets - eliminar pedido:',
+            resultado
+        );
+
+        if (!resultado.ok) {
+            throw new Error(
+                resultado.mensaje || 'No se pudo eliminar el pedido'
+            );
+        }
+
+        return resultado;
+
+    } catch (error) {
+
+        console.error(
+            'Error eliminando pedido de Google Sheets:',
+            error
+        );
+
+        throw error;
+    }
+}
+       function actualizarProduccionEnGoogleSheets(order) {
+    const data = {
+        accion: 'actualizarProduccion',
+        pedido: order
     };
 
     fetch(GOOGLE_SHEETS_URL, {
@@ -1061,46 +1306,102 @@ function closeImage() {
     })
     .then(response => response.json())
     .then(resultado => {
-
-        console.log('Google Sheets - eliminar pedido:', resultado);
+        console.log('Producción actualizada en Google Sheets:', resultado);
 
         if (!resultado.ok) {
-            console.error(
-                'No se pudo eliminar el pedido de Google Sheets:',
-                resultado
-            );
+            console.error('Error actualizando producción:', resultado);
         }
-
     })
     .catch(error => {
-        console.error(
-            'Error eliminando pedido de Google Sheets:',
-            error
-        );
+        console.error('Error actualizando producción en Google Sheets:', error);
     });
-}
+} 
 
+
+        // APLICAR IDENTIDAD VISUAL DE LA CLIENTA
+        function applyClientConfig() {
+            document.title = `${CLIENT_CONFIG.businessName} - Agenda de Pedidos`;
+
+            const favicon = document.getElementById('favicon-link');
+            if (favicon) favicon.href = CLIENT_CONFIG.favicon;
+
+            const ogTitle = document.getElementById('og-title');
+            const ogDescription = document.getElementById('og-description');
+            const ogImage = document.getElementById('og-image');
+            const ogUrl = document.getElementById('og-url');
+
+            if (ogTitle) ogTitle.content = `${CLIENT_CONFIG.businessName} - Agenda de Pedidos`;
+            if (ogDescription) ogDescription.content = CLIENT_CONFIG.businessSubtitle;
+            if (ogImage) ogImage.content = new URL(CLIENT_CONFIG.previewImage, window.location.href).href;
+            if (ogUrl) ogUrl.content = window.location.href;
+
+            const logo = document.getElementById('business-logo');
+            if (logo) logo.src = CLIENT_CONFIG.logo;
+
+            const title = document.getElementById('brand-title');
+            const subtitle = document.getElementById('brand-subtitle');
+            if (title) title.textContent = CLIENT_CONFIG.businessName;
+            if (subtitle) subtitle.textContent = CLIENT_CONFIG.businessSubtitle;
+
+            const hero = document.getElementById('hero-section');
+            if (hero) {
+                hero.style.backgroundImage =
+                    `linear-gradient(rgba(30,50,52,.45),rgba(30,50,52,.55)),url('${CLIENT_CONFIG.heroImage}')`;
+            }
+
+            const heroBadge = document.getElementById('hero-badge');
+            const heroTitle = document.getElementById('hero-title');
+            const heroSubtitle = document.getElementById('hero-subtitle');
+            if (heroBadge) heroBadge.textContent = CLIENT_CONFIG.hero.badge;
+            if (heroTitle) heroTitle.textContent = CLIENT_CONFIG.hero.title;
+            if (heroSubtitle) heroSubtitle.textContent = CLIENT_CONFIG.hero.subtitle;
+
+            const essenceLabel = document.getElementById('essence-label');
+            const essenceTitle = document.getElementById('essence-title');
+            const essenceText = document.getElementById('essence-text');
+            if (essenceLabel) essenceLabel.textContent = CLIENT_CONFIG.essence.label;
+            if (essenceTitle) essenceTitle.textContent = CLIENT_CONFIG.essence.title;
+            if (essenceText) essenceText.textContent = CLIENT_CONFIG.essence.text;
+
+            const guideLabel = document.getElementById('guide-label');
+            const guideTitle = document.getElementById('guide-title');
+            if (guideLabel) guideLabel.textContent = CLIENT_CONFIG.guide.label;
+            if (guideTitle) guideTitle.textContent = CLIENT_CONFIG.guide.title;
+
+            const designLabel = document.getElementById('design-details-label');
+            if (designLabel) designLabel.textContent = CLIENT_CONFIG.designDetailsLabel;
+
+            const footerName = document.getElementById('footer-business-name');
+            const footerSubtitle = document.getElementById('footer-business-subtitle');
+            if (footerName) footerName.textContent = CLIENT_CONFIG.businessName;
+            if (footerSubtitle) footerSubtitle.textContent = CLIENT_CONFIG.businessSubtitle;
+
+            CLIENT_CONFIG.portfolio.forEach((src, index) => {
+                const image = document.getElementById(`portfolio-image-${index + 1}`);
+                if (image) image.src = src;
+            });
+        }
 
         // INICIALIZACIÓN
-       window.onload = function() {
+     window.onload = function() {
+    applyClientConfig();
+
     initFormCatalogs();
     toggleDeliveryFields();
     renderSocialLinks();
     renderBranches();
     renderBlockedDates();
-    renderOrders();
-    renderKitchenOrders();
 
     cargarConfiguracionDesdeGoogleSheets();
+    cargarPedidosDesdeGoogleSheets();
 
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('eventDate').min = today;
 };
-
         // ALMACENAMIENTO LOCAL
         function loadAppState() {
             try {
-                const stored = localStorage.getItem('ledessertmx_app_state');
+                const stored = localStorage.getItem('agenda_pedidos_app_state');
                 if (stored) {
                     const parsed = JSON.parse(stored);
                     return { ...DEFAULT_STATE, ...parsed };
@@ -1113,7 +1414,7 @@ function closeImage() {
 
         function saveAppState() {
             try {
-                localStorage.setItem('ledessertmx_app_state', JSON.stringify(state));
+                localStorage.setItem('agenda_pedidos_app_state', JSON.stringify(state));
             } catch (e) {
                 console.error("Error guardando estado", e);
             }
@@ -1197,31 +1498,78 @@ if (config.branches) {
         console.error('Error cargando configuración desde Google Sheets:', error);
     }
 }
+async function cargarPedidosDesdeGoogleSheets() {
+    try {
+        const response = await fetch(
+            GOOGLE_SHEETS_URL + '?accion=obtenerPedidos'
+        );
 
-        // SISTEMA DE TOASTS Y NOTIFICACIONES
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            let bg = 'bg-stone-800 text-white';
-            if (type === 'success') bg = 'bg-emerald-600 text-white';
-            if (type === 'error') bg = 'bg-rose-600 text-white';
+        const resultado = await response.json();
 
-            toast.className = `${bg} px-5 py-3 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2 mb-2 transition-all duration-300 transform translate-y-2 opacity-0`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> <span>${message}</span>`;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
+        if (!resultado.ok || !Array.isArray(resultado.pedidos)) {
+            console.error(
+                'No se pudieron cargar los pedidos:',
+                resultado
+            );
+            return;
         }
 
+        state.orders = resultado.pedidos;
+
+        renderOrders();
+        renderKitchenOrders();
+
+        console.log(
+            'Pedidos cargados desde Google Sheets:',
+            state.orders
+        );
+
+    } catch (error) {
+        console.error(
+            'Error cargando pedidos desde Google Sheets:',
+            error
+        );
+    }
+}
+       // SISTEMA DE TOASTS Y NOTIFICACIONES
+function showToast(message, type = 'info') {
+
+    const container = document.getElementById('toast-container');
+
+    if (!container) {
+        console.error('No existe #toast-container');
+        return;
+    }
+
+    // IMPORTANTE:
+    // Si el contenedor quedó dentro de un modal o formulario,
+    // lo movemos automáticamente al BODY.
+    if (container.parentElement !== document.body) {
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+
+    let bg = 'bg-stone-800 text-white';
+    if (type === 'success') bg = 'bg-emerald-600 text-white';
+    if (type === 'error') bg = 'bg-rose-600 text-white';
+
+    toast.className = `${bg} px-5 py-3 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2 mb-2 transition-all duration-300 transform translate-y-2 opacity-0`;
+
+    toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> <span>${message}</span>`;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+    }, 10);
+
+    setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
         // LLENADO DINÁMICO DE SELECTS
         function initFormCatalogs() {
             populateSelect('eventType', state.catalogs.events);
@@ -1271,16 +1619,44 @@ if (config.branches) {
             }
         }
 
-        function updatePickupDetails() {
-            const selectedName = document.getElementById('pickupLocationSelect').value;
-            const branch = state.branches.find(b => b.name === selectedName);
-            const infoBox = document.getElementById('pickupLocationInfo');
-            if (branch) {
-                infoBox.innerHTML = `<i class="fa-solid fa-location-dot text-brand-500 mr-1"></i> <strong>${branch.name}</strong>: ${branch.address}`;
-            } else {
-                infoBox.innerHTML = `Selecciona un punto de entrega.`;
-            }
+       function updatePickupDetails() {
+    const selectedName = document.getElementById('pickupLocationSelect').value;
+    const branch = state.branches.find(b => b.name === selectedName);
+    const infoBox = document.getElementById('pickupLocationInfo');
+
+    if (branch) {
+
+        let mapLink = '';
+
+        if (branch.map && branch.map.trim()) {
+            mapLink = `
+                <a href="${branch.map}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="inline-flex items-center gap-1.5 mt-2 text-brand-600 hover:text-brand-700 font-bold">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    Ver ubicación en Google Maps
+                </a>
+            `;
         }
+
+        infoBox.innerHTML = `
+            <div>
+                <i class="fa-solid fa-location-dot text-brand-500 mr-1"></i>
+                <strong>${branch.name}</strong>
+            </div>
+
+            <div class="mt-1">
+                ${branch.address}
+            </div>
+
+            ${mapLink}
+        `;
+
+    } else {
+        infoBox.innerHTML = `Selecciona un punto de entrega.`;
+    }
+}
 
         function checkDateAvailability() {
             const inputDate = document.getElementById('eventDate').value;
@@ -1315,41 +1691,116 @@ if (config.branches) {
             const eventDetails = document.getElementById('eventDetails').value.trim();
 
             let deliveryDetails = '';
-            let timeChosen = '';
+let timeChosen = '';
 
-            if (deliveryMethod === 'Recoger en tienda') {
-                const branchName = document.getElementById('pickupLocationSelect').value;
-                timeChosen = document.getElementById('pickupTime').value;
-                deliveryDetails = `Recoger en: ${branchName} | Horario: ${timeChosen}`;
-            } else {
-                const street = document.getElementById('shipStreet').value.trim();
-                const colony = document.getElementById('shipColony').value.trim();
-                const city = document.getElementById('shipCity').value.trim();
-                const receiver = document.getElementById('shipReceiver').value.trim();
-                timeChosen = document.getElementById('shippingTime').value;
-                deliveryDetails = `Dirección: ${street}, ${colony}, ${city} | Recibe: ${receiver} | Horario: ${timeChosen}`;
-            }
+let branchName = '';
+let branchAddress = '';
+let pickupTime = '';
 
-            pendingOrderData = {
-                id: Date.now().toString(),
-                clientName,
-                clientPhone,
-                eventDate: dateVal,
-                eventType,
-                portions,
-                flavor,
-                filling,
-                frosting,
-                deliveryMethod,
-                deliveryDetails,
-                timeChosen,
-                eventDetails,
-                status: 'Pendiente', // Mantener estatus técnico para cocina
-                createdAt: new Date().toLocaleDateString('es-MX'),
-                totalPrice: 0,
-                anticipo: 0
-            };
+let address = '';
+let receiver = '';
+let deliveryTime = '';
 
+if (deliveryMethod === 'Recoger en tienda') {
+
+    branchName =
+        document.getElementById('pickupLocationSelect').value;
+
+    pickupTime =
+        document.getElementById('pickupTime').value;
+
+    timeChosen = pickupTime;
+
+    // Buscar la sucursal seleccionada
+    const selectedBranch =
+        state.branches.find(
+            branch =>
+                String(branch.name).trim() ===
+                String(branchName).trim()
+        );
+
+    branchAddress =
+        selectedBranch
+            ? (selectedBranch.address || '')
+            : '';
+
+    // Sucursal Principal muestra dirección
+    if (branchName === 'Sucursal Principal') {
+
+        deliveryDetails =
+            `Sucursal: ${branchName} | ` +
+            `Dirección: ${branchAddress || 'Sin dirección'} | ` +
+            `Horario: ${pickupTime}`;
+
+    } else {
+
+        // Sucursal privada: no mostrar dirección
+        deliveryDetails =
+            `Sucursal: ${branchName} | ` +
+            `Horario: ${pickupTime}`;
+    }
+
+} else {
+
+    const street =
+        document.getElementById('shipStreet').value.trim();
+
+    const colony =
+        document.getElementById('shipColony').value.trim();
+
+    const city =
+        document.getElementById('shipCity').value.trim();
+
+    receiver =
+        document.getElementById('shipReceiver').value.trim();
+
+    deliveryTime =
+        document.getElementById('shippingTime').value;
+
+    address =
+        [street, colony, city]
+            .filter(Boolean)
+            .join(', ');
+
+    timeChosen = deliveryTime;
+
+    deliveryDetails =
+        `Dirección: ${address} | ` +
+        `Recibe: ${receiver} | ` +
+        `Horario: ${deliveryTime}`;
+}
+
+pendingOrderData = {
+    id: Date.now().toString(),
+    clientName,
+    clientPhone,
+    eventDate: dateVal,
+    eventType,
+    portions,
+    flavor,
+    filling,
+    frosting,
+
+    deliveryMethod,
+
+    branchName,
+    branchAddress,
+    pickupTime,
+
+    address,
+    receiver,
+    deliveryTime,
+
+    deliveryDetails,
+    timeChosen,
+
+    eventDetails,
+
+    status: 'Pendiente',
+    createdAt: new Date().toLocaleDateString('es-MX'),
+    totalPrice: 0,
+    anticipo: 0
+};
             const container = document.getElementById('reviewDetailsContainer');
             container.innerHTML = `
                 <p><strong>Cliente:</strong> ${clientName} (${clientPhone})</p>
@@ -1378,10 +1829,22 @@ if (config.branches) {
             state.orders.unshift(pendingOrderData);
             saveAppState();
 
-            enviarPedidoAGoogleSheets(pendingOrderData);
+           // Guardar pedido en Google Sheets
+enviarPedidoAGoogleSheets(pendingOrderData);
 
-            renderOrders();
-            renderKitchenOrders();
+// Crear registro en Producción como Pendiente
+const pedidoProduccion = {
+    ...pendingOrderData,
+    status: 'Pendiente'
+};
+
+actualizarProduccionEnGoogleSheets(pedidoProduccion);
+
+// Crear registro en Finanzas
+actualizarFinanzasEnGoogleSheets(pendingOrderData);
+
+renderOrders();
+renderKitchenOrders();
 
             const msg = `*SOLICITUD DE PEDIDO*%0A%0A` +
                 `*Cliente:* ${pendingOrderData.clientName}%0A` +
@@ -1411,10 +1874,11 @@ if (config.branches) {
         }
 
         // ADMIN LOGIN & MODAL CONTROLS
-        function openAdminModal() {
+    function openAdminModal() {
             document.getElementById('adminModal').classList.remove('hidden');
             document.getElementById('adminModal').classList.add('flex');
         }
+
 
         function closeAdminModal() {
             document.getElementById('adminModal').classList.add('hidden');
@@ -1915,8 +2379,13 @@ function addCatalogOption(key, inputId) {
                     <div class="flex flex-wrap gap-2 pt-1 border-t border-stone-100 items-center">
                         <!-- Direct WhatsApp Contact -->
                         <button onclick="contactClientWA('${order.id}')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-xl font-semibold transition flex items-center gap-1.5 border border-emerald-200">
-                        <i class="fa-brands fa-whatsapp text-emerald-600"></i> Contactar
-                        </button>
+    <i class="fa-brands fa-whatsapp text-emerald-600"></i> Confirmar pedido
+</button>
+<button onclick="requestCakeDesignWA('${order.id}')"
+    class="bg-purple-50 hover:bg-purple-100 text-purple-800 px-3 py-1.5 rounded-xl font-semibold transition flex items-center gap-1.5 border border-purple-200">
+    <i class="fa-solid fa-palette text-purple-600"></i> Pedir diseño
+</button>
+
 
                         <!-- Recordatorio Pedido -->
                         <button onclick="sendOrderReminderWA('${order.id}')" class="bg-teal-50 hover:bg-teal-100 text-teal-800 px-3 py-1.5 rounded-xl font-semibold transition flex items-center gap-1.5 border border-teal-200">
@@ -1965,14 +2434,24 @@ function addCatalogOption(key, inputId) {
 
         // FUNCIONES DE ACCIÓN DIRECTAS A WHATSAPP
        function contactClientWA(orderId) {
-    const order = state.orders.find(o => o.id === orderId);
+    const order = state.orders.find(o => o.id == orderId);
 
     if (!order) {
         showToast('No se encontró el pedido', 'error');
         return;
     }
 
-    const cleanPhone = order.clientPhone.replace(/\D/g, '');
+    const cleanPhone = String(order.clientPhone || '').replace(/\D/g, '');
+
+    // Buscar la sucursal seleccionada
+    const branch = state.branches.find(
+        b => b.name === order.branchName
+    );
+
+    // Mostrar Google Maps solamente si la sucursal tiene enlace público
+    const mapInfo = branch?.map
+        ? `\n*UBICACIÓN:* ${branch.map}`
+        : '';
 
     const msg = `Hola ${order.clientName}, te escribimos para compartirte el resumen de la información de tu pedido:
 
@@ -1980,7 +2459,41 @@ function addCatalogOption(key, inputId) {
 *EVENTO:* ${order.eventType}
 *DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
 *MÉTODO DE ENTREGA:* ${order.deliveryMethod}
-*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}
+*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}
+*Detalles:* ${order.eventDetails}
+
+Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo. ¡Muchas gracias!`;
+
+    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+
+    window.open(waUrl, '_blank');
+}
+
+
+function sendOrderReminderWA(orderId) {
+    const order = state.orders.find(o => o.id == orderId);
+
+    if (!order) return;
+
+    const cleanPhone = String(order.clientPhone || '').replace(/\D/g, '');
+    const restante = (order.totalPrice || 0) - (order.anticipo || 0);
+    // Buscar la sucursal seleccionada
+  const branch = state.branches.find(
+        b => b.name === order.branchName
+    );
+
+    // Mostrar Google Maps solamente si la sucursal tiene enlace público
+    const mapInfo = branch?.map
+        ? `\n*UBICACIÓN:* ${branch.map}`
+        : '';
+
+    const msg = `Hola ${order.clientName}, te escribimos para compartirte el resumen de la información de tu pedido:
+
+*FECHA DE ENTREGA:* ${order.eventDate}
+*EVENTO:* ${order.eventType}
+*DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
+*MÉTODO DE ENTREGA:* ${order.deliveryMethod}
+*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}
 *Detalles:* ${order.eventDetails}
 
 Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo. ¡Muchas gracias!`;
@@ -1991,127 +2504,389 @@ Por favor confirma si todo está correcto o menciónanos si hay algún error par
 }
 
         function sendOrderReminderWA(orderId) {
-            const order = state.orders.find(o => o.id === orderId);
-            if (!order) return;
+    const order = state.orders.find(o => o.id == orderId);
+    if (!order) return;
 
-            const cleanPhone = order.clientPhone.replace(/\D/g, '');
-            const restante = (order.totalPrice || 0) - (order.anticipo || 0);
+    const cleanPhone = String(order.clientPhone || '').replace(/\D/g, '');
+    const restante = (order.totalPrice || 0) - (order.anticipo || 0);
 
-            const text = `Hola ${order.clientName}, te escribimos para recordar la fecha y la logística de tu entrega de pedido:
-            
+    // Buscar la sucursal seleccionada
+    const branch = state.branches.find(
+        b => b.name === order.branchName
+    );
+
+    // Mostrar Google Maps solamente si la sucursal tiene enlace público
+     const mapInfo = branch?.map
+        ? `\n*UBICACIÓN:* ${branch.map}`
+        : '';
+
+    const text = `Hola ${order.clientName}, te escribimos para recordar la fecha y la logística de tu entrega de pedido:
+
 *FECHA DE ENTREGA:* ${order.eventDate}
 *EVENTO:* ${order.eventType}
 *DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
 *MÉTODO DE ENTREGA:* ${order.deliveryMethod}
-*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}
+*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}
 ${restante > 0 ? `*RESTANTE PENDIENTE:* $${restante.toFixed(2)}` : '*PAGO:* Liquidado'}
 
 Cualquier detalle o ajuste, quedamos con gusto a tus órdenes. ¡Muchas gracias!`;
 
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
-            showToast('Redirigiendo a WhatsApp con Recordatorio de Pedido', 'success');
-        }
+    window.open(
+        `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`,
+        '_blank'
+    );
+
+    showToast(
+        'Redirigiendo a WhatsApp con Recordatorio de Pedido',
+        'success'
+    );
+}
 
         function requestPaymentReceiptWA(orderId) {
-            const order = state.orders.find(o => o.id === orderId);
-            if (!order) return;
+    const order = state.orders.find(o => o.id == orderId);
 
-            const cleanPhone = order.clientPhone.replace(/\D/g, '');
-
-            const text = `Hola ${order.clientName}, te saludamos te compartimos este mensaje para pedirte de favor ¿Si nos podrías apoyar enviándonos el comprobante de pago de tu anticipo por este medio para registrar tu fecha de entrega oficialmente en nuestra agenda de producción? 
-            Muchas gracias. ¡Quedamos muy atentos y muchas gracias por tu confianza!`;
-
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
-            showToast('Redirigiendo a WhatsApp para solicitar Comprobante de Anticipo', 'success');
-        }
-
-        function sendPrivateAddressWA(phone) {
-            const cleanPhone = phone.replace(/\D/g, '');
-            const template = state.privateMessageTemplate || '¡Hola! Te compartimos la dirección privada para tu entrega.';
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(template)}`, '_blank');
-        }
-
-        function addToGoogleCalendar(orderId) {
-            const order = state.orders.find(o => o.id === orderId);
-            if (!order) return;
-
-            const title = encodeURIComponent(`Entrega Pastel - ${order.clientName} (${order.eventType})`);
-            const details = encodeURIComponent(`Cliente: ${order.clientName}\nTel: ${order.clientPhone}\nProducto: ${order.portions}\nSabor: ${order.flavor}\nRelleno: ${order.filling}\nLogística: ${order.deliveryDetails}`);
-            
-            const dateParts = order.eventDate.split('-');
-            if (dateParts.length === 3) {
-                const dateStr = `${dateParts[0]}${dateParts[1]}${dateParts[2]}`;
-                const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dateStr}T100000Z/${dateStr}T110000Z&details=${details}`;
-                window.open(url, '_blank');
-            } else {
-                showToast('Formato de fecha no válido para calendario', 'error');
-            }
-        }
-
-     // AGREGAR PEDIDO AL CALENDARIO DE IPHONE
-function openIphoneCalendarDirect(orderId) {
-    const order = state.orders.find(o => o.id === orderId);
     if (!order) return;
 
-    const start = order.eventDate.replace(/-/g, '') + 'T100000';
-    const end = order.eventDate.replace(/-/g, '') + 'T110000';
+    const cleanPhone = String(order.clientPhone || '').replace(/\D/g, '');
 
-    const title = `Entrega Pastel - ${order.clientName} (${order.eventType})`;
+    const text = `Hola ${order.clientName}, te saludamos te compartimos este mensaje para pedirte de favor ¿Si nos podrías apoyar enviándonos el comprobante de pago de tu anticipo por este medio para registrar tu fecha de entrega oficialmente en nuestra agenda de producción? 
 
-    const location = order.deliveryDetails || '';
+Muchas gracias. ¡Quedamos muy atentos y muchas gracias por tu confianza!`;
 
-    const description = `Cliente: ${order.clientName}
-Tel: ${order.clientPhone}
-Producto: ${order.portions}
-Sabor: ${order.flavor}
-Relleno: ${order.filling}
-Logística: ${order.deliveryDetails}`;
+    window.open(
+        `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`,
+        '_blank'
+    );
 
-    const escapeICS = (value) => {
-        return String(value || '')
+    showToast(
+        'Redirigiendo a WhatsApp para solicitar Comprobante de Anticipo',
+        'success'
+    );
+}
+
+       function sendPrivateAddressWA(phone) {
+    const cleanPhone = String(phone || '').replace(/\D/g, '');
+
+    const template =
+        state.privateMessageTemplate ||
+        '¡Hola! Te compartimos la dirección privada para tu entrega.';
+
+    window.open(
+        `https://wa.me/${cleanPhone}?text=${encodeURIComponent(template)}`,
+        '_blank'
+    );
+}
+
+ // ============================================
+// AGREGAR PEDIDO A GOOGLE CALENDAR
+// ============================================
+function addToGoogleCalendar(orderId) {
+
+    const order = state.orders.find(o => o.id == orderId);
+
+    if (!order) {
+        showToast('No se encontró el pedido', 'error');
+        return;
+    }
+
+    // --------------------------------------------
+    // FECHA
+    // --------------------------------------------
+    let fecha = order.eventDate || '';
+
+    // Aceptar tanto YYYY-MM-DD como DD/MM/YYYY
+    let year, month, day;
+
+    if (fecha.includes('-')) {
+        const partes = fecha.split('-');
+        year = partes[0];
+        month = partes[1];
+        day = partes[2];
+    } else if (fecha.includes('/')) {
+        const partes = fecha.split('/');
+        day = partes[0];
+        month = partes[1];
+        year = partes[2];
+    } else {
+        showToast('Formato de fecha no válido', 'error');
+        return;
+    }
+
+    const dateStr = `${year}${month.padStart(2, '0')}${day.padStart(2, '0')}`;
+
+    // --------------------------------------------
+    // HORARIO
+    // --------------------------------------------
+    let horario = '';
+
+    if (order.deliveryMethod === 'Recoger en tienda') {
+        horario = order.pickupTime || '';
+    } else {
+        horario = order.deliveryTime || '';
+    }
+
+    // Ejemplo:
+    // "10:00 AM - 12:00 PM"
+    const partesHorario = horario.split('-');
+
+    let horaInicio = '10:00 AM';
+    let horaFin = '11:00 AM';
+
+    if (partesHorario.length >= 2) {
+        horaInicio = partesHorario[0].trim();
+        horaFin = partesHorario[1].trim();
+    }
+
+    // --------------------------------------------
+    // Convertir AM/PM a HHMM
+    // --------------------------------------------
+    function convertirHora(hora) {
+
+        const match = hora.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+
+        if (!match) {
+            return null;
+        }
+
+        let h = parseInt(match[1], 10);
+        const m = parseInt(match[2], 10);
+        const periodo = match[3].toUpperCase();
+
+        if (periodo === 'AM' && h === 12) {
+            h = 0;
+        }
+
+        if (periodo === 'PM' && h !== 12) {
+            h += 12;
+        }
+
+        return `${String(h).padStart(2, '0')}${String(m).padStart(2, '0')}00`;
+    }
+
+    const inicio = convertirHora(horaInicio);
+    const fin = convertirHora(horaFin);
+
+    if (!inicio || !fin) {
+        showToast('No se pudo interpretar el horario', 'error');
+        return;
+    }
+
+    // --------------------------------------------
+    // INFORMACIÓN DEL EVENTO
+    // --------------------------------------------
+    const title =
+        `Entrega Pastel - ${order.clientName} (${order.eventType})`;
+
+    let location = '';
+
+    if (order.deliveryMethod === 'Recoger en tienda') {
+        location = order.branchName || '';
+    } else {
+        location = order.address || '';
+    }
+
+    const details =
+        `Cliente: ${order.clientName}\n` +
+        `Teléfono: ${order.clientPhone}\n` +
+        `Producto: ${order.portions}\n` +
+        `Sabor de pan: ${order.flavor}\n` +
+        `Relleno: ${order.filling}\n` +
+        `Betún: ${order.frosting}\n` +
+        `Método de entrega: ${order.deliveryMethod}\n` +
+        `Logística: ${order.deliveryDetails}\n` +
+        `Detalles: ${order.eventDetails || 'Sin especificaciones extra'}`;
+
+    // --------------------------------------------
+    // GOOGLE CALENDAR
+    // --------------------------------------------
+    const url =
+        `https://calendar.google.com/calendar/render` +
+        `?action=TEMPLATE` +
+        `&text=${encodeURIComponent(title)}` +
+        `&dates=${dateStr}T${inicio}/${dateStr}T${fin}` +
+        `&location=${encodeURIComponent(location)}` +
+        `&details=${encodeURIComponent(details)}`;
+
+    window.open(url, '_blank');
+
+    showToast(
+        'Abriendo Google Calendar para agregar el pedido.',
+        'success'
+    );
+}
+
+ function openIphoneCalendarDirect(orderId) {
+
+    const order = state.orders.find(o => o.id == orderId);
+
+    if (!order) {
+        showToast('No se encontró el pedido', 'error');
+        return;
+    }
+
+    // ============================================
+    // FECHA
+    // ============================================
+
+    const fecha = String(order.eventDate || '');
+    const partesFecha = fecha.split('/');
+
+    if (partesFecha.length !== 3) {
+        showToast('Formato de fecha no válido', 'error');
+        return;
+    }
+
+    const day = partesFecha[0];
+    const month = partesFecha[1];
+    const year = partesFecha[2];
+
+    // ============================================
+    // HORARIO
+    // ============================================
+
+    const horario =
+        order.deliveryMethod === 'Recoger en tienda'
+            ? order.pickupTime
+            : order.deliveryTime;
+
+    const partesHorario = String(horario || '').split('-');
+
+    if (partesHorario.length !== 2) {
+        showToast('Horario no válido', 'error');
+        return;
+    }
+
+    function convertirHora(hora) {
+
+        const match = String(hora).trim().match(
+            /(\d{1,2}):(\d{2})\s*(AM|PM)/i
+        );
+
+        if (!match) return null;
+
+        let h = parseInt(match[1], 10);
+        const m = match[2];
+        const ampm = match[3].toUpperCase();
+
+        if (ampm === 'AM' && h === 12) h = 0;
+        if (ampm === 'PM' && h !== 12) h += 12;
+
+        return (
+            String(h).padStart(2, '0') +
+            m +
+            '00'
+        );
+    }
+
+    const inicio = convertirHora(partesHorario[0]);
+    const fin = convertirHora(partesHorario[1]);
+
+    if (!inicio || !fin) {
+        showToast('No se pudo interpretar el horario', 'error');
+        return;
+    }
+
+    // ============================================
+    // DATOS DEL EVENTO
+    // ============================================
+
+    const title =
+        `Entrega Pastel - ${order.clientName} (${order.eventType})`;
+
+    const location =
+        order.deliveryMethod === 'Recoger en tienda'
+            ? order.branchName || ''
+            : order.address || '';
+
+    const details =
+        `Cliente: ${order.clientName}` +
+        `\nTeléfono: ${order.clientPhone || ''}` +
+        `\nProducto: ${order.portions || ''}` +
+        `\nSabor de pan: ${order.flavor || ''}` +
+        `\nRelleno: ${order.filling || ''}` +
+        `\nBetún: ${order.frosting || ''}` +
+        `\nMétodo de entrega: ${order.deliveryMethod || ''}` +
+        `\nLogística: ${order.deliveryDetails || ''}` +
+        `\nDetalles: ${order.eventDetails || 'Sin especificaciones extra'}`;
+
+    // ============================================
+    // ESCAPAR ICS
+    // ============================================
+
+    const escapeICS = value =>
+        String(value || '')
             .replace(/\\/g, '\\\\')
             .replace(/\r?\n/g, '\\n')
             .replace(/;/g, '\\;')
             .replace(/,/g, '\\,');
-    };
+
+    // ============================================
+    // DTSTAMP
+    // ============================================
+
+    const now = new Date();
+
+    const pad = n => String(n).padStart(2, '0');
+
+    const dtstamp =
+        now.getUTCFullYear() +
+        pad(now.getUTCMonth() + 1) +
+        pad(now.getUTCDate()) +
+        'T' +
+        pad(now.getUTCHours()) +
+        pad(now.getUTCMinutes()) +
+        pad(now.getUTCSeconds()) +
+        'Z';
+
+    // ============================================
+    // ICS
+    // ============================================
 
     const ics = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//Ledessertmx//Agenda//ES',
+        'PRODID:-//Sistema de Pedidos//ES',
         'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
         'BEGIN:VEVENT',
-        `UID:${order.id}@ledessertmx`,
-        `DTSTART:${start}`,
-        `DTEND:${end}`,
+        `UID:${Date.now()}-${order.id}@agendapedidos`,
+        `DTSTAMP:${dtstamp}`,
+
+        // IMPORTANTE:
+        // Fecha y hora locales, igual que el sistema que ya funciona.
+        `DTSTART:${year}${month}${day}T${inicio}`,
+        `DTEND:${year}${month}${day}T${fin}`,
+
         `SUMMARY:${escapeICS(title)}`,
         `LOCATION:${escapeICS(location)}`,
-        `DESCRIPTION:${escapeICS(description)}`,
+        `DESCRIPTION:${escapeICS(details)}`,
+
         'END:VEVENT',
         'END:VCALENDAR'
-    ].join('\n');
+    ].join('\r\n');
 
-    // Método Blob utilizado en tu invitación de Canva
-    const blob = new Blob(
-        [ics],
-        { type: 'text/calendar;charset=utf-8' }
+    // ============================================
+    // EXACTAMENTE EL MÉTODO QUE YA FUNCIONABA
+    // ============================================
+
+    const calendarData =
+        `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+
+    window.open(
+        calendarData,
+        '_blank',
+        'noopener,noreferrer'
     );
 
-    const url = window.URL.createObjectURL(blob);
-
-    // Abrir el archivo de calendario
-    window.location.href = url;
-
-    showToast('Abriendo calendario para agregar la cita...', 'success');
-
-    // Liberar la URL después de un momento
-    setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-    }, 5000);
+    showToast(
+        'Abriendo el calendario para agregar el pedido.',
+        'success'
+    );
 }
         // ESTATUS Y VISTA DE COCINA
         function changeOrderStatus(id, newStatus) {
-    const order = state.orders.find(o => o.id === id);
+    const order = state.orders.find(o => String(o.id) === String(id));
+
     if (order) {
         order.status = newStatus;
         saveAppState();
@@ -2122,6 +2897,82 @@ Logística: ${order.deliveryDetails}`;
         renderKitchenOrders();
         showToast(`Estatus de cocina actualizado a ${newStatus}`, 'success');
     }
+}
+        function cambiarEstadoLocal(id, nuevoEstado) {
+
+    const order = state.orders.find(
+        o => String(o.id) === String(id)
+    );
+
+    if (!order) return;
+
+    // Solo cambia el estado en pantalla.
+    // Todavía NO se guarda en Google Sheets.
+    order.status = nuevoEstado;
+
+    renderKitchenOrders();
+}
+        function guardarEstadoProduccion(id) {
+
+    const order = state.orders.find(
+        o => String(o.id) === String(id)
+    );
+
+    if (!order) {
+        showToast('No se encontró el pedido', 'error');
+        return;
+    }
+
+    // Mostrar inmediatamente que estamos guardando
+    showToast('Guardando estatus...', 'success');
+
+    const data = {
+        accion: 'actualizarProduccion',
+        pedido: order
+    };
+
+    fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'payload=' + encodeURIComponent(JSON.stringify(data))
+    })
+    .then(response => response.json())
+    .then(resultado => {
+
+        console.log('Producción guardada:', resultado);
+
+        if (resultado.ok) {
+
+            saveAppState();
+
+            showToast(
+                `Estatus "${order.status}" guardado correctamente`,
+                'success'
+            );
+
+        } else {
+
+            showToast(
+                'No se pudo guardar el estatus',
+                'error'
+            );
+        }
+
+    })
+    .catch(error => {
+
+        console.error(
+            'Error guardando producción:',
+            error
+        );
+
+        showToast(
+            'Error al guardar el estatus',
+            'error'
+        );
+    });
 }
         function actualizarFinanzasEnGoogleSheets(order) {
     const data = {
@@ -2178,14 +3029,14 @@ Logística: ${order.deliveryDetails}`;
                         ${o.eventDetails ? `<p class="text-[10px] text-stone-500 italic">" ${o.eventDetails} "</p>` : ''}
                     </div>
                     <div class="flex items-center gap-2">
-                        <select onchange="changeOrderStatus('${o.id}', this.value)" class="bg-amber-50 border border-amber-200 rounded-lg px-2 py-1 font-bold text-[11px] text-amber-900">
+                        <select onchange="cambiarEstadoLocal('${o.id}', this.value)" class="bg-amber-50 border border-amber-200 rounded-lg px-2 py-1 font-bold text-[11px] text-amber-900">
                             <option value="Pendiente" ${o.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
                             <option value="En Proceso" ${o.status === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
                             <option value="Terminado" ${o.status === 'Terminado' ? 'selected' : ''}>Terminado</option>
                         </select>
-                        <button onclick="changeOrderStatus('${o.id}', 'Terminado')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold transition">
-                            <i class="fa-solid fa-check"></i> Listo
-                        </button>
+     <button onclick="guardarEstadoProduccion('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold transition">
+    <i class="fa-solid fa-check"></i> Listo
+</button>
                     </div>
                 `;
                 container.appendChild(box);
@@ -2194,18 +3045,29 @@ Logística: ${order.deliveryDetails}`;
 
         // FINANZAS MODAL
         function openFinanceModal(id) {
-            currentEditingFinanceOrderId = id;
-            const order = state.orders.find(o => o.id === id);
-            if (!order) return;
+    currentEditingFinanceOrderId = id;
 
-            document.getElementById('financeClientName').textContent = `Cliente: ${order.clientName} (${order.eventDate})`;
-            document.getElementById('financeTotalInput').value = order.totalPrice || 0;
-            document.getElementById('financeAnticipoInput').value = order.anticipo || 0;
-            calculateFinanceRestante();
+    const order = state.orders.find(o => o.id == id);
 
-            document.getElementById('financeModal').classList.remove('hidden');
-            document.getElementById('financeModal').classList.add('flex');
-        }
+    if (!order) {
+        showToast('No se encontró el pedido', 'error');
+        return;
+    }
+
+    document.getElementById('financeClientName').textContent =
+        `Cliente: ${order.clientName} (${order.eventDate})`;
+
+    document.getElementById('financeTotalInput').value =
+        order.totalPrice || 0;
+
+    document.getElementById('financeAnticipoInput').value =
+        order.anticipo || 0;
+
+    calculateFinanceRestante();
+
+    document.getElementById('financeModal').classList.remove('hidden');
+    document.getElementById('financeModal').classList.add('flex');
+}
 
         function closeFinanceModal() {
             document.getElementById('financeModal').classList.add('hidden');
@@ -2221,256 +3083,676 @@ Logística: ${order.deliveryDetails}`;
         }
 
         function saveFinanceSettings() {
-      if (!currentEditingFinanceOrderId) return;
-    const order = state.orders.find(o => o.id === currentEditingFinanceOrderId);
+    if (!currentEditingFinanceOrderId) return;
 
-    if (order) {
-        order.totalPrice = parseFloat(document.getElementById('financeTotalInput').value) || 0;
-        order.anticipo = parseFloat(document.getElementById('financeAnticipoInput').value) || 0;
+    const order = state.orders.find(
+        o => o.id == currentEditingFinanceOrderId
+    );
 
-        saveAppState();
-
-        actualizarFinanzasEnGoogleSheets(order);
-
-        renderOrders();
-        closeFinanceModal();
-        showToast('Finanzas del pedido actualizadas', 'success');
+    if (!order) {
+        showToast('No se encontró el pedido', 'error');
+        return;
     }
+
+    order.totalPrice =
+        parseFloat(document.getElementById('financeTotalInput').value) || 0;
+
+    order.anticipo =
+        parseFloat(document.getElementById('financeAnticipoInput').value) || 0;
+
+    saveAppState();
+
+    actualizarFinanzasEnGoogleSheets(order);
+
+    renderOrders();
+    closeFinanceModal();
+
+    showToast('Finanzas del pedido actualizadas', 'success');
 }
+
         function markOrderAsPaid() {
     if (!currentEditingFinanceOrderId) return;
 
-    const order = state.orders.find(o => o.id === currentEditingFinanceOrderId);
+    const order = state.orders.find(
+        o => o.id == currentEditingFinanceOrderId
+    );
 
-    if (order) {
-        // El anticipo pasa a ser igual al total
-        order.anticipo = order.totalPrice || 0;
-
-        // Guardar cambios
-        saveAppState();
-
-        // Actualizar Finanzas en Google Sheets
-        actualizarFinanzasEnGoogleSheets(order);
-
-        // Actualizar la lista de pedidos
-        renderOrders();
-
-        // Cerrar el modal
-        closeFinanceModal();
-
-        // Mostrar confirmación
-        showToast('Pedido marcado como pagado', 'success');
+    if (!order) {
+        showToast('No se encontró el pedido', 'error');
+        return;
     }
+
+    // El anticipo pasa a ser igual al total
+    order.anticipo = order.totalPrice || 0;
+
+    saveAppState();
+
+    actualizarFinanzasEnGoogleSheets(order);
+
+    renderOrders();
+    closeFinanceModal();
+
+    showToast('Pedido marcado como pagado', 'success');
 }
 
+
         // EDITAR DATOS DE FORMULARIO DE PEDIDO
-        function openEditFormModal(id) {
-            const order = state.orders.find(o => o.id === id);
-            if (!order) return;
+      function openEditFormModal(id) {
 
-            document.getElementById('editOrderId').value = order.id;
-            document.getElementById('editClientName').value = order.clientName;
-            document.getElementById('editClientPhone').value = order.clientPhone;
-            document.getElementById('editEventDate').value = order.eventDate;
-            document.getElementById('editDeliveryDetails').value = order.deliveryDetails;
-            document.getElementById('editEventDetails').value = order.eventDetails || '';
+    const order = state.orders.find(
+        o => String(o.id) === String(id)
+    );
 
-            populateSelect('editEventType', state.catalogs.events);
-            populateSelect('editEventPortions', state.catalogs.portions);
-            populateSelect('editEventFlavor', state.catalogs.flavors);
-            populateSelect('editEventFilling', state.catalogs.fillings);
-            populateSelect('editEventFrosting', state.catalogs.frostings);
+    if (!order) {
+        console.error('No se encontró el pedido para editar:', id);
+        return;
+    }
 
-            document.getElementById('editEventType').value = order.eventType;
-            document.getElementById('editEventPortions').value = order.portions;
-            document.getElementById('editEventFlavor').value = order.flavor;
-            document.getElementById('editEventFilling').value = order.filling;
-            document.getElementById('editEventFrosting').value = order.frosting;
-            document.getElementById('editDeliveryMethod').value = order.deliveryMethod;
+    console.log('PEDIDO PARA EDITAR:', order);
 
-            document.getElementById('editFormModal').classList.remove('hidden');
-            document.getElementById('editFormModal').classList.add('flex');
-        }
+    // ============================================
+    // DATOS GENERALES
+    // ============================================
 
-        function closeEditFormModal() {
-            document.getElementById('editFormModal').classList.add('hidden');
-            document.getElementById('editFormModal').classList.remove('flex');
-        }
+    document.getElementById('editOrderId').value = order.id || '';
 
-        function saveEditedOrderForm(e) {
-            e.preventDefault();
-            const id = document.getElementById('editOrderId').value;
-            const order = state.orders.find(o => o.id === id);
-            if (order) {
-                order.clientName = document.getElementById('editClientName').value.trim();
-                order.clientPhone = document.getElementById('editClientPhone').value.trim();
-                order.eventDate = document.getElementById('editEventDate').value;
-                order.eventType = document.getElementById('editEventType').value;
-                order.portions = document.getElementById('editEventPortions').value;
-                order.flavor = document.getElementById('editEventFlavor').value;
-                order.filling = document.getElementById('editEventFilling').value;
-                order.frosting = document.getElementById('editEventFrosting').value;
-                order.deliveryMethod = document.getElementById('editDeliveryMethod').value;
-                order.deliveryDetails = document.getElementById('editDeliveryDetails').value.trim();
-                order.eventDetails = document.getElementById('editEventDetails').value.trim();
+    document.getElementById('editClientName').value =
+        order.clientName || '';
 
-                saveAppState();
-actualizarPedidoEnGoogleSheets(order);
+    document.getElementById('editClientPhone').value =
+        order.clientPhone || '';
 
-renderOrders();
-renderKitchenOrders();
-closeEditFormModal();
-showToast('Datos del pedido actualizados', 'success');
-            }
-        }
+    // Fecha
+    let fechaEvento = order.eventDate || '';
 
-        // RESUMEN TEXTAREA MODAL
-        let currentSummaryPhone = '';
-        function openSummaryModal(id) {
-            const order = state.orders.find(o => o.id === id);
-            if (!order) return;
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaEvento)) {
+        const partes = fechaEvento.split('/');
+        fechaEvento = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
 
-            currentSummaryPhone = order.clientPhone;
-            const restante = (order.totalPrice || 0) - (order.anticipo || 0);
-            let deliveryInfo = '';
+    document.getElementById('editEventDate').value = fechaEvento;
 
-if (order.deliveryMethod === 'Recoger en tienda') {
 
-    if (
-        String(order.branchName || '').trim().toLowerCase() === 'principal'
-    ) {
+    // ============================================
+    // CATÁLOGOS DEL PRODUCTO
+    // ============================================
 
-        const sucursal = (state.branches || []).find(
-            branch =>
-                String(branch.name || '').trim().toLowerCase() === 'principal'
-        );
+    populateSelect(
+        'editEventType',
+        state.catalogs.events
+    );
 
-        deliveryInfo =
-            `*Sucursal:* ${order.branchName || 'Sin información'}\n` +
-            `*Dirección:* ${sucursal?.address || 'Sin información'}\n` +
-            `*Horario de Recogida:* ${order.pickupTime || 'Sin información'}`;
+    populateSelect(
+        'editEventPortions',
+        state.catalogs.portions
+    );
+
+    populateSelect(
+        'editEventFlavor',
+        state.catalogs.flavors
+    );
+
+    populateSelect(
+        'editEventFilling',
+        state.catalogs.fillings
+    );
+
+    populateSelect(
+        'editEventFrosting',
+        state.catalogs.frostings
+    );
+
+    document.getElementById('editEventType').value =
+        order.eventType || '';
+
+    document.getElementById('editEventPortions').value =
+        order.portions || '';
+
+    document.getElementById('editEventFlavor').value =
+        order.flavor || '';
+
+    document.getElementById('editEventFilling').value =
+        order.filling || '';
+
+    document.getElementById('editEventFrosting').value =
+        order.frosting || '';
+
+
+    // ============================================
+    // MÉTODO DE ENTREGA
+    // ============================================
+
+    const deliverySelect =
+        document.getElementById('editDeliveryMethod');
+
+    deliverySelect.value =
+        order.deliveryMethod || 'Recoger en tienda';
+
+
+    // ============================================
+    // SUCURSALES
+    // ============================================
+
+    const branchSelect =
+        document.getElementById('editPickupLocationSelect');
+
+    branchSelect.innerHTML = '';
+
+    if (state.branches && state.branches.length > 0) {
+
+        state.branches.forEach(branch => {
+
+            const option = document.createElement('option');
+
+            option.value = branch.name;
+            option.textContent = branch.name;
+
+            branchSelect.appendChild(option);
+        });
+    }
+
+
+    // ============================================
+    // HORARIOS DE RECOGIDA
+    // ============================================
+
+    populateSelect(
+        'editPickupTime',
+        state.catalogs.pickupTimes
+    );
+
+
+    // ============================================
+    // HORARIOS DE ENVÍO
+    // ============================================
+
+    populateSelect(
+        'editShippingTime',
+        state.catalogs.shippingTimes
+    );
+
+
+    // ============================================
+    // CARGAR DATOS SEGÚN MÉTODO
+    // ============================================
+
+    if (order.deliveryMethod === 'Recoger en tienda') {
+
+        document.getElementById('editPickupLocationSelect').value =
+            order.branchName || '';
+
+        document.getElementById('editPickupTime').value =
+            order.pickupTime || '';
 
     } else {
 
-        // Privada: no mostrar su dirección
-        deliveryInfo =
-            `*Sucursal:* ${order.branchName || 'Sin información'}\n` +
-            `*Horario de Recogida:* ${order.pickupTime || 'Sin información'}`;
+        // Dirección
+        const direccion = order.address || '';
+
+        // Si la dirección está guardada como:
+        // Calle, Colonia, Ciudad
+        const partesDireccion = direccion.split(',').map(
+            parte => parte.trim()
+        );
+
+        document.getElementById('editShipStreet').value =
+            partesDireccion[0] || '';
+
+        document.getElementById('editShipColony').value =
+            partesDireccion[1] || '';
+
+        document.getElementById('editShipCity').value =
+            partesDireccion[2] || '';
+
+        document.getElementById('editShipReceiver').value =
+            order.receiver || '';
+
+        document.getElementById('editShippingTime').value =
+            order.deliveryTime || '';
     }
 
-} else {
 
-    deliveryInfo =
-        `*Dirección:* ${order.address || 'Sin información'}\n` +
-        `*Quién recibe:* ${order.receiver || 'Sin información'}\n` +
-        `*Horario de Entrega:* ${order.deliveryTime || 'Sin información'}`;
+    // Mostrar/ocultar los campos correspondientes
+    toggleEditDeliveryFields();
+
+
+    // ============================================
+    // DETALLES DE DISEÑO
+    // ============================================
+
+    document.getElementById('editEventDetails').value =
+        order.eventDetails || '';
+
+
+   // ============================================
+// ABRIR MODAL
+// ============================================
+
+document.getElementById('editFormModal')
+    .classList.remove('hidden');
+
+document.getElementById('editFormModal')
+    .classList.add('flex');
 }
 
-            const txt = `*RESUMEN OFICIAL DE PEDIDO*\n\n` +
-                `*Cliente:* ${order.clientName}\n` +
-                `*Teléfono:* ${order.clientPhone}\n` +
-                `*Fecha:* ${order.eventDate}\n` +
-                `*Tipo Evento:* ${order.eventType}\n` +
-                `*Porciones:* ${order.portions}\n` +
-                `*Sabor de Pan:* ${order.flavor}\n` +
-                `*Relleno:* ${order.filling}\n` +
-                `*Betún:* ${order.frosting}\n` +
-                `*Método Entrega:* ${order.deliveryMethod}\n` +
-                deliveryInfo + `\n` +
-                `*Detalles:* ${order.eventDetails || 'Sin especificaciones extra'}\n\n` +
-                `*FINANZAS:*\n` +
-                `- Total: $${(order.totalPrice || 0).toFixed(2)}\n` +
-                `- Anticipo: $${(order.anticipo || 0).toFixed(2)}\n` +
-                `- Restante: $${restante.toFixed(2)}`;
+function toggleEditDeliveryFields() {
 
-            document.getElementById('summaryTextarea').value = txt;
-            document.getElementById('summaryModal').classList.remove('hidden');
-            document.getElementById('summaryModal').classList.add('flex');
-        }
+    const method =
+        document.getElementById('editDeliveryMethod').value;
 
-        function closeSummaryModal() {
-            document.getElementById('summaryModal').classList.add('hidden');
-            document.getElementById('summaryModal').classList.remove('flex');
-        }
+    const pickup =
+        document.getElementById('editPickupContainer');
 
-        function sendSummaryWA() {
-            const txt = document.getElementById('summaryTextarea').value;
-            const cleanPhone = currentSummaryPhone.replace(/\D/g, '');
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(txt)}`, '_blank');
-        }
+    const shipping =
+        document.getElementById('editShippingContainer');
 
-    function deleteOrder(id) {
+    if (method === 'Recoger en tienda') {
 
-    eliminarPedidoDeGoogleSheets(id);
+        pickup.classList.remove('hidden');
+        shipping.classList.add('hidden');
 
-    state.orders = state.orders.filter(o => o.id !== id);
+    } else {
+
+        pickup.classList.add('hidden');
+        shipping.classList.remove('hidden');
+    }
+}
+        function saveEditedOrderForm(e) {
+
+    e.preventDefault();
+
+    const id = document.getElementById('editOrderId').value;
+
+    const order = state.orders.find(
+        o => String(o.id) === String(id)
+    );
+
+    if (!order) {
+        console.error('No se encontró el pedido para guardar:', id);
+        return;
+    }
+
+    order.clientName =
+        document.getElementById('editClientName').value.trim();
+
+    order.clientPhone =
+        document.getElementById('editClientPhone').value.trim();
+
+    order.eventDate =
+        document.getElementById('editEventDate').value;
+
+    order.eventType =
+        document.getElementById('editEventType').value;
+
+    order.portions =
+        document.getElementById('editEventPortions').value;
+
+    order.flavor =
+        document.getElementById('editEventFlavor').value;
+
+    order.filling =
+        document.getElementById('editEventFilling').value;
+
+    order.frosting =
+        document.getElementById('editEventFrosting').value;
+
+    order.deliveryMethod =
+        document.getElementById('editDeliveryMethod').value;
+
+
+    // ============================================
+    // RECOGER EN SUCURSAL
+    // ============================================
+
+    if (order.deliveryMethod === 'Recoger en tienda') {
+
+        order.branchName =
+            document.getElementById('editPickupLocationSelect').value;
+
+        order.pickupTime =
+            document.getElementById('editPickupTime').value;
+
+        order.address = '';
+        order.receiver = '';
+        order.deliveryTime = '';
+
+        order.deliveryDetails =
+            [
+                order.branchName,
+                order.pickupTime
+            ]
+            .filter(Boolean)
+            .join(' | ');
+
+    } else {
+
+        // ============================================
+        // ENVÍO A DOMICILIO
+        // ============================================
+
+        const street =
+            document.getElementById('editShipStreet').value.trim();
+
+        const colony =
+            document.getElementById('editShipColony').value.trim();
+
+        const city =
+            document.getElementById('editShipCity').value.trim();
+
+        order.receiver =
+            document.getElementById('editShipReceiver').value.trim();
+
+        order.deliveryTime =
+            document.getElementById('editShippingTime').value;
+
+        order.address =
+            [
+                street,
+                colony,
+                city
+            ]
+            .filter(Boolean)
+            .join(', ');
+
+        order.deliveryDetails =
+            [
+                order.address,
+                order.receiver,
+                order.deliveryTime
+            ]
+            .filter(Boolean)
+            .join(' | ');
+
+        order.branchName = '';
+        order.pickupTime = '';
+    }
+
+
+    // ============================================
+    // DETALLES DE DISEÑO
+    // ============================================
+
+    order.eventDetails =
+        document.getElementById('editEventDetails').value.trim();
+
+
+    // ============================================
+    // GUARDAR CAMBIOS
+    // ============================================
 
     saveAppState();
+
+    actualizarPedidoEnGoogleSheets(order);
+
     renderOrders();
     renderKitchenOrders();
 
-    showToast('Pedido eliminado', 'info');
+    closeEditFormModal();
+
+    showToast(
+        'Datos del pedido actualizados',
+        'success'
+    );
+}
+        function closeEditFormModal() {
+    document.getElementById('editFormModal').classList.add('hidden');
+    document.getElementById('editFormModal').classList.remove('flex');
+}
+
+// ============================================
+// RESUMEN DEL PEDIDO
+// ============================================
+
+let currentSummaryPhone = '';
+
+
+// ============================================
+// MOSTRAR RESUMEN
+// ============================================
+
+function openSummaryModal(id) {
+    const order = state.orders.find(o => o.id == id);
+
+    if (!order) {
+        showToast('No se encontró el pedido', 'error');
+        return;
+    }
+
+    currentSummaryPhone = order.clientPhone;
+
+    const restante =
+        (order.totalPrice || 0) -
+        (order.anticipo || 0);
+
+    const txt =
+        `*RESUMEN OFICIAL DE PEDIDO*\n\n` +
+        `*Cliente:* ${order.clientName}\n` +
+        `*Teléfono:* ${order.clientPhone}\n` +
+        `*Fecha:* ${order.eventDate}\n` +
+        `*Tipo Evento:* ${order.eventType}\n` +
+        `*Porciones:* ${order.portions}\n` +
+        `*Sabor de Pan:* ${order.flavor}\n` +
+        `*Relleno:* ${order.filling}\n` +
+        `*Betún:* ${order.frosting}\n` +
+        `*Método Entrega:* ${order.deliveryMethod}\n` +
+        `*Logística:* ${order.deliveryDetails}\n` +
+        `*Detalles:* ${order.eventDetails || 'Sin especificaciones extra'}\n\n` +
+        `*FINANZAS:*\n` +
+        `- Total: $${(order.totalPrice || 0).toFixed(2)}\n` +
+        `- Anticipo: $${(order.anticipo || 0).toFixed(2)}\n` +
+        `- Restante: $${restante.toFixed(2)}`;
+
+    document.getElementById('summaryTextarea').value = txt;
+
+    document.getElementById('summaryModal').classList.remove('hidden');
+    document.getElementById('summaryModal').classList.add('flex');
+}
+
+
+// ============================================
+// CERRAR RESUMEN
+// ============================================
+
+function closeSummaryModal() {
+
+    document.getElementById('summaryModal')
+        .classList.add('hidden');
+
+    document.getElementById('summaryModal')
+        .classList.remove('flex');
+}
+
+
+// ============================================
+// ENVIAR RESUMEN POR WHATSAPP
+// ============================================
+
+function sendSummaryWA() {
+
+    const txt =
+        document.getElementById('summaryTextarea').value;
+
+    let cleanPhone =
+        String(currentSummaryPhone || '')
+            .replace(/\D/g, '');
+
+    if (!cleanPhone) {
+        showToast(
+            'Este pedido no tiene número de WhatsApp.',
+            'error'
+        );
+        return;
+    }
+
+    // México
+    if (cleanPhone.length === 10) {
+        cleanPhone = '52' + cleanPhone;
+    }
+
+    const whatsappUrl =
+        `https://wa.me/${cleanPhone}?text=${encodeURIComponent(txt)}`;
+
+    window.open(
+        whatsappUrl,
+        '_blank'
+    );
+}
+
+    async function deleteOrder(id) {
+
+    try {
+
+        // Primero eliminar de Google Sheets
+        await eliminarPedidoDeGoogleSheets(id);
+
+        // Solo si Google Sheets confirmó el borrado,
+        // quitarlo de la aplicación
+        state.orders = state.orders.filter(
+            o => String(o.id) !== String(id)
+        );
+
+        saveAppState();
+        renderOrders();
+        renderKitchenOrders();
+
+        showToast('Pedido eliminado', 'info');
+
+    } catch (error) {
+
+        console.error(
+            'No se pudo eliminar el pedido:',
+            error
+        );
+
+        showToast(
+            'No se pudo eliminar el pedido. Intenta nuevamente.',
+            'error'
+        );
+    }
 }
 
         function confirmClearPastMonthOrders() {
 
-    const todayStr = new Date().toISOString().split('T')[0];
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
 
-    // Obtener los pedidos que tienen fecha pasada
-    const pastOrders = state.orders.filter(o => o.eventDate < todayStr);
+    // Convertir dd/MM/yyyy a fecha real
+    function convertirFechaPedido(fechaTexto) {
 
-    // Obtener sus IDs para eliminarlos también de Google Sheets
-    const pastOrderIds = pastOrders.map(o => String(o.id));
+        if (!fechaTexto) return null;
 
-    // Eliminar de Google Sheets
-    if (pastOrderIds.length > 0) {
+        const partes = String(fechaTexto).split('/');
 
-        const data = {
-            accion: 'limpiarPedidosPasados',
-            pedidoIds: pastOrderIds
-        };
+        if (partes.length !== 3) return null;
 
-        fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'payload=' + encodeURIComponent(JSON.stringify(data))
-        })
-        .then(response => response.json())
-        .then(resultado => {
+        const dia = Number(partes[0]);
+        const mes = Number(partes[1]) - 1;
+        const año = Number(partes[2]);
 
-            console.log('Google Sheets - limpiar pedidos pasados:', resultado);
+        const fecha = new Date(año, mes, dia);
+        fecha.setHours(0, 0, 0, 0);
 
-            if (!resultado.ok) {
-                console.error(
-                    'No se pudieron eliminar los pedidos pasados de Google Sheets:',
-                    resultado
-                );
-            }
-
-        })
-        .catch(error => {
-            console.error(
-                'Error limpiando pedidos pasados de Google Sheets:',
-                error
-            );
-        });
+        return fecha;
     }
 
-    // Eliminar también de la aplicación
-    const initialCount = state.orders.length;
+    // Obtener únicamente pedidos anteriores a HOY
+    const pastOrders = state.orders.filter(o => {
 
-    state.orders = state.orders.filter(o => o.eventDate >= todayStr);
+        const fechaPedido = convertirFechaPedido(o.eventDate);
 
-    const clearedCount = initialCount - state.orders.length;
+        return fechaPedido && fechaPedido < hoy;
+    });
 
-    saveAppState();
-    renderOrders();
-    renderKitchenOrders();
+    // Obtener IDs
+    const pastOrderIds = pastOrders.map(o => String(o.id));
 
-    showToast(`Se limpiaron ${clearedCount} pedidos pasados.`, 'success');
+    console.log('Pedidos que se eliminarán:', pastOrders);
+    console.log('IDs que se eliminarán:', pastOrderIds);
+
+    // Si no hay pedidos pasados
+    if (pastOrderIds.length === 0) {
+
+        showToast(
+            'No hay pedidos con fecha pasada para limpiar.',
+            'info'
+        );
+
+        return;
+    }
+
+    // Enviar IDs a Google Sheets
+    const data = {
+        accion: 'limpiarPedidosPasados',
+        pedidoIds: pastOrderIds
+    };
+
+    fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'payload=' + encodeURIComponent(JSON.stringify(data))
+    })
+    .then(response => response.json())
+    .then(resultado => {
+
+        console.log(
+            'Google Sheets - limpiar pedidos pasados:',
+            resultado
+        );
+
+        if (!resultado.ok) {
+
+            showToast(
+                'No se pudieron eliminar los pedidos pasados.',
+                'error'
+            );
+
+            return;
+        }
+// Eliminar también de la aplicación
+        const initialCount = state.orders.length;
+
+        state.orders = state.orders.filter(o => {
+
+            const fechaPedido =
+                convertirFechaPedido(o.eventDate);
+
+            return !fechaPedido || fechaPedido >= hoy;
+        });
+
+        const clearedCount =
+            initialCount - state.orders.length;
+
+        saveAppState();
+        renderOrders();
+        renderKitchenOrders();
+
+        showToast(
+            `Se limpiaron ${clearedCount} pedidos pasados.`,
+            'success'
+        );
+
+    })
+    .catch(error => {
+
+        console.error(
+            'Error limpiando pedidos pasados:',
+            error
+        );
+
+        showToast(
+            'Error limpiando los pedidos pasados.',
+            'error'
+        );
+    });
 }
-    </script>
+      </script>
+
+<!-- CONTENEDOR DE NOTIFICACIONES -->
+<div id="toast-container"
+     class="fixed bottom-5 right-5 z-[9999] flex flex-col items-end pointer-events-none">
+</div>
+
 </body>
 </html>
