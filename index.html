@@ -10,7 +10,7 @@
 
     <meta id="og-title" property="og:title" content="Dulce Reino - Agenda de Pedidos">
     <meta id="og-description" property="og:description" content="Pastelería Artesanal">
-    <meta id="og-image" property="og:image" content="https://demo-agenda.vercel.app/img/preview-Dulce Reino.jpg">
+    <meta id="og-image" property="og:image" content="https://demo-agenda.vercel.app/img/preview-DulceReino.jpg">
     <meta property="og:type" content="website">
     <meta id="og-url" property="og:url" content="https://demo-agenda.vercel.app/">
 
@@ -31,7 +31,7 @@
             logo: 'img/logo.png',
             favicon: 'img/favicon.png',
             heroImage: 'img/hero.jpg',
-            previewImage: 'img/preview-Dulce Reino.jpg',
+            previewImage: 'img/preview-DulceReino.jpg',
 
             colors: {
                 main: '#5f3134',
@@ -85,7 +85,80 @@
         document.documentElement.style.setProperty('--brand-focus', CLIENT_CONFIG.colors.inputFocus);
     </script>
 
-     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: 'var(--brand-light)',
+                            100: 'var(--brand-lighter)',
+                            200: 'var(--brand-lighter)',
+                            500: 'var(--brand-main)',
+                            600: 'var(--brand-secondary)',
+                            700: 'var(--brand-main)',
+                            800: 'var(--brand-secondary)',
+                            900: 'var(--brand-dark)',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --brand-main: #5f3134;
+            --brand-secondary: #896157;
+            --brand-dark: #2d494c;
+            --brand-light: #f0f7f7;
+            --brand-lighter: #dbecec;
+            --brand-border: #edf2f7;
+            --brand-focus: #569b9e;
+            --bg-light: #f8faf9;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: #896157;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .canva-card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(86, 155, 158, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+        }
+        .input-canva {
+            background-color: #fcfdfe;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.25rem;
+            padding: 0.875rem 1.25rem;
+            font-size: 0.925rem;
+            transition: all 0.2s ease;
+        }
+        .input-canva:focus {
+            outline: none;
+            border-color: #569b9e;
+            box-shadow: 0 0 0 3px rgba(86, 155, 158, 0.15);
+            background-color: #ffffff;
+        }
+        .admin-section-card {
+            background-color: #ffffff;
+            border-radius: 1.75rem;
+            border: 1px solid #edf2f7;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px -2px rgba(86, 155, 158, 0.05);
+        }
+        #toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 100;
+        }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-teal-100 selection:text-brand-900">
 
@@ -110,12 +183,12 @@
     <!-- Header Elegante Estilo Canva -->
     <header class="w-full bg-white/95 backdrop-blur-md border-b border-stone-100 py-3.5 px-4 md:px-10 flex justify-between items-center sticky top-0 z-40">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full border border-[#5497a6] p-0.5 overflow-hidden flex-shrink-0 bg-white">
+            <div class="w-12 h-12 rounded-full border border-[#5f3134] p-0.5 overflow-hidden flex-shrink-0 bg-white">
                <img id="business-logo" src="img/logo.png" alt="Logo" class="w-full h-full rounded-full object-cover">
             </div>
             <div>
                 <h1 id="brand-title" class="text-lg md:text-xl font-bold font-serif text-brand-700 leading-tight tracking-wide"></h1>
-                <p id="brand-subtitle" class="text-[10px] md:text-xs text- [#86a6ab] font-medium tracking-widest uppercase"></p>
+                <p id="brand-subtitle" class="text-[10px] md:text-xs text-stone-400 font-medium tracking-widest uppercase"></p>
             </div>
         </div>
         
