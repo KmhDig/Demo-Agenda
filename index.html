@@ -385,6 +385,33 @@ background-repeat:no-repeat;">
                     </label>
                     <select id="eventType" required class="w-full input-canva font-medium"></select>
                 </div>
+              <!-- SOLICITAR DISEÑO -->
+<div id="designIdeaContainer"
+     class="hidden p-4 bg-purple-50 border border-purple-200 rounded-2xl text-center space-y-2">
+
+    <p class="text-xs font-medium text-purple-900">
+        🎨 <strong>¿Tienes alguna idea para tu pastel?</strong>
+    </p>
+
+    <p class="text-[11px] text-purple-700">
+        Envíanos una foto de referencia o cuéntanos tu idea
+        y te ayudamos con el diseño.
+    </p>
+
+    <button
+        type="button"
+        onclick="sendDesignIdeaWhatsApp()"
+        class="inline-flex items-center justify-center gap-2
+               bg-purple-600 hover:bg-purple-700
+               text-white font-semibold text-xs
+               px-5 py-2.5 rounded-xl shadow transition">
+
+        <i class="fa-brands fa-whatsapp"></i>
+        Enviar idea o foto por WhatsApp
+
+    </button>
+
+</div>
 
                 <!-- Porciones / Tamaño -->
                 <div class="space-y-2">
