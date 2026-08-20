@@ -3599,7 +3599,48 @@ function toggleEditDeliveryFields() {
     document.getElementById('editFormModal').classList.add('hidden');
     document.getElementById('editFormModal').classList.remove('flex');
 }
+// SOLICITAR DISEÑO POR WHATSAPP
+function sendDesignIdeaWhatsApp() {
 
+    const name =
+        document.getElementById('clientName')?.value.trim() || '';
+
+    const phone =
+        document.getElementById('clientPhone')?.value.trim() || '';
+
+    const eventType =
+        document.getElementById('eventType')?.value || '';
+
+    const eventDate =
+        document.getElementById('eventDate')?.value || '';
+
+    const targetPhone =
+        String(state.businessPhone || '').replace(/\D/g, '');
+
+    if (!targetPhone) {
+        showToast(
+            'No hay un WhatsApp configurado en Administración',
+            'error'
+        );
+        return;
+    }
+
+    const msg =
+`🎨 *SOLICITUD DE DISEÑO*
+
+👤 *Cliente:* ${name}
+📱 *WhatsApp:* ${phone}
+📅 *Fecha del evento:* ${eventDate || 'No especificada'}
+🎉 *Evento:* ${eventType}
+
+Hola, quisiera compartirles una foto de referencia o una idea para el diseño de mi pastel. ¿Me pueden ayudar?`;
+
+    const waUrl =
+        `https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`;
+
+    window.open(waUrl, '_blank');
+}
+     
 // ============================================
 // RESUMEN DEL PEDIDO
 // ============================================
