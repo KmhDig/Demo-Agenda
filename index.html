@@ -85,80 +85,7 @@
         document.documentElement.style.setProperty('--brand-focus', CLIENT_CONFIG.colors.inputFocus);
     </script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: 'var(--brand-light)',
-                            100: 'var(--brand-lighter)',
-                            200: 'var(--brand-lighter)',
-                            500: 'var(--brand-main)',
-                            600: 'var(--brand-secondary)',
-                            700: 'var(--brand-main)',
-                            800: 'var(--brand-secondary)',
-                            900: 'var(--brand-dark)',
-                        }
-                    },
-                    fontFamily: {
-                        serif: ['Playfair Display', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        :root {
-            --brand-main: #5f3134;
-            --brand-secondary: #896157;
-            --brand-dark: #2d494c;
-            --brand-light: #f0f7f7;
-            --brand-lighter: #dbecec;
-            --brand-border: #edf2f7;
-            --brand-focus: #569b9e;
-            --bg-light: #f8faf9;
-        }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-light);
-            color: #896157;
-        }
-        .font-serif {
-            font-family: 'Playfair Display', serif;
-        }
-        .canva-card-shadow {
-            box-shadow: 0 10px 25px -5px rgba(86, 155, 158, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
-        }
-        .input-canva {
-            background-color: #fcfdfe;
-            border: 1px solid #e2e8f0;
-            border-radius: 1.25rem;
-            padding: 0.875rem 1.25rem;
-            font-size: 0.925rem;
-            transition: all 0.2s ease;
-        }
-        .input-canva:focus {
-            outline: none;
-            border-color: #569b9e;
-            box-shadow: 0 0 0 3px rgba(86, 155, 158, 0.15);
-            background-color: #ffffff;
-        }
-        .admin-section-card {
-            background-color: #ffffff;
-            border-radius: 1.75rem;
-            border: 1px solid #edf2f7;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px -2px rgba(86, 155, 158, 0.05);
-        }
-        #toast-container {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            z-index: 100;
-        }
-    </style>
+     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-teal-100 selection:text-brand-900">
 
@@ -183,12 +110,12 @@
     <!-- Header Elegante Estilo Canva -->
     <header class="w-full bg-white/95 backdrop-blur-md border-b border-stone-100 py-3.5 px-4 md:px-10 flex justify-between items-center sticky top-0 z-40">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full border border-[#5f3134] p-0.5 overflow-hidden flex-shrink-0 bg-white">
+            <div class="w-12 h-12 rounded-full border border-[#5497a6] p-0.5 overflow-hidden flex-shrink-0 bg-white">
                <img id="business-logo" src="img/logo.png" alt="Logo" class="w-full h-full rounded-full object-cover">
             </div>
             <div>
                 <h1 id="brand-title" class="text-lg md:text-xl font-bold font-serif text-brand-700 leading-tight tracking-wide"></h1>
-                <p id="brand-subtitle" class="text-[10px] md:text-xs text-stone-400 font-medium tracking-widest uppercase"></p>
+                <p id="brand-subtitle" class="text-[10px] md:text-xs text- [#86a6ab] font-medium tracking-widest uppercase"></p>
             </div>
         </div>
         
@@ -484,7 +411,7 @@ Notas adicionales:</textarea>
     <footer class="w-full bg-brand-500 text-white text-center py-10 px-4 space-y-4">
         <h4 id="footer-business-name" class="font-serif text-xl tracking-wide"></h4>
         <p id="footer-business-subtitle" class="text-xs font-light text-stone-100 opacity-90"></p>
-        <p class="text-xs font-light text-stone-100 opacity-90">© Agenda de Pedidos -Pasteleria Artesanal. Todos los derechos reservados.</p>
+        <p class="text-xs font-light text-stone-100 opacity-90">© Agenda de Pedidos -Ledessertmx. Todos los derechos reservados.</p>
         
         <div class="pt-2">
             <span class="text-[10px] uppercase font-bold tracking-widest block mb-3 opacity-80">SÍGUENOS & CONTÁCTANOS</span>
@@ -1153,7 +1080,7 @@ Notas adicionales:"></textarea>
     </button>
 </div>
 
-   <script>
+ <script>
     const DEFAULT_STATE = {
     pin: '1234',
     emailPrimary: 'admin@ejemplo.com',
@@ -1846,21 +1773,63 @@ actualizarFinanzasEnGoogleSheets(pendingOrderData);
 renderOrders();
 renderKitchenOrders();
 
-            const msg = `*SOLICITUD DE PEDIDO*%0A%0A` +
-                `*Cliente:* ${pendingOrderData.clientName}%0A` +
-                `*Teléfono:* ${pendingOrderData.clientPhone}%0A` +
-                `*Fecha Evento:* ${pendingOrderData.eventDate}%0A` +
-                `*Tipo Evento:* ${pendingOrderData.eventType}%0A` +
-                `*Porciones:* ${pendingOrderData.portions}%0A` +
-                `*Pan:* ${pendingOrderData.flavor}%0A` +
-                `*Relleno:* ${pendingOrderData.filling}%0A` +
-                `*Betún:* ${pendingOrderData.frosting}%0A` +
-                `*Método Entrega:* ${pendingOrderData.deliveryMethod}%0A` +
-                `*Logística/Horario:* ${pendingOrderData.deliveryDetails}%0A` +
-                `*Detalles Adicionales:* ${pendingOrderData.eventDetails || 'Ninguno'}`;
+          const detallesFormateados = pendingOrderData.eventDetails || 'Ninguno';
 
-            const waNumber = state.businessPhone.replace(/\D/g, '');
-            const waUrl = `https://wa.me/${waNumber}?text=${msg}`;
+let informacionEntrega = '';
+
+if (pendingOrderData.deliveryMethod === 'Recoger en tienda') {
+
+    const sucursal = state.branches.find(
+        branch =>
+            String(branch.name).trim() ===
+            String(pendingOrderData.branchName).trim()
+    );
+
+    informacionEntrega =
+        `🏬 *Sucursal:* ${pendingOrderData.branchName}\n`;
+
+    if (pendingOrderData.branchAddress) {
+        informacionEntrega +=
+            `📍 *Dirección:* ${pendingOrderData.branchAddress}\n`;
+    }
+
+    if (sucursal && sucursal.map) {
+        informacionEntrega +=
+            `🔗 *Google Maps:* ${sucursal.map}\n`;
+    }
+
+    informacionEntrega +=
+        `🕐 *Horario:* ${pendingOrderData.pickupTime || 'No especificado'}\n`;
+
+} else {
+
+    informacionEntrega =
+        `📍 *Dirección:* ${pendingOrderData.address || 'No especificada'}\n` +
+        `👤 *Recibe:* ${pendingOrderData.receiver || 'No especificado'}\n` +
+        `🕐 *Horario:* ${pendingOrderData.deliveryTime || 'No especificado'}\n`;
+}
+
+
+const msg =
+    `*SOLICITUD DE PEDIDO*\n\n` +
+    `👤 *Cliente:* ${pendingOrderData.clientName}\n` +
+    `📱 *Teléfono:* ${pendingOrderData.clientPhone}\n` +
+    `📅 *Fecha Evento:* ${pendingOrderData.eventDate}\n` +
+    `🎉 *Tipo Evento:* ${pendingOrderData.eventType}\n` +
+    `*Porciones:* ${pendingOrderData.portions}\n` +
+    `*Pan:* ${pendingOrderData.flavor}\n` +
+    `*Relleno:* ${pendingOrderData.filling}\n` +
+    `*Betún:* ${pendingOrderData.frosting}\n` +
+    `🚚 *Método Entrega:* ${pendingOrderData.deliveryMethod}\n` +
+    informacionEntrega +
+    `\n🎨 *Detalles Adicionales:*\n` +
+    detallesFormateados;
+
+
+const waNumber = state.businessPhone.replace(/\D/g, '');
+
+const waUrl =
+    `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
             
 
            closeReviewModal();
@@ -2453,18 +2422,23 @@ function addCatalogOption(key, inputId) {
         ? `\n*UBICACIÓN:* ${branch.map}`
         : '';
 
-    const msg = `Hola ${order.clientName}, te escribimos para compartirte el resumen de la información de tu pedido:
+ const msg =
+    `👤 Hola ${order.clientName}, te escribimos para compartirte el resumen de la información de tu pedido:\n\n` +
+    `📅 *FECHA DE ENTREGA:* ${order.eventDate}\n` +
+    `🎉 *EVENTO:* ${order.eventType}\n\n` +
+    `*DETALLE DEL PEDIDO:*\n` +
+    `Porciones: ${order.portions}\n` +
+    `Pan: ${order.flavor}\n` +
+    `Relleno: ${order.filling}\n` +
+    `Betún: ${order.frosting}\n\n` +
+    `🚚 *MÉTODO DE ENTREGA:* ${order.deliveryMethod}\n` +
+    `📍 *LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}\n\n` +
+    `🎨 *DETALLES:*\n` +
+    `${order.eventDetails || 'Ninguno'}\n\n` +
+    `Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo.\n\n` +
+    `¡Muchas gracias!`;
 
-*FECHA DE ENTREGA:* ${order.eventDate}
-*EVENTO:* ${order.eventType}
-*DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
-*MÉTODO DE ENTREGA:* ${order.deliveryMethod}
-*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}
-*Detalles:* ${order.eventDetails}
-
-Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo. ¡Muchas gracias!`;
-
-    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
 
     window.open(waUrl, '_blank');
 }
@@ -2487,16 +2461,21 @@ function sendOrderReminderWA(orderId) {
         ? `\n*UBICACIÓN:* ${branch.map}`
         : '';
 
-    const msg = `Hola ${order.clientName}, te escribimos para compartirte el resumen de la información de tu pedido:
-
-*FECHA DE ENTREGA:* ${order.eventDate}
-*EVENTO:* ${order.eventType}
-*DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
-*MÉTODO DE ENTREGA:* ${order.deliveryMethod}
-*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}
-*Detalles:* ${order.eventDetails}
-
-Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo. ¡Muchas gracias!`;
+    const msg =
+    `👤 Hola ${order.clientName}, te escribimos para compartirte el resumen de la información de tu pedido:\n\n` +
+    `📅 *FECHA DE ENTREGA:* ${order.eventDate}\n` +
+    `🎉 *EVENTO:* ${order.eventType}\n\n` +
+    `*DETALLE DEL PEDIDO:*\n` +
+    `Porciones: ${order.portions}\n` +
+    `Pan: ${order.flavor}\n` +
+    `Relleno: ${order.filling}\n` +
+    `Betún: ${order.frosting}\n\n` +
+    `🚚 *MÉTODO DE ENTREGA:* ${order.deliveryMethod}\n` +
+    `📍 *LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}\n\n` +
+    `🎨 *DETALLES:*\n` +
+    `${order.eventDetails || 'Ninguno'}\n\n` +
+    `Por favor confirma si todo está correcto o menciónanos si hay algún error para corregirlo a tiempo.\n\n` +
+    `¡Muchas gracias!`;
 
     const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
 
@@ -2520,21 +2499,17 @@ Por favor confirma si todo está correcto o menciónanos si hay algún error par
         ? `\n*UBICACIÓN:* ${branch.map}`
         : '';
 
-    const text = `Hola ${order.clientName}, te escribimos para recordar la fecha y la logística de tu entrega de pedido:
+  const text =
+    `👤 Hola ${order.clientName}, te escribimos para recordarte la fecha y logística de tu entrega:\n\n` +
+    `📅 *FECHA DE ENTREGA:* ${order.eventDate}\n` +
+    `🚚 *MÉTODO DE ENTREGA:* ${order.deliveryMethod}\n` +
+    `📍 *LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}\n\n` +
+    `Cualquier detalle o ajuste, quedamos con gusto a tus órdenes. ¡Muchas gracias!`;
 
-*FECHA DE ENTREGA:* ${order.eventDate}
-*EVENTO:* ${order.eventType}
-*DETALLE DEL PEDIDO:* ${order.portions}, Pan ${order.flavor}, Relleno ${order.filling}, Betún ${order.frosting}
-*MÉTODO DE ENTREGA:* ${order.deliveryMethod}
-*LOGÍSTICA/HORARIO:* ${order.deliveryDetails}${mapInfo}
-${restante > 0 ? `*RESTANTE PENDIENTE:* $${restante.toFixed(2)}` : '*PAGO:* Liquidado'}
-
-Cualquier detalle o ajuste, quedamos con gusto a tus órdenes. ¡Muchas gracias!`;
-
-    window.open(
-        `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`,
-        '_blank'
-    );
+window.open(
+    `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`,
+    '_blank'
+);
 
     showToast(
         'Redirigiendo a WhatsApp con Recordatorio de Pedido',
@@ -2549,10 +2524,11 @@ Cualquier detalle o ajuste, quedamos con gusto a tus órdenes. ¡Muchas gracias!
 
     const cleanPhone = String(order.clientPhone || '').replace(/\D/g, '');
 
-    const text = `Hola ${order.clientName}, te saludamos te compartimos este mensaje para pedirte de favor ¿Si nos podrías apoyar enviándonos el comprobante de pago de tu anticipo por este medio para registrar tu fecha de entrega oficialmente en nuestra agenda de producción? 
+    const text = `👤 Hola ${order.clientName}, ¿nos podrías enviar por este medio el comprobante de pago de tu anticipo?
 
-Muchas gracias. ¡Quedamos muy atentos y muchas gracias por tu confianza!`;
+📋 Con esto podremos registrar oficialmente tu fecha en nuestra agenda de producción.
 
+¡Muchas gracias! Quedamos atentos.`;
     window.open(
         `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`,
         '_blank'
@@ -2575,6 +2551,30 @@ Muchas gracias. ¡Quedamos muy atentos y muchas gracias por tu confianza!`;
         `https://wa.me/${cleanPhone}?text=${encodeURIComponent(template)}`,
         '_blank'
     );
+}
+     function requestCakeDesignWA(orderId) {
+
+    const order = state.orders.find(
+        o => String(o.id) === String(orderId)
+    );
+
+    if (!order) {
+        console.error('No se encontró el pedido:', orderId);
+        return;
+    }
+
+    const cleanPhone =
+        String(order.clientPhone || '').replace(/\D/g, '');
+
+    const text =
+        `👤 Hola ${order.clientName}, si tienes alguna idea o referencia para el diseño de tu pastel, puedes enviárnosla por este medio. 🎨\n\n` +
+        `Puedes mandarnos una foto, captura o imagen de algún diseño que te guste para tomarlo como referencia.\n\n` +
+        `¡Muchas gracias!`;
+
+    const waUrl =
+        `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
+
+    window.open(waUrl, '_blank');
 }
 
  // ============================================
@@ -3525,22 +3525,24 @@ function openSummaryModal(id) {
         (order.anticipo || 0);
 
     const txt =
-        `*RESUMEN OFICIAL DE PEDIDO*\n\n` +
-        `*Cliente:* ${order.clientName}\n` +
-        `*Teléfono:* ${order.clientPhone}\n` +
-        `*Fecha:* ${order.eventDate}\n` +
-        `*Tipo Evento:* ${order.eventType}\n` +
-        `*Porciones:* ${order.portions}\n` +
-        `*Sabor de Pan:* ${order.flavor}\n` +
-        `*Relleno:* ${order.filling}\n` +
-        `*Betún:* ${order.frosting}\n` +
-        `*Método Entrega:* ${order.deliveryMethod}\n` +
-        `*Logística:* ${order.deliveryDetails}\n` +
-        `*Detalles:* ${order.eventDetails || 'Sin especificaciones extra'}\n\n` +
-        `*FINANZAS:*\n` +
-        `- Total: $${(order.totalPrice || 0).toFixed(2)}\n` +
-        `- Anticipo: $${(order.anticipo || 0).toFixed(2)}\n` +
-        `- Restante: $${restante.toFixed(2)}`;
+    `📋 *RESUMEN OFICIAL DE PEDIDO*\n\n` +
+    `👤 *Cliente:* ${order.clientName}\n` +
+    `📱 *Teléfono:* ${order.clientPhone}\n` +
+    `📅 *Fecha:* ${order.eventDate}\n` +
+    `🎉 *Tipo de Evento:* ${order.eventType}\n\n` +
+    `*DETALLE DEL PEDIDO:*\n` +
+    `Porciones: ${order.portions}\n` +
+    `Pan: ${order.flavor}\n` +
+    `Relleno: ${order.filling}\n` +
+    `Betún: ${order.frosting}\n\n` +
+    `🚚 *MÉTODO DE ENTREGA:* ${order.deliveryMethod}\n` +
+    `📍 *LOGÍSTICA:* ${order.deliveryDetails}\n\n` +
+    `🎨 *DETALLES:*\n` +
+    `${order.eventDetails || 'Sin especificaciones extra'}\n\n` +
+    `💰 *FINANZAS:*\n` +
+    `Total: $${(order.totalPrice || 0).toFixed(2)}\n` +
+    `Anticipo: $${(order.anticipo || 0).toFixed(2)}\n` +
+    `Restante: $${restante.toFixed(2)}`;
 
     document.getElementById('summaryTextarea').value = txt;
 
@@ -3655,7 +3657,7 @@ function sendSummaryWA() {
         return fecha;
     }
 
-    // Obtener únicamente pedidos anteriores a HOY
+     // Obtener únicamente pedidos anteriores a HOY
     const pastOrders = state.orders.filter(o => {
 
         const fechaPedido = convertirFechaPedido(o.eventDate);
