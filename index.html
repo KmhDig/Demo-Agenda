@@ -294,7 +294,7 @@ main { max-width: 1380px !important; }
                 'img/Pastel6.jpg'
             ],
 
-            googleSheetsUrl: 'https://script.google.com/macros/s/AKfycbzbw3vc3-K-FmMf5al-jD615XI64H-wWFh-GmVEmrp_lruogG6V8rkNMn8A6AAobuSo/exec'   
+            googleSheetsUrl: 'https://script.google.com/macros/s/AKfycbzbw3vc3-K-FmMf5al-jD615XI64H-wWFh-GmVEmrp_lruogG6V8rkNMn8A6AAobuSo/exec'  
         };
 
         document.documentElement.style.setProperty('--brand-main', CLIENT_CONFIG.colors.main);
@@ -2431,7 +2431,7 @@ function closeImage() {
                 const stored = localStorage.getItem('agenda_pedidos_app_state');
                 if (stored) {
                     const parsed = JSON.parse(stored);
-                    return { ...DEFAULT_STATE, ...parsed, pin: '1234' };
+                    return { ...DEFAULT_STATE, ...parsed, orders: [], pin: '1234' }; // Los pedidos siempre deben venir de Google Sheets; no reutilizar pedidos viejos del navegador.
                 }
             } catch (e) {
                 console.error("Error cargando estado", e);
@@ -2632,14 +2632,14 @@ async function cargarPedidosDesdeGoogleSheets() {
         const resultado = await response.json();
 
         if (!resultado.ok || !Array.isArray(resultado.pedidos)) {
-            console.error(
-                'No se pudieron cargar los pedidos:',
-                resultado
-            );
+            console.error('No se pudieron cargar los pedidos:', resultado);
+            // No mostrar pedidos antiguos guardados en este navegador si la agenda no confirma datos actuales.
+            state.orders = [];
+            renderOrders(document.getElementById('orderSearchInput')?.value || '');
+            renderKitchenOrders();
+            renderUpcomingOrders();
             const container = document.getElementById('ordersContainer');
-            if (container && state.orders.length === 0) {
-                container.innerHTML = '<div class="p-6 bg-amber-50 rounded-2xl text-center text-amber-800 text-xs space-y-3"><p>No se pudieron cargar los pedidos desde la agenda. Tus pedidos no se han borrado por este mensaje.</p><button type="button" onclick="cargarPedidosDesdeGoogleSheets()" class="px-4 py-2 rounded-xl bg-brand-500 text-white font-bold">Reintentar carga</button></div>';
-            }
+            if (container) container.innerHTML = '<div class="p-6 bg-amber-50 rounded-2xl text-center text-amber-800 text-xs space-y-3"><p>No se pudo confirmar la información actual de Google Sheets. No se muestran pedidos guardados anteriormente en este navegador.</p><button type="button" onclick="cargarPedidosDesdeGoogleSheets()" class="px-4 py-2 rounded-xl bg-brand-500 text-white font-bold">Reintentar carga</button></div>';
             return;
         }
 
@@ -2711,10 +2711,13 @@ async function cargarPedidosDesdeGoogleSheets() {
             'Error cargando pedidos desde Google Sheets:',
             error
         );
+        // Si la conexión falla, limpiar los pedidos viejos de la vista; no persistir este vaciado.
+        state.orders = [];
+        renderOrders(document.getElementById('orderSearchInput')?.value || '');
+        renderKitchenOrders();
+        renderUpcomingOrders();
         const container = document.getElementById('ordersContainer');
-        if (container && state.orders.length === 0) {
-            container.innerHTML = '<div class="p-6 bg-amber-50 rounded-2xl text-center text-amber-800 text-xs space-y-3"><p>No se pudo conectar con la agenda de pedidos. Intenta cargarla nuevamente.</p><button type="button" onclick="cargarPedidosDesdeGoogleSheets()" class="px-4 py-2 rounded-xl bg-brand-500 text-white font-bold">Reintentar carga</button></div>';
-        }
+        if (container) container.innerHTML = '<div class="p-6 bg-amber-50 rounded-2xl text-center text-amber-800 text-xs space-y-3"><p>No se pudo conectar con Google Sheets. Por seguridad no se muestran pedidos antiguos del navegador.</p><button type="button" onclick="cargarPedidosDesdeGoogleSheets()" class="px-4 py-2 rounded-xl bg-brand-500 text-white font-bold">Reintentar carga</button></div>';
     }
 }
        // SISTEMA DE TOASTS Y NOTIFICACIONES
