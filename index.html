@@ -2417,7 +2417,7 @@ function closeImage() {
     renderAvailabilityCalendar();
     renderAdminAvailabilityCalendar();
     updateOrderAvailability();
-    setInterval(updateOrderAvailability, 60000);
+    setInterval(updateOrderAvailability, 5000);
 
     cargarConfiguracionDesdeGoogleSheets();
     cargarPedidosDesdeGoogleSheets();
@@ -7431,6 +7431,51 @@ main > section { margin-bottom: .65rem !important; }
 }
 
 </style>
+
+
+<script id="dulce-reino-hard-order-hours-guard">
+(function () {
+  function checkOrderGateNow() {
+    try {
+      if (typeof updateOrderAvailability === 'function') updateOrderAvailability();
+      if (typeof estaDentroDelHorarioDePedidos === 'function') {
+        const open = estaDentroDelHorarioDePedidos(new Date());
+        const form = document.getElementById('orderForm');
+        if (form && !open) {
+          form.classList.add('order-form-reception-closed');
+          const notice = document.getElementById('orderFormClosedNotice');
+          if (notice) {
+            notice.textContent = typeof obtenerMensajeHorarioCerrado === 'function'
+              ? obtenerMensajeHorarioCerrado()
+              : 'En este momento no estamos recibiendo pedidos. Regresa durante el horario configurado.';
+            notice.classList.remove('hidden');
+          }
+          form.querySelectorAll('input, select, textarea, button').forEach(function (control) {
+            if (!control.hasAttribute('data-order-gate-prev-disabled')) {
+              control.setAttribute('data-order-gate-prev-disabled', control.disabled ? '1' : '0');
+            }
+            control.disabled = true;
+            control.setAttribute('aria-disabled', 'true');
+          });
+        }
+      }
+    } catch (err) { console.warn('No se pudo actualizar el bloqueo del formulario:', err); }
+  }
+  document.addEventListener('submit', function (event) {
+    if (!event.target || event.target.id !== 'orderForm') return;
+    try {
+      if (typeof estaDentroDelHorarioDePedidos === 'function' && !estaDentroDelHorarioDePedidos(new Date())) {
+        event.preventDefault(); event.stopImmediatePropagation();
+        if (typeof setOrderFormAvailability === 'function') setOrderFormAvailability(false);
+        if (typeof showToast === 'function') showToast(typeof obtenerMensajeHorarioCerrado === 'function' ? obtenerMensajeHorarioCerrado() : 'El formulario está cerrado en este momento.', 'error');
+      }
+    } catch (_) { event.preventDefault(); event.stopImmediatePropagation(); }
+  }, true);
+  document.addEventListener('DOMContentLoaded', checkOrderGateNow);
+  window.addEventListener('load', checkOrderGateNow);
+  setInterval(checkOrderGateNow, 5000);
+})();
+</script>
 
 </body>
 </html>
