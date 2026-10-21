@@ -3914,10 +3914,16 @@ function addCatalogOption(key, inputId) {
             const modo = state.orderHoursMode || 'hours';
             const inicio = new Date(fromDate);
             if (modo === 'days') {
+                // En modo Solo días, un día habilitado está abierto desde medianoche;
+                // si hoy está deshabilitado, la próxima apertura es a las 12:00 AM del siguiente día activo.
+                inicio.setHours(0, 0, 0, 0);
                 for (let offset = 0; offset <= 7; offset++) {
                     const candidato = new Date(inicio);
                     candidato.setDate(inicio.getDate() + offset);
-                    if (state.orderHours?.[getOrderDayKey(candidato)]?.activo !== false) return candidato;
+                    if (state.orderHours?.[getOrderDayKey(candidato)]?.activo !== false) {
+                        if (offset === 0 && fromDate.getTime() >= candidato.getTime()) return candidato;
+                        return candidato;
+                    }
                 }
                 return null;
             }
@@ -3972,7 +3978,15 @@ function addCatalogOption(key, inputId) {
             const ahora = new Date();
             const dia = getOrderDayKey(ahora);
             const config = state.orderHours?.[dia];
+            const modo = state.orderHoursMode || 'hours';
             const proxima = getNextOrderOpening(ahora);
+            if (modo === 'days') {
+                if (proxima) {
+                    const cuando = obtenerNombreRelativo(proxima, ahora);
+                    return `Hoy no estamos recibiendo pedidos. Podrás llenar el formulario ${cuando} durante todo el día, a partir de las 12:00 AM.`;
+                }
+                return 'En este momento no hay días habilitados para recibir pedidos. Consulta más tarde nuestra disponibilidad.';
+            }
             if (config && config.activo !== false) {
                 const minutos = ahora.getHours() * 60 + ahora.getMinutes();
                 const apertura = minutesFromTime(config.apertura);
@@ -4050,7 +4064,13 @@ function addCatalogOption(key, inputId) {
             progressWrap?.classList.add('hidden');
             if (countdown) countdown.textContent = '';
 
-            if (abierto && config) {
+            if (abierto && modo === 'days') {
+                box.classList.add('is-open');
+                icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                title.innerHTML = '<span class="order-status-dot order-live-pulse"></span><span>Estamos recibiendo pedidos</span>';
+                message.textContent = 'Hoy puedes llenar el formulario durante todo el día, hasta las 11:59 PM.';
+                if (countdown) countdown.textContent = 'Disponible todo el día';
+            } else if (abierto && config) {
                 const apertura = minutesFromTime(config.apertura);
                 const cierre = minutesFromTime(config.cierre);
                 const quedan = cierre - minutosAhora;
