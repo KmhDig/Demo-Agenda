@@ -115,6 +115,24 @@ main { max-width: 1380px !important; }
 }
 </style>
 
+
+<style id="public-order-schedule-compact">
+#publicOrderSchedule{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;margin:0 0 12px;border:1px solid #f2dfe2;border-radius:18px;background:linear-gradient(135deg,#fff4f6,#fff);color:#292524}
+#publicOrderSchedule .public-schedule-icon{flex:0 0 42px;width:42px;height:42px;border-radius:14px;border:1px solid #fecdd3;background:#fff;display:flex;align-items:center;justify-content:center;color:#cf334c}
+#publicOrderSchedule .public-schedule-main{flex:1;min-width:0}
+#publicOrderSchedule .public-schedule-eyebrow{font-size:10px;letter-spacing:.14em;font-weight:800;color:#cf334c;margin:1px 0 4px}
+#publicOrderSchedule h4{font-size:clamp(15px,1.6vw,19px);font-weight:800;line-height:1.25;margin:0 0 4px;color:#211c1c}
+#publicOrderSchedule p{font-size:12px;line-height:1.45;margin:0;color:#6b625f}
+#publicOrderSchedule .public-schedule-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px;max-width:620px}
+#publicOrderSchedule .public-schedule-meta>div{min-width:0;padding:9px 11px;border:1px solid #f0e2e3;border-radius:13px;background:rgba(255,255,255,.85)}
+#publicOrderSchedule .public-schedule-meta span{display:block;font-size:9px;letter-spacing:.04em;font-weight:800;color:#a49a98;margin-bottom:3px}
+#publicOrderSchedule .public-schedule-meta strong{display:block;font-size:11px;line-height:1.35;color:#292524;overflow-wrap:anywhere}
+#publicOrderSchedule.is-closed{background:#faf8f7;border-color:#e7e1df}
+#publicOrderSchedule.is-closed .public-schedule-icon{color:#78716c;border-color:#e7e1df}
+#publicOrderSchedule.is-closed .public-schedule-eyebrow{color:#78716c}
+@media(max-width:640px){#publicOrderSchedule{padding:12px;gap:9px;border-radius:14px;margin-bottom:9px}#publicOrderSchedule .public-schedule-icon{width:34px;height:34px;flex-basis:34px;border-radius:11px}#publicOrderSchedule .public-schedule-meta{grid-template-columns:1fr;gap:6px;margin-top:8px}#publicOrderSchedule .public-schedule-meta>div{padding:8px 9px}#publicOrderSchedule .public-schedule-meta span{font-size:8px}#publicOrderSchedule .public-schedule-meta strong{font-size:10px}}
+</style>
+
 </head>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -862,6 +880,19 @@ background-repeat:no-repeat;">
                     <div id="otherAvailabilityCalendarDetail" class="availability-detail" aria-live="polite">Selecciona una fecha verde para agregarla al formulario.</div>
                 </div>
             </div>
+
+            <section id="publicOrderSchedule" class="public-order-schedule" aria-live="polite">
+                <div class="public-schedule-icon"><i class="fa-solid fa-clock"></i></div>
+                <div class="public-schedule-main">
+                    <div class="public-schedule-eyebrow">PEDIDOS Y HORARIOS</div>
+                    <h4 id="publicScheduleTitle">¡Ya puedes hacer tu pedido!</h4>
+                    <p id="publicScheduleMessage">Consulta los días y horarios en que recibimos pedidos.</p>
+                    <div class="public-schedule-meta">
+                        <div><span>DÍAS PARA HACER PEDIDOS</span><strong id="publicOrderDays">Todos los días</strong></div>
+                        <div><span>HORARIO PARA HACER PEDIDOS</span><strong id="publicOrderHours">Consultando horario…</strong></div>
+                    </div>
+                </div>
+            </section>
 
             <div class="rounded-2xl border border-amber-100 bg-amber-50 p-4 md:p-5 mb-6">
                 <div class="flex items-start gap-3">
@@ -2427,6 +2458,7 @@ function closeImage() {
         }
 
        const config = resultado.configuracion;
+       if (config.orderHoursMode) state.orderHoursMode = String(config.orderHoursMode);
 
 // Si hubo cualquier guardado mientras esta lectura estaba en curso, no aplicar
 // esta respuesta: podría contener fechas anteriores y borrar cambios recientes.
@@ -3556,6 +3588,7 @@ function savePaymentInfoDraft() {
         otherDailyOrderLimit: Number(state.otherDailyOrderLimit ?? 3),
         otherDailyOrderLimitEnabled: state.otherDailyOrderLimitEnabled === true,
         orderHours: state.orderHours,
+        orderHoursMode: state.orderHoursMode || 'hours',
 
         paymentBank: state.paymentBank || '',
         paymentHolder: state.paymentHolder || '',
@@ -3584,16 +3617,19 @@ function savePaymentInfoDraft() {
             body: 'payload=' + encodeURIComponent(JSON.stringify(data))
         });
 
-        const resultado = await response.json();
+        const rawResponse = await response.text();
+        let resultado;
+        try { resultado = JSON.parse(rawResponse); }
+        catch (_) { throw new Error('El script de Google Sheets no devolvió JSON. Revisa que la implementación /exec esté actualizada.'); }
         console.log('Configuración Google Sheets:', resultado);
 
-        if (!resultado || !resultado.ok) {
+        if (!response.ok || !resultado || resultado.ok !== true) {
+            const detalle = resultado?.mensaje || resultado?.error || `HTTP ${response.status}`;
             console.error('Google Sheets rechazó la configuración:', resultado);
-            showToast('No se pudo guardar la configuración', 'error');
+            showToast(`No se pudo guardar: ${String(detalle).slice(0,100)}`, 'error');
             return false;
         }
 
-        showToast('Configuración guardada', 'success');
         return true;
     };
 
@@ -3602,10 +3638,24 @@ function savePaymentInfoDraft() {
             console.error('Error previo en la cola de guardado:', error);
         })
         .then(ejecutarGuardado)
-        .catch(error => {
+        .catch(async error => {
             console.error('Error guardando configuración en Google Sheets:', error);
-            showToast('Error al guardar la configuración', 'error');
-            return false;
+            // Apps Script puede guardar el cambio y aun así bloquear la lectura de su respuesta por CORS.
+            // Reintento como envío simple: la escritura de configuración es idempotente (clave/valor).
+            try {
+                await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'payload=' + encodeURIComponent(JSON.stringify(data))
+                });
+                showToast('Cambios enviados a Google Sheets. La conexión no permitió leer la confirmación, pero el envío se realizó.', 'success');
+                return true;
+            } catch (retryError) {
+                console.error('Falló también el envío simple a Google Sheets:', retryError);
+                showToast('No se pudo conectar con Google Sheets. Revisa la URL /exec y que el script esté implementado como aplicación web.', 'error');
+                return false;
+            }
         });
 
     return colaGuardadoConfiguracion;
@@ -3835,14 +3885,42 @@ function addCatalogOption(key, inputId) {
         }
 
         function estaDentroDelHorarioDePedidos(date = new Date()) {
+            const modo = state.orderHoursMode || 'hours';
             const config = state.orderHours?.[getOrderDayKey(date)];
-            if (!config || config.activo === false) return false;
+            // En modo solo horario no se restringen los días; en solo días no se restringen las horas.
+            if (modo !== 'hours' && (!config || config.activo === false)) return false;
+            if (modo === 'days') return true;
+            const horario = config || { apertura: '09:00', cierre: '18:00' };
             const minutos = date.getHours() * 60 + date.getMinutes();
-            return minutos >= minutesFromTime(config.apertura) && minutos < minutesFromTime(config.cierre);
+            return minutos >= minutesFromTime(horario.apertura) && minutos < minutesFromTime(horario.cierre);
         }
 
         function getNextOrderOpening(fromDate = new Date()) {
+            const modo = state.orderHoursMode || 'hours';
             const inicio = new Date(fromDate);
+            if (modo === 'days') {
+                for (let offset = 0; offset <= 7; offset++) {
+                    const candidato = new Date(inicio);
+                    candidato.setDate(inicio.getDate() + offset);
+                    if (state.orderHours?.[getOrderDayKey(candidato)]?.activo !== false) return candidato;
+                }
+                return null;
+            }
+            if (modo === 'hours') {
+                const config = state.orderHours?.[getOrderDayKey(inicio)] || { apertura: '09:00', cierre: '18:00' };
+                const minutos = inicio.getHours() * 60 + inicio.getMinutes();
+                if (minutos < minutesFromTime(config.apertura)) {
+                    const candidato = new Date(inicio);
+                    const [h, m] = config.apertura.split(':').map(Number);
+                    candidato.setHours(h, m, 0, 0);
+                    return candidato;
+                }
+                if (minutos < minutesFromTime(config.cierre)) return inicio;
+                const candidato = new Date(inicio);
+                candidato.setDate(candidato.getDate() + 1);
+                candidato.setHours(9, 0, 0, 0);
+                return candidato;
+            }
             inicio.setSeconds(0, 0);
             for (let offset = 0; offset <= 7; offset++) {
                 const candidato = new Date(inicio);
@@ -3912,7 +3990,12 @@ function addCatalogOption(key, inputId) {
             const progressStart = document.getElementById('orderProgressStart');
             const progressEnd = document.getElementById('orderProgressEnd');
             const chips = document.getElementById('orderHoursChips');
-            if (!box || !icon || !title || !message) return;
+            const publicBox = document.getElementById('publicOrderSchedule');
+            const publicTitle = document.getElementById('publicScheduleTitle');
+            const publicMessage = document.getElementById('publicScheduleMessage');
+            const publicDays = document.getElementById('publicOrderDays');
+            const publicHours = document.getElementById('publicOrderHours');
+            if (!box || !icon || !title || !message) { renderPublicOrderSchedule(); return; }
 
             const ahora = new Date();
             const dia = getOrderDayKey(ahora);
@@ -3964,6 +4047,33 @@ function addCatalogOption(key, inputId) {
                 }).join('');
             }
             if (summary) summary.textContent = 'El horario se actualiza automáticamente según la configuración de atención.';
+            renderPublicOrderSchedule();
+        }
+
+        function renderPublicOrderSchedule() {
+            const box = document.getElementById('publicOrderSchedule');
+            if (!box) return;
+            const title = document.getElementById('publicScheduleTitle');
+            const message = document.getElementById('publicScheduleMessage');
+            const daysEl = document.getElementById('publicOrderDays');
+            const hoursEl = document.getElementById('publicOrderHours');
+            const modo = state.orderHoursMode || 'hours';
+            const active = ORDER_DAY_KEYS.slice(1).filter(d => modo === 'hours' || state.orderHours?.[d]?.activo !== false);
+            const names = active.map(d => ORDER_DAY_LABELS[d]);
+            let daysText = 'Ningún día configurado';
+            if (modo === 'hours' || names.length === 7) daysText = 'Todos los días';
+            else if (names.length && names.length <= 3) daysText = names.join(', ');
+            else if (names.length) daysText = names.slice(0, 3).join(', ') + (names.length > 3 ? ` y ${names.length - 3} más` : '');
+            const ranges = [...new Set(active.map(d => { const c=state.orderHours[d]; return `${formatOrderTime(c.apertura)}–${formatOrderTime(c.cierre)}`; }))];
+            const hoursText = modo === 'days' ? 'Todo el día' : (!active.length ? 'Cerrado todos los días' : ranges.length === 1 ? ranges[0] : 'Consulta el horario por día');
+            const open = estaDentroDelHorarioDePedidos(new Date());
+            box.classList.toggle('is-closed', !open);
+            if (title) title.textContent = open ? '¡Ya puedes hacer tu pedido!' : 'Pedidos fuera de horario';
+            if (message) message.textContent = open
+                ? (modo === 'days' ? 'Hoy recibimos pedidos durante todo el día.' : modo === 'hours' ? 'Hoy estamos recibiendo pedidos.' : 'Hoy recibimos pedidos dentro del horario configurado.')
+                : obtenerMensajeHorarioCerrado();
+            if (daysEl) daysEl.textContent = daysText;
+            if (hoursEl) hoursEl.textContent = hoursText;
         }
 
         function renderOrderDaysAdmin() {
@@ -4088,7 +4198,7 @@ function addCatalogOption(key, inputId) {
             if (estado) estado.textContent = activo ? 'Disponible para pedidos' : 'Día cerrado';
         }
 
-        function saveOrderHours() {
+        async function saveOrderHours() {
             const desde = document.getElementById('orderHoursGlobalStart')?.value || '09:00';
             const hasta = document.getElementById('orderHoursGlobalEnd')?.value || '17:00';
             const modo = document.querySelector('input[name="orderHoursMode"]:checked')?.value || 'hours';
@@ -4105,10 +4215,18 @@ function addCatalogOption(key, inputId) {
             }
             state.orderHoursMode = modo;
             saveAppState();
-            guardarConfiguracionEnGoogleSheets();
             renderOrderDaysAdmin();
             updateOrderAvailability();
-            showToast(modo === 'days' ? 'La restricción por días quedó seleccionada.' : 'Horario para recibir pedidos guardado', 'success');
+            const saved = await guardarConfiguracionEnGoogleSheets();
+            renderOrderHoursAdmin();
+            renderOrderDaysAdmin();
+            updateOrderAvailability();
+            if (saved) {
+                const labels = { hours: 'Solo horario', days: 'Solo días', both: 'Horario y días' };
+                showToast(`${labels[modo]} guardado correctamente.`, 'success');
+            } else {
+                showToast('No se pudo confirmar el guardado. Verifica la implementación de Apps Script y su URL /exec.', 'error');
+            }
         }
 
 
