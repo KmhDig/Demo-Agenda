@@ -4232,7 +4232,9 @@ function addCatalogOption(key, inputId) {
         async function cambiarEstadoProduccion(orderId, status) {
             const order = state.orders.find(o => String(o.id) === String(orderId));
             if (!order || !['Pendiente', 'En Proceso', 'Terminado'].includes(status)) return;
-            order.status = status; order.productionStatus = status;
+            // El estado de producción es independiente del estado general del pedido.
+            // No sobrescribir order.status para evitar mezclar el historial con la cocina.
+            order.productionStatus = status;
             saveAppState(); renderKitchenOrders();
             renderOrders(document.getElementById('orderSearchInput')?.value || '');
             try {
@@ -5873,8 +5875,13 @@ function openIphoneCalendarDirect(orderId) {
             const badge = document.getElementById('kitchenCountBadge');
             if (!container) return;
             const valid = ['Pendiente', 'En Proceso', 'Terminado'];
-            let filtered = state.orders.filter(o => !['cancelado','cancelada'].includes(String(o.status || '').toLowerCase())).map(o => ({
-                ...o, status: valid.includes(o.productionStatus) ? o.productionStatus : (valid.includes(o.status) ? o.status : 'Pendiente')
+            // Cocina se alimenta únicamente de los pedidos que siguen en state.orders.
+            // Usa solo productionStatus; nunca deduce el estatus de cocina del estado general.
+            let filtered = state.orders.filter(o => {
+                const generalStatus = String(o.orderStatus || o.estadoPedido || o.status || '').trim().toLowerCase();
+                return !!o && !['cancelado','cancelada','eliminado','eliminada','borrado','borrada'].includes(generalStatus);
+            }).map(o => ({
+                ...o, status: valid.includes(o.productionStatus) ? o.productionStatus : 'Pendiente'
             }));
             if (kitchenFilter !== 'all') filtered = filtered.filter(o => o.status === kitchenFilter);
             if (badge) badge.textContent = `${filtered.length} pedidos`;
