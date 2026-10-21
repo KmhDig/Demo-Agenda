@@ -6986,5 +6986,109 @@ function sendSummaryWA() {
 }
 </style>
 
+
+<style id="dulce-reino-compact-responsive-v1">
+/* Presentación compacta adaptable: escritorio, tablet y celular. No cambia la lógica del formulario. */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:76px}
+body{font-size:14px;line-height:1.45}
+header.sticky{padding:.55rem clamp(.65rem,2vw,1.25rem)!important;min-height:58px}
+header.sticky>div:first-child{gap:.6rem!important}
+header.sticky>div:first-child>div:first-child{width:2.8rem!important;height:2.8rem!important}
+#brand-title{font-size:clamp(1rem,1.25vw,1.25rem)!important}
+#brand-subtitle{font-size:.58rem!important;letter-spacing:.06em!important}
+header.sticky button[onclick="openAdminModal()"]{min-height:2.25rem!important;padding:.5rem .85rem!important}
+#hero-section{min-height:clamp(320px,52vh,490px)!important;padding:2.5rem 0!important}
+#hero-section>div{width:min(100% - 2rem,900px)!important}
+#hero-badge{font-size:.65rem!important;padding:.45rem .9rem!important;margin-bottom:.8rem!important;letter-spacing:.16em!important}
+#hero-title{font-size:clamp(2rem,4.2vw,3.8rem)!important;line-height:1.08!important;margin-bottom:.8rem!important;max-width:850px!important}
+#hero-subtitle{font-size:clamp(.88rem,1.2vw,1.05rem)!important;line-height:1.5!important;max-width:650px!important}
+.hero-actions{margin-top:1.15rem!important;gap:.6rem!important}
+.hero-button{min-height:42px!important;padding:.65rem 1rem!important;font-size:.78rem!important}
+main{max-width:1100px!important;padding:.65rem clamp(.5rem,1.5vw,1rem)!important;gap:.75rem!important}
+main>section{margin-bottom:.65rem!important}
+#portfolio-section{gap:.45rem!important;margin-top:.6rem!important}
+#portfolio-section h3{font-size:clamp(1.2rem,2vw,1.65rem)!important}
+#portfolio-section .text-center>span{font-size:.62rem!important;letter-spacing:.22em!important}
+#portfolio-grid{gap:clamp(.25rem,.7vw,.55rem)!important}
+#portfolio-grid>div{border-radius:.65rem!important}
+#quality-guide-section{padding:clamp(.8rem,1.6vw,1.25rem)!important;border-radius:1rem!important;gap:.75rem!important;column-gap:1rem!important}
+#quality-guide-section #essence-title{font-size:1.25rem!important;margin:.15rem 0 .35rem!important}
+#quality-guide-section #essence-text{font-size:.72rem!important;line-height:1.45!important}
+#quality-guide-section #essence-label,#quality-guide-section #guide-label{font-size:.6rem!important}
+#quality-guide-section #guide-title{font-size:1.15rem!important}
+#quality-guide-section #steps-section{padding-left:1rem!important}
+#quality-guide-section #steps-section>div:first-child{margin-bottom:.5rem!important}
+#quality-guide-section #steps-section>.space-y-6{gap:.55rem .7rem!important}
+#quality-guide-section #steps-section strong{font-size:.72rem!important}
+#quality-guide-section #steps-section p{font-size:.62rem!important;line-height:1.4!important}
+#quality-guide-section #steps-section .w-9.h-9{width:1.45rem!important;height:1.45rem!important;flex-basis:1.45rem!important;font-size:.68rem!important}
+#form-section{padding:clamp(.75rem,1.8vw,1.25rem)!important;border-radius:1rem!important;margin-top:.5rem!important;gap:1rem!important}
+#form-section h3{font-size:clamp(1.25rem,2.2vw,1.65rem)!important}
+#form-section>div:first-child span{font-size:.65rem!important}
+#form-section>div:first-child p{font-size:.72rem!important}
+#form-section .space-y-8{gap:.85rem!important}
+#form-section h4{font-size:.72rem!important}
+#form-section p,#form-section label{font-size:.72rem!important;line-height:1.45!important}
+#form-section input:not([type=checkbox]):not([type=radio]),#form-section select,#form-section textarea{min-height:2.45rem!important;padding:.55rem .75rem!important;font-size:.82rem!important;border-radius:.75rem!important}
+#form-section textarea{min-height:4.5rem!important}
+#form-section button{font-size:.75rem!important;padding:.6rem .8rem!important}
+#form-section .availability-calendar{padding:.8rem!important;border-radius:1rem!important}
+.availability-calendar-head{gap:.5rem!important}
+.availability-calendar-icon{width:30px!important;height:30px!important;border-radius:.65rem!important}
+.availability-calendar-month{font-size:.9rem!important}
+.availability-calendar-sub{font-size:.56rem!important}
+.availability-week{margin-top:.7rem!important;gap:.2rem!important}
+.availability-week span{font-size:.52rem!important}
+.availability-grid{gap:.22rem!important;margin-top:.35rem!important}
+.availability-day{min-height:clamp(30px,4vw,42px)!important;border-radius:.55rem!important}
+.availability-day .day-number{font-size:.68rem!important}
+.availability-legend{margin-top:.65rem!important;padding-top:.6rem!important;gap:.4rem .7rem!important}
+.availability-legend-item{font-size:.55rem!important}
+.availability-detail{margin-top:.6rem!important;padding:.55rem!important;font-size:.61rem!important;min-height:30px!important}
+.admin-section-card{padding:clamp(.75rem,1.5vw,1.15rem)!important;border-radius:1rem!important}
+.input-canva{padding:.6rem .8rem!important;border-radius:.75rem!important;font-size:.82rem!important}
+button{touch-action:manipulation}
+#financeModal>div,#paymentInfoModal>div{width:min(100%,500px)!important;max-height:92dvh!important;padding:clamp(14px,2vw,20px)!important;gap:12px!important;border-radius:1rem!important}
+#financeModal .input-canva,#paymentInfoModal .input-canva,#paymentInfoModal input,#paymentInfoModal textarea{min-height:2.8rem!important;padding:.65rem .8rem!important;font-size:.88rem!important;border-radius:.75rem!important}
+#financeModal button,#paymentInfoModal button{min-height:2.65rem!important;font-size:.75rem!important;border-radius:.75rem!important}
+@media(min-width:1100px){main{max-width:1080px!important}#form-section{max-width:100%}#hero-section{min-height:440px!important}}
+@media(max-width:760px){
+  body{font-size:13px}
+  header.sticky{padding:.5rem .7rem!important}
+  #hero-section{min-height:360px!important;padding:2.3rem 0!important}
+  #hero-title{font-size:clamp(1.9rem,6vw,2.7rem)!important}
+  #hero-subtitle{font-size:.88rem!important}
+  .hero-button{min-height:40px!important;padding:.6rem .8rem!important;font-size:.72rem!important}
+  #quality-guide-section{grid-template-columns:minmax(0,1fr)!important;padding:.9rem!important}
+  #quality-guide-section #steps-section{border-left:0!important;border-top:1px solid rgba(255,255,255,.28)!important;padding:.75rem 0 0!important}
+  #quality-guide-section #steps-section>.space-y-6{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #form-section{padding:.75rem!important}
+  #form-section .grid{min-width:0}
+  #financeModal,#paymentInfoModal{padding:.5rem!important}
+}
+@media(max-width:480px){
+  header.sticky>div:first-child>div:first-child{width:2.45rem!important;height:2.45rem!important}
+  #brand-title{font-size:.95rem!important}
+  #brand-subtitle{font-size:.52rem!important}
+  #hero-section{min-height:330px!important;padding:2rem 0!important}
+  #hero-section>div{width:calc(100% - 1.25rem)!important}
+  #hero-title{font-size:clamp(1.7rem,8vw,2.2rem)!important}
+  #hero-subtitle{font-size:.82rem!important}
+  .hero-actions{flex-direction:column!important;align-items:stretch!important;max-width:260px;margin-left:auto!important;margin-right:auto!important}
+  .hero-button{width:100%!important}
+  #portfolio-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:.22rem!important}
+  #quality-guide-section #steps-section>.space-y-6{grid-template-columns:minmax(0,1fr)!important}
+  .availability-calendar{padding:.6rem!important}
+  .availability-day{min-height:32px!important}
+  .availability-day .day-number{font-size:.63rem!important}
+  .availability-legend{gap:.35rem .55rem!important}
+  .availability-legend-item{font-size:.5rem!important}
+  #financeModal>div,#paymentInfoModal>div{padding:12px!important;max-height:94dvh!important}
+  #financeModal.account-tracking-mode #financeTotalsPanel{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+
 </body>
 </html>
