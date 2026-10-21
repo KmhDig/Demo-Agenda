@@ -294,7 +294,7 @@ main { max-width: 1380px !important; }
                 'img/Pastel6.jpg'
             ],
 
-            googleSheetsUrl: 'https://script.google.com/macros/s/AKfycbzbw3vc3-K-FmMf5al-jD615XI64H-wWFh-GmVEmrp_lruogG6V8rkNMn8A6AAobuSo/exec'  
+            googleSheetsUrl: 'https://https://script.google.com/macros/s/AKfycbzbw3vc3-K-FmMf5al-jD615XI64H-wWFh-GmVEmrp_lruogG6V8rkNMn8A6AAobuSo/exec'  
         };
 
         document.documentElement.style.setProperty('--brand-main', CLIENT_CONFIG.colors.main);
@@ -906,6 +906,7 @@ background-repeat:no-repeat;">
             </div>
 
             <form id="orderForm" onsubmit="handleReviewOrder(event)" class="space-y-6">
+                <div id="orderFormClosedNotice" class="hidden rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700" role="status" aria-live="polite"></div>
                 <div class="space-y-3">
                     <label class="block text-xs font-bold uppercase tracking-wider text-stone-600">TIPO DE PEDIDO</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -3051,6 +3052,11 @@ function showToast(message, type = 'info') {
 
         function handleReviewOrder(e) {
             e.preventDefault();
+            if (!estaDentroDelHorarioDePedidos(new Date())) {
+                setOrderFormAvailability(false);
+                showToast(obtenerMensajeHorarioCerrado(), 'error');
+                return;
+            }
 
             const dateVal = document.getElementById('eventDate').value;
             const dateStatus = customerAvailabilityStatusForDate(dateVal);
@@ -3987,6 +3993,32 @@ function addCatalogOption(key, inputId) {
             return partes.join(' · ');
         }
 
+        function setOrderFormAvailability(isOpen) {
+            const form = document.getElementById('orderForm');
+            const notice = document.getElementById('orderFormClosedNotice');
+            if (!form) return;
+            form.classList.toggle('order-form-reception-closed', !isOpen);
+            if (notice) {
+                notice.textContent = isOpen ? '' : obtenerMensajeHorarioCerrado();
+                notice.classList.toggle('hidden', isOpen);
+            }
+            // Bloquea ambos tipos de pedido (pastel y otro) mientras la recepción esté cerrada.
+            // Guarda el estado original para no perder campos que se deshabilitan por otras reglas.
+            form.querySelectorAll('input, select, textarea, button').forEach(control => {
+                if (!control.dataset.orderReceptionOriginalDisabled) {
+                    control.dataset.orderReceptionOriginalDisabled = control.disabled ? '1' : '0';
+                }
+                if (!isOpen) {
+                    control.disabled = true;
+                    control.setAttribute('aria-disabled', 'true');
+                } else {
+                    control.disabled = control.dataset.orderReceptionOriginalDisabled === '1';
+                    control.removeAttribute('aria-disabled');
+                }
+            });
+            if (isOpen && typeof toggleDeliveryFields === 'function') toggleDeliveryFields();
+        }
+
         function updateOrderAvailability() {
             const box = document.getElementById('orderAvailabilityStatus');
             const icon = document.getElementById('orderAvailabilityIcon');
@@ -4010,6 +4042,7 @@ function addCatalogOption(key, inputId) {
             const dia = getOrderDayKey(ahora);
             const config = state.orderHours?.[dia];
             const abierto = estaDentroDelHorarioDePedidos(ahora);
+            setOrderFormAvailability(abierto);
             const minutosAhora = ahora.getHours() * 60 + ahora.getMinutes();
             const proxima = getNextOrderOpening(ahora);
 
@@ -4112,6 +4145,33 @@ function addCatalogOption(key, inputId) {
             if (otherLimit) otherLimit.value = Number(state.otherDailyOrderLimit ?? 3);
             if (otherLimitEnabled) otherLimitEnabled.checked = state.otherDailyOrderLimitEnabled === true;
         }
+        async function guardarConfiguracionOperativaRapida() {
+            const config = {
+                orderHours: state.orderHours,
+                orderHoursMode: state.orderHoursMode || 'hours',
+                orderLeadTimeDays: Number(state.orderLeadTimeDays ?? 3),
+                orderLeadTimeEnabled: state.orderLeadTimeEnabled !== false,
+                otherOrderLeadTimeDays: Number(state.otherOrderLeadTimeDays ?? 2),
+                otherOrderLeadTimeEnabled: state.otherOrderLeadTimeEnabled !== false,
+                blockWeekendsPastel: state.blockWeekendsPastel === true,
+                blockWeekendsOther: state.blockWeekendsOther === true,
+                dailyOrderLimit: Number(state.dailyOrderLimit ?? 3),
+                dailyOrderLimitEnabled: state.dailyOrderLimitEnabled === true,
+                otherDailyOrderLimit: Number(state.otherDailyOrderLimit ?? 3),
+                otherDailyOrderLimitEnabled: state.otherDailyOrderLimitEnabled === true
+            };
+            const response = await fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'payload=' + encodeURIComponent(JSON.stringify({ accion: 'guardarConfiguracionOperativa', configuracion: config }))
+            });
+            const raw = await response.text();
+            let result;
+            try { result = JSON.parse(raw); } catch (_) { throw new Error('Respuesta inválida de Apps Script.'); }
+            if (!response.ok || result?.ok !== true) throw new Error(result?.mensaje || 'Google Sheets no confirmó el guardado.');
+            return true;
+        }
+
         async function saveDulceReinoOperationalSettings(section) {
             if (section === 'lead') {
                 const days = Number.parseInt(document.getElementById('orderLeadTimeInput')?.value, 10);
@@ -4140,9 +4200,10 @@ function addCatalogOption(key, inputId) {
                 state.otherDailyOrderLimitEnabled = document.getElementById('configOtherOrderDailyCapacityEnabledInput')?.checked === true;
             }
             saveAppState();
+            // Actualizar la interfaz de inmediato; el guardado remoto continúa en segundo plano.
+            renderAvailabilityCalendar(); renderAdminAvailabilityCalendar(); updateOrderAvailability();
             try {
-                const saved = await guardarConfiguracionEnGoogleSheets();
-                renderAvailabilityCalendar(); renderAdminAvailabilityCalendar(); updateOrderAvailability();
+                const saved = await guardarConfiguracionOperativaRapida();
                 if (!saved) showToast('Se guardó localmente, pero Google Sheets no confirmó el guardado.', 'error');
                 else showToast('Configuración guardada.', 'success');
             } catch (e) { showToast('Se guardó localmente, pero no se pudo confirmar el guardado en la base.', 'error'); }
@@ -4226,7 +4287,9 @@ function addCatalogOption(key, inputId) {
             saveAppState();
             renderOrderDaysAdmin();
             updateOrderAvailability();
-            const saved = await guardarConfiguracionEnGoogleSheets();
+            let saved = false;
+            try { saved = await guardarConfiguracionOperativaRapida(); }
+            catch (error) { console.error('Error guardando horario/días:', error); }
             renderOrderHoursAdmin();
             renderOrderDaysAdmin();
             updateOrderAvailability();
