@@ -133,6 +133,7 @@ main { max-width: 1380px !important; }
 @media(max-width:640px){#publicOrderSchedule{padding:12px;gap:9px;border-radius:14px;margin-bottom:9px}#publicOrderSchedule .public-schedule-icon{width:34px;height:34px;flex-basis:34px;border-radius:11px}#publicOrderSchedule .public-schedule-meta{grid-template-columns:1fr;gap:6px;margin-top:8px}#publicOrderSchedule .public-schedule-meta>div{padding:8px 9px}#publicOrderSchedule .public-schedule-meta span{font-size:8px}#publicOrderSchedule .public-schedule-meta strong{font-size:10px}}
 </style>
 
+<!-- v5: compatible con Apps Script optimizado para guardar configuración en bloque -->
 </head>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1574,7 +1575,8 @@ Notas adicionales:</textarea>
                         <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-stone-500"><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span></div>
                         <div id="adminAvailabilityGrid" class="grid grid-cols-7 gap-1"></div>
                         <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 items-end border-t border-stone-100 pt-4"><div><label class="text-xs font-bold text-stone-700">Fecha seleccionada</label><p id="adminAvailabilitySelected" class="text-sm font-semibold text-brand-700">Selecciona un día del calendario</p><label for="adminAvailabilityStatus" class="block text-xs font-bold text-stone-700 mt-3 mb-2">Estado</label><select id="adminAvailabilityStatus" class="w-full input-canva"><option value="available">Disponible</option><option value="limited">Poca disponibilidad</option><option value="full">Agenda llena</option><option value="closed">Cerrado</option></select></div><button type="button" onclick="saveSelectedAvailabilityStatus()" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase">Guardar estado</button></div>
-                        <p class="text-[10px] text-stone-500">Los pedidos ya registrados se conservan aunque cambies el estado de una fecha.</p>
+                        <div class="border-t border-stone-100 pt-3 space-y-3"><label class="flex items-start gap-3 p-3 rounded-xl border border-stone-200 bg-white"><input type="checkbox" id="adminBlockWeekends" class="mt-0.5 accent-pink-600"><span><strong class="block text-xs text-stone-800">No aceptar pedidos sábados y domingos</strong><span class="block text-[10px] text-stone-500">Se aplica solo a la agenda seleccionada arriba: Pasteles u Otros pedidos.</span></span></label><button type="button" onclick="saveWeekendBlockingSetting()" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase w-full sm:w-auto">Guardar regla de fin de semana</button></div>
+                        <p class="text-[10px] text-stone-500">Los pedidos ya registrados se conservan aunque cambies el estado de una fecha. Las reglas de fin de semana y anticipación también se aplican al calendario del cliente.</p>
                     </section>
                     <section class="admin-section-card space-y-5"><div class="flex items-center gap-3 border-b border-stone-100 pb-3"><span class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center"><i class="fa-solid fa-clock"></i></span><div><h4 class="font-bold text-brand-700 text-base">Anticipación mínima para recibir pedidos</h4><p class="text-xs text-stone-500">Define con cuántos días de anticipación se puede solicitar un pastel.</p></div></div>
                         <label class="flex items-center gap-3 p-3 rounded-xl border border-stone-200"><input type="checkbox" id="orderLeadTimeEnabled" checked class="accent-pink-600"><span><strong class="block text-xs text-stone-800">Activar anticipación mínima</strong><span class="text-[10px] text-stone-500">Desactivada: permite solicitar fechas más cercanas.</span></span></label><div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end"><div><label for="orderLeadTimeInput" class="block text-xs font-bold text-stone-700 mb-2">Días hábiles de anticipación</label><input type="number" id="orderLeadTimeInput" min="0" max="60" value="5" class="input-canva"></div><button type="button" onclick="saveDulceReinoOperationalSettings('lead')" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase">Guardar anticipación</button></div>
@@ -2179,6 +2181,8 @@ orderHours: {
             otherOrderLeadTimeEnabled: true,
             orderLeadTimeDays: 5,
             orderLeadTimeEnabled: true,
+            blockWeekendsPastel: false,
+            blockWeekendsOther: false,
             dailyOrderLimit: 3,
             dailyOrderLimitEnabled: true,
             otherDailyOrderLimit: 3,
@@ -2557,6 +2561,8 @@ if (config.otherOrderLeadTimeDays !== undefined) state.otherOrderLeadTimeDays = 
 if (config.otherOrderLeadTimeEnabled !== undefined) state.otherOrderLeadTimeEnabled = !(config.otherOrderLeadTimeEnabled === false || config.otherOrderLeadTimeEnabled === 'false');
 if (config.orderLeadTimeDays !== undefined) state.orderLeadTimeDays = Math.max(0, Math.min(60, parseInt(config.orderLeadTimeDays, 10) || 0));
 if (config.orderLeadTimeEnabled !== undefined) state.orderLeadTimeEnabled = !(config.orderLeadTimeEnabled === false || config.orderLeadTimeEnabled === 'false');
+if (config.blockWeekendsPastel !== undefined) state.blockWeekendsPastel = config.blockWeekendsPastel === true || config.blockWeekendsPastel === 'true';
+if (config.blockWeekendsOther !== undefined) state.blockWeekendsOther = config.blockWeekendsOther === true || config.blockWeekendsOther === 'true';
 if (config.dailyOrderLimit !== undefined) state.dailyOrderLimit = Math.max(1, parseInt(config.dailyOrderLimit, 10) || 3);
 if (config.dailyOrderLimitEnabled !== undefined) state.dailyOrderLimitEnabled = config.dailyOrderLimitEnabled === true || config.dailyOrderLimitEnabled === 'true';
 if (config.otherDailyOrderLimit !== undefined) state.otherDailyOrderLimit = Math.max(1, parseInt(config.otherDailyOrderLimit, 10) || 3);
@@ -3584,6 +3590,8 @@ function savePaymentInfoDraft() {
         otherOrderLeadTimeEnabled: state.otherOrderLeadTimeEnabled !== false,
         orderLeadTimeDays: Number(state.orderLeadTimeDays ?? 3),
         orderLeadTimeEnabled: state.orderLeadTimeEnabled !== false,
+        blockWeekendsPastel: state.blockWeekendsPastel === true,
+        blockWeekendsOther: state.blockWeekendsOther === true,
         dailyOrderLimit: Number(state.dailyOrderLimit ?? 3),
         dailyOrderLimitEnabled: state.dailyOrderLimitEnabled === true,
         otherDailyOrderLimit: Number(state.otherDailyOrderLimit ?? 3),
@@ -4254,6 +4262,19 @@ function addCatalogOption(key, inputId) {
             return new Date(y, (m || 1)-1, d || 1);
         }
 
+        function dateIsBeforeLeadTime(key, isOther) {
+            const enabled = isOther ? state.otherOrderLeadTimeEnabled !== false : state.orderLeadTimeEnabled !== false;
+            const days = Math.max(0, Number(isOther ? state.otherOrderLeadTimeDays || 0 : state.orderLeadTimeDays || 0));
+            if (!enabled || days <= 0) return false;
+            const minDate = new Date(); minDate.setHours(0,0,0,0);
+            let remaining = days;
+            while (remaining > 0) {
+                minDate.setDate(minDate.getDate() + 1);
+                if (![0,6].includes(minDate.getDay())) remaining--;
+            }
+            return dateFromKey(key) < minDate;
+        }
+
         function availabilityStatusForDate(key) {
             const todayKey = normalizeDateKey(new Date());
             if (key < todayKey) return 'closed';
@@ -4262,6 +4283,9 @@ function addCatalogOption(key, inputId) {
             const closed = Array.isArray(state?.closedDates) ? state.closedDates : [];
             if (closed.includes(key)) return 'closed';
             if (blocked.includes(key)) return 'full';
+            const day = dateFromKey(key).getDay();
+            if (state.blockWeekendsPastel === true && [0,6].includes(day)) return 'closed';
+            if (dateIsBeforeLeadTime(key, false)) return 'closed';
             if (limited.includes(key)) return 'limited';
             return 'available';
         }
@@ -4272,6 +4296,19 @@ function addCatalogOption(key, inputId) {
             const blocked = Array.isArray(state?.otherBlockedDates) ? state.otherBlockedDates : [];
             const limited = Array.isArray(state?.otherLimitedDates) ? state.otherLimitedDates : [];
             const closed = Array.isArray(state?.otherClosedDates) ? state.otherClosedDates : [];
+            if (closed.includes(key)) return 'closed';
+            if (blocked.includes(key)) return 'full';
+            const day = dateFromKey(key).getDay();
+            if (state.blockWeekendsOther === true && [0,6].includes(day)) return 'closed';
+            if (dateIsBeforeLeadTime(key, true)) return 'closed';
+            if (limited.includes(key)) return 'limited';
+            return 'available';
+        }
+
+        function storedAvailabilityStatusForDate(key, isOther) {
+            const closed = isOther ? (state.otherClosedDates || []) : (state.closedDates || []);
+            const blocked = isOther ? (state.otherBlockedDates || []) : (state.blockedDates || []);
+            const limited = isOther ? (state.otherLimitedDates || []) : (state.limitedDates || []);
             if (closed.includes(key)) return 'closed';
             if (blocked.includes(key)) return 'full';
             if (limited.includes(key)) return 'limited';
@@ -4428,7 +4465,9 @@ function addCatalogOption(key, inputId) {
             const type = document.getElementById('adminAvailabilityType')?.value || 'pastel';
             const status = document.getElementById('adminAvailabilityStatus');
             if (selectedAvailabilityDate && selected) selected.textContent = formatLongDate(selectedAvailabilityDate);
-            if (status && selectedAvailabilityDate) status.value = type === 'otro' ? otherAvailabilityStatusForDate(selectedAvailabilityDate) : availabilityStatusForDate(selectedAvailabilityDate);
+            if (status && selectedAvailabilityDate) status.value = storedAvailabilityStatusForDate(selectedAvailabilityDate, type === 'otro');
+            const weekendToggle = document.getElementById('adminBlockWeekends');
+            if (weekendToggle) weekendToggle.checked = type === 'otro' ? state.blockWeekendsOther === true : state.blockWeekendsPastel === true;
             renderAdminAvailabilityCalendar();
         }
 
@@ -4439,7 +4478,7 @@ function addCatalogOption(key, inputId) {
             const select = document.getElementById('adminAvailabilityStatus');
             const isOther = document.getElementById('adminAvailabilityType')?.value === 'otro';
             if (selected) selected.textContent = formatLongDate(key);
-            if (select) select.value = isOther ? otherAvailabilityStatusForDate(key) : availabilityStatusForDate(key);
+            if (select) select.value = storedAvailabilityStatusForDate(key, isOther);
             renderAdminAvailabilityCalendar();
             renderAvailabilityCalendar();
         }
@@ -4451,6 +4490,25 @@ function addCatalogOption(key, inputId) {
             if (next < min) return;
             adminAvailabilityMonth = next;
             renderAdminAvailabilityCalendar();
+        }
+
+        async function saveWeekendBlockingSetting() {
+            const isOther = document.getElementById('adminAvailabilityType')?.value === 'otro';
+            const enabled = document.getElementById('adminBlockWeekends')?.checked === true;
+            if (isOther) state.blockWeekendsOther = enabled;
+            else state.blockWeekendsPastel = enabled;
+            saveAppState();
+            try {
+                const saved = await guardarConfiguracionEnGoogleSheets();
+                renderCustomerCalendar(isOther ? 'otro' : 'pastel');
+                renderAdminAvailabilityCalendar();
+                updateOrderAvailability();
+                if (!saved) { showToast('La regla cambió en pantalla, pero Google Sheets no confirmó el guardado.', 'error'); return; }
+                showToast(enabled ? 'Se bloquearon sábados y domingos para esta agenda.' : 'Se habilitaron sábados y domingos para esta agenda.', 'success');
+            } catch (error) {
+                console.error('Error guardando la regla de fin de semana:', error);
+                showToast('No se pudo guardar la regla de fin de semana en Google Sheets.', 'error');
+            }
         }
 
         async function saveSelectedAvailabilityStatus() {
