@@ -134,6 +134,44 @@ main { max-width: 1380px !important; }
 </style>
 
 <!-- v5: compatible con Apps Script optimizado para guardar configuración en bloque -->
+
+<style id="portfolio-force-two-columns-final">
+  html body #portfolio-section #portfolio-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: auto !important;
+    gap: .75rem !important;
+    width: 100% !important;
+  }
+  html body #portfolio-section #portfolio-grid > div {
+    grid-column: auto / span 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+  html body #portfolio-section #portfolio-grid > div > img,
+  html body #portfolio-section #portfolio-grid img {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5 !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  @media (max-width: 900px) {
+    html body #portfolio-section #portfolio-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: .5rem !important;
+    }
+  }
+  @media (max-width: 600px) {
+    html body #portfolio-section #portfolio-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: .4rem !important;
+    }
+  }
+</style>
+
 </head>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
