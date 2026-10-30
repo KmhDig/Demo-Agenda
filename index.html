@@ -7553,46 +7553,52 @@ main > section { margin-bottom: .65rem !important; }
 
 
 <script id="dulce-reino-hard-order-hours-guard">
+/*
+ * La disponibilidad y el bloqueo/desbloqueo del formulario deben gestionarse
+ * únicamente desde updateOrderAvailability() y setOrderFormAvailability().
+ * Este bloque solo protege el envío; no deshabilita controles por su cuenta.
+ */
 (function () {
-  function checkOrderGateNow() {
+  function refreshOrderAvailability() {
     try {
-      if (typeof updateOrderAvailability === 'function') updateOrderAvailability();
-      if (typeof estaDentroDelHorarioDePedidos === 'function') {
-        const open = estaDentroDelHorarioDePedidos(new Date());
-        const form = document.getElementById('orderForm');
-        if (form && !open) {
-          form.classList.add('order-form-reception-closed');
-          const notice = document.getElementById('orderFormClosedNotice');
-          if (notice) {
-            notice.textContent = typeof obtenerMensajeHorarioCerrado === 'function'
-              ? obtenerMensajeHorarioCerrado()
-              : 'En este momento no estamos recibiendo pedidos. Regresa durante el horario configurado.';
-            notice.classList.remove('hidden');
-          }
-          form.querySelectorAll('input, select, textarea, button').forEach(function (control) {
-            if (!control.hasAttribute('data-order-gate-prev-disabled')) {
-              control.setAttribute('data-order-gate-prev-disabled', control.disabled ? '1' : '0');
-            }
-            control.disabled = true;
-            control.setAttribute('aria-disabled', 'true');
-          });
-        }
+      if (typeof updateOrderAvailability === 'function') {
+        updateOrderAvailability();
       }
-    } catch (err) { console.warn('No se pudo actualizar el bloqueo del formulario:', err); }
+    } catch (err) {
+      console.warn('No se pudo actualizar la disponibilidad de pedidos:', err);
+    }
   }
+
+  document.addEventListener('DOMContentLoaded', refreshOrderAvailability);
+  window.addEventListener('load', refreshOrderAvailability);
+
   document.addEventListener('submit', function (event) {
     if (!event.target || event.target.id !== 'orderForm') return;
+
     try {
-      if (typeof estaDentroDelHorarioDePedidos === 'function' && !estaDentroDelHorarioDePedidos(new Date())) {
-        event.preventDefault(); event.stopImmediatePropagation();
-        if (typeof setOrderFormAvailability === 'function') setOrderFormAvailability(false);
-        if (typeof showToast === 'function') showToast(typeof obtenerMensajeHorarioCerrado === 'function' ? obtenerMensajeHorarioCerrado() : 'El formulario está cerrado en este momento.', 'error');
+      if (typeof estaDentroDelHorarioDePedidos === 'function' &&
+          !estaDentroDelHorarioDePedidos(new Date())) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        if (typeof setOrderFormAvailability === 'function') {
+          setOrderFormAvailability(false);
+        }
+        if (typeof showToast === 'function') {
+          showToast(
+            typeof obtenerMensajeHorarioCerrado === 'function'
+              ? obtenerMensajeHorarioCerrado()
+              : 'El formulario está cerrado en este momento.',
+            'error'
+          );
+        }
       }
-    } catch (_) { event.preventDefault(); event.stopImmediatePropagation(); }
+    } catch (err) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      console.warn('No se pudo validar el envío del pedido:', err);
+    }
   }, true);
-  document.addEventListener('DOMContentLoaded', checkOrderGateNow);
-  window.addEventListener('load', checkOrderGateNow);
-  setInterval(checkOrderGateNow, 5000);
 })();
 </script>
 
