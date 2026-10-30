@@ -2504,14 +2504,14 @@ function closeImage() {
        const config = resultado.configuracion;
 
 // Si hubo cualquier guardado mientras esta lectura estaba en curso, no aplicar
-// esta respuesta: podría contener una modalidad anterior y sobrescribir "Solo días".
+// esta respuesta: podría contener una modalidad anterior y sobrescribir la nueva.
 if (versionAlIniciarLectura !== configuracionLocalVersion) {
     console.warn('Se omitió una configuración antigua para proteger cambios recientes.');
     return;
 }
 
-// Aplicar la modalidad remota únicamente después de comprobar que la lectura sigue vigente.
-if (config.orderHoursMode && ['hours', 'days', 'both'].includes(String(config.orderHoursMode))) {
+// Aplicar la modalidad remota solo después de validar que esta lectura sigue vigente.
+if (['hours', 'days', 'both'].includes(String(config.orderHoursMode || ''))) {
     state.orderHoursMode = String(config.orderHoursMode);
 }
 
@@ -3947,37 +3947,13 @@ function addCatalogOption(key, inputId) {
 
         function estaDentroDelHorarioDePedidos(date = new Date()) {
             const modo = state.orderHoursMode || 'hours';
-            const dia = getOrderDayKey(date);
-            const config = state.orderHours?.[dia];
-
-            // SOLO HORARIO: ignora por completo si el día está activado o desactivado.
-            if (modo === 'hours') {
-                const horario = config || { apertura: '09:00', cierre: '18:00' };
-                const minutos = date.getHours() * 60 + date.getMinutes();
-
-                return (
-                    minutos >= minutesFromTime(horario.apertura) &&
-                    minutos < minutesFromTime(horario.cierre)
-                );
-            }
-
-            // SOLO DÍAS: un día activo permite recibir pedidos las 24 horas.
-            if (modo === 'days') {
-                return !!config && config.activo !== false;
-            }
-
-            // HORARIO Y DÍAS: deben cumplirse ambas condiciones.
-            if (modo === 'both') {
-                if (!config || config.activo === false) return false;
-
-                const minutos = date.getHours() * 60 + date.getMinutes();
-                return (
-                    minutos >= minutesFromTime(config.apertura) &&
-                    minutos < minutesFromTime(config.cierre)
-                );
-            }
-
-            return false;
+            const config = state.orderHours?.[getOrderDayKey(date)];
+            // En modo solo horario no se restringen los días; en solo días no se restringen las horas.
+            if (modo !== 'hours' && (!config || config.activo === false)) return false;
+            if (modo === 'days') return true;
+            const horario = config || { apertura: '09:00', cierre: '18:00' };
+            const minutos = date.getHours() * 60 + date.getMinutes();
+            return minutos >= minutesFromTime(horario.apertura) && minutos < minutesFromTime(horario.cierre);
         }
 
         function getNextOrderOpening(fromDate = new Date()) {
@@ -4236,9 +4212,12 @@ function addCatalogOption(key, inputId) {
             if (otherLimitEnabled) otherLimitEnabled.checked = state.otherDailyOrderLimitEnabled === true;
         }
         async function guardarConfiguracionOperativaRapida() {
-            // Evita que una lectura de Google Sheets iniciada antes de este guardado
-            // vuelva a colocar una modalidad anterior (por ejemplo, "hours").
-            configuracionLocalVersion++;
+            // Leer siempre la modalidad visible en el panel antes de guardar.
+            // Evita enviar "hours" por defecto cuando el usuario eligió "days".
+            const selectedMode = document.querySelector('input[name="orderHoursMode"]:checked')?.value;
+            if (['hours', 'days', 'both'].includes(selectedMode)) {
+                state.orderHoursMode = selectedMode;
+            }
 
             const config = {
                 orderHours: state.orderHours,
@@ -4278,21 +4257,13 @@ function addCatalogOption(key, inputId) {
                 state.otherOrderLeadTimeDays = days;
                 state.otherOrderLeadTimeEnabled = document.getElementById('otherOrderLeadTimeEnabled')?.checked !== false;
             } else if (section === 'days') {
-                // Guardar los días que el usuario activó o desactivó.
-                state.orderHours = normalizarHorarioPedidos(state.orderHours);
                 document.querySelectorAll('[data-order-day]').forEach(el => {
                     const day = el.getAttribute('data-order-day');
-                    if (state.orderHours[day]) {
-                        state.orderHours[day].activo = el.checked;
-                    }
+                    if (state.orderHours[day]) state.orderHours[day].activo = el.checked;
                 });
 
-                // Mantener la modalidad elegida en los controles de horario.
-                // Así "Solo días", "Solo horario" y "Horario y días" no se mezclan.
-                const selectedMode = document.querySelector(
-                    'input[name="orderHoursMode"]:checked'
-                )?.value;
-
+                // Guardar también la modalidad seleccionada, no solo los días.
+                const selectedMode = document.querySelector('input[name="orderHoursMode"]:checked')?.value;
                 if (['hours', 'days', 'both'].includes(selectedMode)) {
                     state.orderHoursMode = selectedMode;
                 }
