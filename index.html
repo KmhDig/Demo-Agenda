@@ -2502,13 +2502,17 @@ function closeImage() {
         }
 
        const config = resultado.configuracion;
-       if (config.orderHoursMode) state.orderHoursMode = String(config.orderHoursMode);
 
 // Si hubo cualquier guardado mientras esta lectura estaba en curso, no aplicar
-// esta respuesta: podría contener fechas anteriores y borrar cambios recientes.
+// esta respuesta: podría contener una modalidad anterior y sobrescribir "Solo días".
 if (versionAlIniciarLectura !== configuracionLocalVersion) {
     console.warn('Se omitió una configuración antigua para proteger cambios recientes.');
     return;
+}
+
+// Aplicar la modalidad remota únicamente después de comprobar que la lectura sigue vigente.
+if (config.orderHoursMode && ['hours', 'days', 'both'].includes(String(config.orderHoursMode))) {
+    state.orderHoursMode = String(config.orderHoursMode);
 }
 
 console.log('CONFIGURACIÓN RECIBIDA:', config);
@@ -4232,6 +4236,10 @@ function addCatalogOption(key, inputId) {
             if (otherLimitEnabled) otherLimitEnabled.checked = state.otherDailyOrderLimitEnabled === true;
         }
         async function guardarConfiguracionOperativaRapida() {
+            // Evita que una lectura de Google Sheets iniciada antes de este guardado
+            // vuelva a colocar una modalidad anterior (por ejemplo, "hours").
+            configuracionLocalVersion++;
+
             const config = {
                 orderHours: state.orderHours,
                 orderHoursMode: state.orderHoursMode || 'hours',
