@@ -3946,14 +3946,23 @@ function addCatalogOption(key, inputId) {
         }
 
         function estaDentroDelHorarioDePedidos(date = new Date()) {
-            const modo = state.orderHoursMode || 'hours';
+            const modo = ['hours', 'days', 'both'].includes(state.orderHoursMode)
+                ? state.orderHoursMode
+                : 'hours';
             const config = state.orderHours?.[getOrderDayKey(date)];
-            // En modo solo horario no se restringen los días; en solo días no se restringen las horas.
-            if (modo !== 'hours' && (!config || config.activo === false)) return false;
-            if (modo === 'days') return true;
+
+            // Solo días: únicamente importa que el día esté activado.
+            if (modo === 'days') return !!config && config.activo !== false;
+
+            // Horario y días: primero valida el día; Solo horario ignora por completo ese interruptor.
+            if (modo === 'both' && (!config || config.activo === false)) return false;
+
+            // Solo horario: usa las horas configuradas para el día, aunque esté desactivado en la lista de días.
             const horario = config || { apertura: '09:00', cierre: '18:00' };
             const minutos = date.getHours() * 60 + date.getMinutes();
-            return minutos >= minutesFromTime(horario.apertura) && minutos < minutesFromTime(horario.cierre);
+            const apertura = minutesFromTime(horario.apertura || '09:00');
+            const cierre = minutesFromTime(horario.cierre || '18:00');
+            return minutos >= apertura && minutos < cierre;
         }
 
         function getNextOrderOpening(fromDate = new Date()) {
@@ -4066,26 +4075,46 @@ function addCatalogOption(key, inputId) {
             const form = document.getElementById('orderForm');
             const notice = document.getElementById('orderFormClosedNotice');
             if (!form) return;
+
+            const estabaCerrado = form.dataset.orderReceptionClosed === '1';
             form.classList.toggle('order-form-reception-closed', !isOpen);
             if (notice) {
                 notice.textContent = isOpen ? '' : obtenerMensajeHorarioCerrado();
                 notice.classList.toggle('hidden', isOpen);
             }
-            // Bloquea ambos tipos de pedido (pastel y otro) mientras la recepción esté cerrada.
-            // Guarda el estado original para no perder campos que se deshabilitan por otras reglas.
-            form.querySelectorAll('input, select, textarea, button').forEach(control => {
-                if (!control.dataset.orderReceptionOriginalDisabled) {
-                    control.dataset.orderReceptionOriginalDisabled = control.disabled ? '1' : '0';
-                }
-                if (!isOpen) {
+
+            // Captura el estado real justo antes de cerrar y lo restaura al reabrir.
+            // No guarda un estado inicial permanente: otros controles pueden habilitarse/deshabilitarse
+            // por reglas propias mientras el formulario está abierto.
+            const controls = form.querySelectorAll('input, select, textarea, button');
+            if (!isOpen && !estabaCerrado) {
+                controls.forEach(control => {
+                    control.dataset.orderReceptionPrevDisabled = control.disabled ? '1' : '0';
                     control.disabled = true;
                     control.setAttribute('aria-disabled', 'true');
-                } else {
-                    control.disabled = control.dataset.orderReceptionOriginalDisabled === '1';
+                });
+                form.dataset.orderReceptionClosed = '1';
+                return;
+            }
+
+            if (isOpen && estabaCerrado) {
+                controls.forEach(control => {
+                    control.disabled = control.dataset.orderReceptionPrevDisabled === '1';
+                    delete control.dataset.orderReceptionPrevDisabled;
                     control.removeAttribute('aria-disabled');
-                }
-            });
-            if (isOpen && typeof toggleDeliveryFields === 'function') toggleDeliveryFields();
+                });
+                delete form.dataset.orderReceptionClosed;
+                if (typeof toggleDeliveryFields === 'function') toggleDeliveryFields();
+                return;
+            }
+
+            // Mantiene bloqueados los controles si el formulario sigue cerrado.
+            if (!isOpen) {
+                controls.forEach(control => {
+                    control.disabled = true;
+                    control.setAttribute('aria-disabled', 'true');
+                });
+            }
         }
 
         function updateOrderAvailability() {
@@ -4105,13 +4134,19 @@ function addCatalogOption(key, inputId) {
             const publicMessage = document.getElementById('publicScheduleMessage');
             const publicDays = document.getElementById('publicOrderDays');
             const publicHours = document.getElementById('publicOrderHours');
-            if (!box || !icon || !title || !message) { renderPublicOrderSchedule(); return; }
 
+            // El bloqueo del formulario se ejecuta siempre, incluso si esta página no contiene
+            // el panel visual opcional de estado/horario.
             const ahora = new Date();
             const dia = getOrderDayKey(ahora);
             const config = state.orderHours?.[dia];
+            const modo = ['hours', 'days', 'both'].includes(state.orderHoursMode)
+                ? state.orderHoursMode
+                : 'hours';
             const abierto = estaDentroDelHorarioDePedidos(ahora);
             setOrderFormAvailability(abierto);
+            if (!box || !icon || !title || !message) { renderPublicOrderSchedule(); return; }
+
             const minutosAhora = ahora.getHours() * 60 + ahora.getMinutes();
             const proxima = getNextOrderOpening(ahora);
 
@@ -4125,7 +4160,7 @@ function addCatalogOption(key, inputId) {
                 title.innerHTML = '<span class="order-status-dot order-live-pulse"></span><span>Estamos recibiendo pedidos</span>';
                 message.textContent = 'Hoy puedes llenar el formulario durante todo el día, hasta las 11:59 PM.';
                 if (countdown) countdown.textContent = 'Disponible todo el día';
-            } else if (abierto && config) {
+            } else if (abierto && modo !== 'days' && config) {
                 const apertura = minutesFromTime(config.apertura);
                 const cierre = minutesFromTime(config.cierre);
                 const quedan = cierre - minutosAhora;
