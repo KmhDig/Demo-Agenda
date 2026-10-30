@@ -3943,13 +3943,37 @@ function addCatalogOption(key, inputId) {
 
         function estaDentroDelHorarioDePedidos(date = new Date()) {
             const modo = state.orderHoursMode || 'hours';
-            const config = state.orderHours?.[getOrderDayKey(date)];
-            // En modo solo horario no se restringen los días; en solo días no se restringen las horas.
-            if (modo !== 'hours' && (!config || config.activo === false)) return false;
-            if (modo === 'days') return true;
-            const horario = config || { apertura: '09:00', cierre: '18:00' };
-            const minutos = date.getHours() * 60 + date.getMinutes();
-            return minutos >= minutesFromTime(horario.apertura) && minutos < minutesFromTime(horario.cierre);
+            const dia = getOrderDayKey(date);
+            const config = state.orderHours?.[dia];
+
+            // SOLO HORARIO: ignora por completo si el día está activado o desactivado.
+            if (modo === 'hours') {
+                const horario = config || { apertura: '09:00', cierre: '18:00' };
+                const minutos = date.getHours() * 60 + date.getMinutes();
+
+                return (
+                    minutos >= minutesFromTime(horario.apertura) &&
+                    minutos < minutesFromTime(horario.cierre)
+                );
+            }
+
+            // SOLO DÍAS: un día activo permite recibir pedidos las 24 horas.
+            if (modo === 'days') {
+                return !!config && config.activo !== false;
+            }
+
+            // HORARIO Y DÍAS: deben cumplirse ambas condiciones.
+            if (modo === 'both') {
+                if (!config || config.activo === false) return false;
+
+                const minutos = date.getHours() * 60 + date.getMinutes();
+                return (
+                    minutos >= minutesFromTime(config.apertura) &&
+                    minutos < minutesFromTime(config.cierre)
+                );
+            }
+
+            return false;
         }
 
         function getNextOrderOpening(fromDate = new Date()) {
@@ -4246,10 +4270,24 @@ function addCatalogOption(key, inputId) {
                 state.otherOrderLeadTimeDays = days;
                 state.otherOrderLeadTimeEnabled = document.getElementById('otherOrderLeadTimeEnabled')?.checked !== false;
             } else if (section === 'days') {
+                // Guardar los días que el usuario activó o desactivó.
+                state.orderHours = normalizarHorarioPedidos(state.orderHours);
                 document.querySelectorAll('[data-order-day]').forEach(el => {
                     const day = el.getAttribute('data-order-day');
-                    if (state.orderHours[day]) state.orderHours[day].activo = el.checked;
+                    if (state.orderHours[day]) {
+                        state.orderHours[day].activo = el.checked;
+                    }
                 });
+
+                // Mantener la modalidad elegida en los controles de horario.
+                // Así "Solo días", "Solo horario" y "Horario y días" no se mezclan.
+                const selectedMode = document.querySelector(
+                    'input[name="orderHoursMode"]:checked'
+                )?.value;
+
+                if (['hours', 'days', 'both'].includes(selectedMode)) {
+                    state.orderHoursMode = selectedMode;
+                }
             } else if (section === 'capacity') {
                 const max = Number.parseInt(document.getElementById('configOrderDailyCapacityInput')?.value, 10);
                 if (!Number.isInteger(max) || max < 1 || max > 1000) { showToast('El máximo debe ser un número entre 1 y 1000.', 'error'); return; }
