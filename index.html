@@ -1629,7 +1629,7 @@ Notas adicionales:</textarea>
                             <span class="w-10 h-10 rounded-2xl bg-sky-50 text-sky-700 flex items-center justify-center shrink-0"><i class="fa-solid fa-clock"></i></span>
                             <div>
                                 <h4 class="font-bold text-brand-700 text-base">Horario para hacer pedidos</h4>
-                                <p class="text-xs text-stone-500 mt-1">Fuera del horario configurado, el formulario no permitirá enviar pedidos.</p>
+                                <p class="text-xs text-stone-500 mt-1">“Solo horario” aplica las horas Desde/Hasta todos los días. “Horario y días” también exige que el día esté activado.</p>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1643,7 +1643,7 @@ Notas adicionales:</textarea>
                         </div>
                         <button type="button" onclick="saveOrderHours()" class="order-hours-save"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios de horario</button>
                     </section>
-                    <section class="admin-section-card space-y-5"><div class="flex items-center gap-3 border-b border-stone-100 pb-3"><span class="w-10 h-10 rounded-2xl bg-violet-50 text-violet-700 flex items-center justify-center"><i class="fa-solid fa-calendar-days"></i></span><div><h4 class="font-bold text-brand-700 text-base">Días para hacer pedidos</h4><p class="text-xs text-stone-500">Activa los días en que aceptas solicitudes.</p></div></div><div id="orderDaysAdminList" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div><button type="button" onclick="saveDulceReinoOperationalSettings('days')" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase">Guardar días</button></section>
+                    <section class="admin-section-card space-y-5"><div class="flex items-center gap-3 border-b border-stone-100 pb-3"><span class="w-10 h-10 rounded-2xl bg-violet-50 text-violet-700 flex items-center justify-center"><i class="fa-solid fa-calendar-days"></i></span><div><h4 class="font-bold text-brand-700 text-base">Días para hacer pedidos</h4><p class="text-xs text-stone-500">Activa los días en que aceptas solicitudes.</p></div></div><p class="text-xs text-stone-500 -mt-2">Estos días se toman en cuenta al elegir “Solo días” o “Horario y días”. En “Solo horario”, se reciben pedidos todos los días.</p><div id="orderDaysAdminList" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div><button type="button" onclick="saveDulceReinoOperationalSettings('days')" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase">Guardar días</button></section>
                     <section class="admin-section-card space-y-5"><div class="flex items-center gap-3 border-b border-stone-100 pb-3"><span class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-700 flex items-center justify-center"><i class="fa-solid fa-gauge-high"></i></span><div><h4 class="font-bold text-brand-700 text-base">Máximo de pedidos por día</h4><p class="text-xs text-stone-500">Al alcanzar el límite, el sistema rechazará pedidos nuevos para esa fecha. Los pedidos existentes no se eliminan.</p></div></div><label class="flex items-start gap-3 p-3 rounded-xl border border-stone-200 bg-white"><input type="checkbox" id="configOrderDailyCapacityEnabledInput" class="mt-0.5 accent-pink-600" checked><span><strong class="block text-xs text-stone-800">Activar límite de pedidos por día</strong><span class="block text-[10px] text-stone-500">Activado: aplica el máximo indicado. Desactivado: no limita la cantidad de pedidos por fecha.</span></span></label><div><label for="configOrderDailyCapacityInput" class="block text-xs font-bold text-stone-700 mb-2">Cantidad máxima de pedidos</label><input type="number" id="configOrderDailyCapacityInput" min="1" max="1000" step="1" value="3" class="input-canva"></div><button type="button" onclick="saveDulceReinoOperationalSettings('capacity')" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase">Guardar límite diario</button></section>
                     <section class="admin-section-card space-y-5"><div class="flex items-center gap-3 border-b border-stone-100 pb-3"><span class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-700 flex items-center justify-center"><i class="fa-solid fa-gauge-high"></i></span><div><h4 class="font-bold text-brand-700 text-base">Máximo de pedidos por día · Otros pedidos</h4><p class="text-xs text-stone-500">Este límite es independiente del de pasteles. Al alcanzarlo, se rechazarán nuevos pedidos de otros productos para esa fecha; los pedidos existentes no se eliminan.</p></div></div><label class="flex items-start gap-3 p-3 rounded-xl border border-stone-200 bg-white"><input type="checkbox" id="configOtherOrderDailyCapacityEnabledInput" class="mt-0.5 accent-pink-600" checked><span><strong class="block text-xs text-stone-800">Activar límite de otros pedidos por día</strong><span class="block text-[10px] text-stone-500">Activado: aplica el máximo indicado. Desactivado: no limita otros pedidos por fecha.</span></span></label><div><label for="configOtherOrderDailyCapacityInput" class="block text-xs font-bold text-stone-700 mb-2">Cantidad máxima de otros pedidos</label><input type="number" id="configOtherOrderDailyCapacityInput" min="1" max="1000" step="1" value="3" class="input-canva"></div><button type="button" onclick="saveDulceReinoOperationalSettings('otherCapacity')" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase">Guardar límite de otros pedidos</button></section>
                 </div>
@@ -3974,19 +3974,27 @@ function addCatalogOption(key, inputId) {
                 return null;
             }
             if (modo === 'hours') {
-                const config = state.orderHours?.[getOrderDayKey(inicio)] || { apertura: '09:00', cierre: '18:00' };
-                const minutos = inicio.getHours() * 60 + inicio.getMinutes();
-                if (minutos < minutesFromTime(config.apertura)) {
+                // Solo horario: los días activados/desactivados se ignoran.
+                // Busca la siguiente apertura usando las horas guardadas para cada día,
+                // sin imponer una hora fija (por ejemplo, 9:00 AM) al día siguiente.
+                for (let offset = 0; offset <= 7; offset++) {
                     const candidato = new Date(inicio);
-                    const [h, m] = config.apertura.split(':').map(Number);
-                    candidato.setHours(h, m, 0, 0);
-                    return candidato;
+                    candidato.setDate(inicio.getDate() + offset);
+                    const config = state.orderHours?.[getOrderDayKey(candidato)] || { apertura: '09:00', cierre: '17:00' };
+                    const apertura = minutesFromTime(config.apertura || '09:00');
+                    const cierre = minutesFromTime(config.cierre || '17:00');
+                    const minutos = candidato.getHours() * 60 + candidato.getMinutes();
+                    if (offset === 0 && minutos < apertura) {
+                        candidato.setHours(Math.floor(apertura / 60), apertura % 60, 0, 0);
+                        return candidato;
+                    }
+                    if (offset === 0 && minutos >= apertura && minutos < cierre) return candidato;
+                    if (offset > 0) {
+                        candidato.setHours(Math.floor(apertura / 60), apertura % 60, 0, 0);
+                        return candidato;
+                    }
                 }
-                if (minutos < minutesFromTime(config.cierre)) return inicio;
-                const candidato = new Date(inicio);
-                candidato.setDate(candidato.getDate() + 1);
-                candidato.setHours(9, 0, 0, 0);
-                return candidato;
+                return null;
             }
             inicio.setSeconds(0, 0);
             for (let offset = 0; offset <= 7; offset++) {
@@ -4033,11 +4041,12 @@ function addCatalogOption(key, inputId) {
                 }
                 return 'En este momento no hay días habilitados para recibir pedidos. Consulta más tarde nuestra disponibilidad.';
             }
-            if (config && config.activo !== false) {
+            if (modo === 'hours' || (config && config.activo !== false)) {
+                const horario = config || { apertura: '09:00', cierre: '17:00' };
                 const minutos = ahora.getHours() * 60 + ahora.getMinutes();
-                const apertura = minutesFromTime(config.apertura);
-                const cierre = minutesFromTime(config.cierre);
-                if (minutos < apertura) return `Los pedidos todavía no están disponibles. Hoy comenzamos a recibir pedidos a las ${formatOrderTime(config.apertura)}.`;
+                const apertura = minutesFromTime(horario.apertura || '09:00');
+                const cierre = minutesFromTime(horario.cierre || '17:00');
+                if (minutos < apertura) return `Los pedidos todavía no están disponibles. Hoy comenzamos a recibir pedidos a las ${formatOrderTime(horario.apertura || '09:00')}.`;
                 if (minutos >= cierre && proxima) return `Por hoy hemos cerrado la recepción de pedidos. Favor de enviar tu pedido ${obtenerNombreRelativo(proxima, ahora)} a partir de las ${formatOrderTime(String(proxima.getHours()).padStart(2, '0') + ':' + String(proxima.getMinutes()).padStart(2, '0'))}.`;
             }
             if (proxima) return `Disculpe las molestias. Nuestro próximo horario de atención es ${obtenerNombreRelativo(proxima, ahora)} a partir de las ${formatOrderTime(String(proxima.getHours()).padStart(2, '0') + ':' + String(proxima.getMinutes()).padStart(2, '0'))}.`;
